@@ -1,11 +1,11 @@
 {
-  "name": "package-name",
-  "version": "0.0.0",
-  "description": "TODO:",
+  "name": "astro-page-insight",
+  "version": "0.0.1",
+  "description": "Integration to make Astro site insights easier and more visual.",
   "author": {
-    "email": "TODO:",
-    "name": "TODO:",
-    "url": "TODO:"
+    "email": "shoma@ktym4a.me",
+    "name": "ktym4a",
+    "url": "https://ktym4a.me"
   },
   "license": "MIT",
   "keywords": [
@@ -13,9 +13,10 @@
     "astro-component",
     "withastro",
     "astro",
-    "TODO:"
+    "lighthouse",
+    "page-insight"
   ],
-  "homepage": "TODO:",
+  "homepage": "https://github.com/ktym4a/astro-page-insight",
   "publishConfig": {
     "access": "public"
   },
@@ -30,5 +31,9 @@
   },
   "dependencies": {
     "astro-integration-kit": "^0.1.1"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.1.0",
+    "lighthouse": "^11.5.0"
   }
 }

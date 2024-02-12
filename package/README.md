@@ -1,27 +1,23 @@
-# `package-name`
+# `astro-page-insight`
 
-This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that TODO:description
+This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that make Astro site insights easier and more visual.
 
 ## Usage
-
-### Prerequisites
-
-TODO:
 
 ### Installation
 
 Install the integration **automatically** using the Astro CLI:
 
 ```bash
-pnpm astro add package-name
+pnpm astro add astro-page-insight
 ```
 
 ```bash
-npm astro add package-name
+npm astro add astro-page-insight
 ```
 
 ```bash
-yarn astro add package-name
+yarn astro add astro-page-insight
 ```
 
 Or install it **manually**:
@@ -29,32 +25,39 @@ Or install it **manually**:
 1. Install the required dependencies
 
 ```bash
-pnpm add package-name
+pnpm add astro-page-insight
 ```
 
 ```bash
-npm install package-name
+npm install astro-page-insight
 ```
 
 ```bash
-yarn add package-name
+yarn add astro-page-insight
 ```
 
 2. Add the integration to your astro config
 
 ```diff
-+import integration from "package-name";
++import astroPageInsight from "astro-page-insight";
 
 export default defineConfig({
   integrations: [
-+    integration(),
++    astroPageInsight(),
   ],
 });
 ```
 
 ### Configuration
 
-TODO:configuration
+Here is the TypeScript type:
+
+```ts
+export type Options = {
+  weight?: number;
+  breakPoint?: number;
+}
+```
 
 ## Contributing
 
@@ -79,8 +82,8 @@ You can now edit files in `package`. Please note that making changes to those fi
 
 ## Licensing
 
-[MIT Licensed](https://github.com/TODO:/blob/main/LICENSE). Made with ❤️ by [TODO:](https://github.com/TODO:).
+[MIT Licensed](https://github.com/ktym4a/astro-page-insight/blob/main/LICENSE). Made with ❤️ by [ktym4a](https://github.com/ktym4a).
 
-## Acknowledgements
+<!-- ## Acknowledgements
 
-TODO:
+TODO: -->

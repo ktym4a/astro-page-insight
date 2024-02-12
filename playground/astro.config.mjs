@@ -1,8 +1,8 @@
 import tailwind from "@astrojs/tailwind";
+import astroPageInsight from "astro-page-insight";
 import { defineConfig } from "astro/config";
-import packageName from "package-name";
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [tailwind(), packageName()],
+	integrations: [tailwind(), astroPageInsight()],
 });

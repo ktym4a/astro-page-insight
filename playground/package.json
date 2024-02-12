@@ -13,12 +13,12 @@
   "dependencies": {
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.3.5",
-    "package-name": "workspace:*",
+    "astro-page-insight": "workspace:*",
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.5.3",
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.11.17",
     "typescript": "^5.3.3"
   }
 }

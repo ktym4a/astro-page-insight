@@ -1,3 +1,3 @@
-import { integration } from "./integration.js";
+import astroPageInsight from "./astro-page-insight.js";
 
-export default integration;
+export default astroPageInsight;
