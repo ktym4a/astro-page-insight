@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.5
+
+### Patch Changes
+
+- a2be3e3: Change Icon.
+
 ## 0.0.4
 
 ### Patch Changes
