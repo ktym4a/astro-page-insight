@@ -1,6 +1,6 @@
 {
   "name": "astro-page-insight",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Integration to make Astro site insights easier and more visual.",
   "author": {
     "email": "shoma@ktym4a.me",
