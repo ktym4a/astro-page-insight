@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.3
+
+### Patch Changes
+
+- 100c583: Change dependencies.
+
 ## 0.0.2
 
 ### Patch Changes
