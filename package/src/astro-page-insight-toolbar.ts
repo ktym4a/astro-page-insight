@@ -6,7 +6,7 @@ import type { LHResult } from "../types/server";
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
 	name: "PageInsight",
-	icon: "check-circle",
+	icon: "file-search",
 	init(canvas) {
 		let isFetching = false;
 		let areaElm: HTMLDivElement;
