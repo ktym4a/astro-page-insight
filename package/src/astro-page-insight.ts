@@ -19,7 +19,7 @@ export default defineIntegration({
 			},
 			"astro:server:setup": async ({ server }) => {
 				const { weight, breakPoint } = options;
-				server.hot.on(
+				server.ws.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 					async ({ width, height, url }) => {
 						try {
@@ -33,7 +33,7 @@ export default defineIntegration({
 							if (lhResult) {
 								const result = organizeLHResult(lhResult, weight);
 
-								server.hot.send(
+								server.ws.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-success",
 									{
 										...result,
@@ -42,7 +42,7 @@ export default defineIntegration({
 								);
 							}
 						} catch (error) {
-							server.hot.send(
+							server.ws.send(
 								"astro-dev-toolbar:astro-page-insight-app:on-error",
 								"Something went wrong\nPlease try again",
 							);

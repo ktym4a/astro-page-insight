@@ -21,6 +21,8 @@ interface ImportMeta {
 }
 
 interface ImportMetaEnv {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	[key: string]: any;
 	BASE_URL: string;
 	MODE: string;
 	DEV: boolean;
