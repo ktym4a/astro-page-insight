@@ -39,11 +39,11 @@ yarn add astro-page-insight
 2. Add the integration to your astro config
 
 ```diff
-+import astroPageInsight from "astro-page-insight";
++import pageInsight from "astro-page-insight";
 
 export default defineConfig({
   integrations: [
-+    astroPageInsight(),
++    pageInsight(),
   ],
 });
 ```
