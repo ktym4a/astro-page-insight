@@ -2,4 +2,4 @@
 "astro-page-insight": patch
 ---
 
-Fixes types (hopefully) and improve structure
+Fixes types (hopefully) and improves package structure
