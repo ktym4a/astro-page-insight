@@ -18,7 +18,8 @@
     "a11y",
     "optimization"
   ],
-  "homepage": "https://github.com/ktym4a/astro-page-insight",
+  "homepage": "https://www.npmjs.com/package/astro-page-insight",
+  "repository": "https://github.com/ktym4a/astro-page-insight",
   "publishConfig": {
     "access": "public"
   },
