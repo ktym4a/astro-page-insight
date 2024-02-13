@@ -1,7 +1,7 @@
 {
   "name": "astro-page-insight",
   "version": "0.0.12",
-  "description": "Shows everything to improve from Page Speed Insight directly on the page.",
+  "description": "Shows everything to improve from Lighthouse results directly on the page.",
   "author": {
     "email": "shoma@ktym4a.me",
     "name": "ktym4a",
