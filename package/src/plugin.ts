@@ -1,7 +1,6 @@
 import { type DevToolbarApp } from "astro";
 import type { DevToolbarTooltipSection } from "astro/runtime/client/dev-toolbar/ui-library/tooltip.js";
-import type { PositionType } from "../types/client";
-import type { LHResult } from "../types/server";
+import type { LHResult, PositionType } from "./types.js";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 const BR_REGEX = /\n/g;
@@ -21,7 +20,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		document.addEventListener("astro:after-swap", initCanvas);
 
-		import.meta.hot.on(
+		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
 			(result: LHResult) => {
 				if (result.url !== window.location.href) {
@@ -161,7 +160,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			},
 		);
 
-		import.meta.hot.on(
+		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-error",
 			(message: string) => {
 				isFetching = false;
@@ -429,7 +428,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			const height = document.documentElement.clientHeight;
 			const url = window.location.href;
 
-			import.meta.hot.send(
+			import.meta.hot?.send(
 				"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 				{
 					width,

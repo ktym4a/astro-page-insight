@@ -24,7 +24,6 @@
     "access": "public"
   },
   "sideEffects": false,
-  "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -37,5 +36,8 @@
     "astro-integration-kit": "^0.1.1",
     "chrome-launcher": "^1.1.0",
     "lighthouse": "^11.5.0"
+  },
+  "devDependencies": {
+    "vite": "^5.1.1"
   }
 }

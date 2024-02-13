@@ -4,13 +4,13 @@ import type {
 	Result,
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
-import { categories } from "../constants";
+import { CATEGORIES } from "./constants.js";
 import type {
 	Categories,
 	ElementType,
 	LHOptions,
 	LHResult,
-} from "../types/server";
+} from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -22,7 +22,7 @@ export const startLH = async (options: LHOptions) => {
 		output: "json",
 		formFactor: isMobile ? "mobile" : "desktop",
 		disableFullPageScreenshot: true,
-		onlyCategories: categories,
+		onlyCategories: CATEGORIES,
 		screenEmulation: {
 			mobile: isMobile,
 			width: options.width,
