@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.7
+
+### Patch Changes
+
+- 3933a40: Fix types for options.
+
 ## 0.0.6
 
 ### Patch Changes
