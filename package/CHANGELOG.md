@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.8
+
+### Patch Changes
+
+- 8b974df: add keywords to package.json
+
 ## 0.0.7
 
 ### Patch Changes
