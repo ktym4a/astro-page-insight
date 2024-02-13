@@ -4,8 +4,8 @@ import {
 	defineOptions,
 } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
-import { type Options, optionsSchema } from "./types.js";
 import { organizeLHResult, startLH } from "./server.js";
+import { type Options, optionsSchema } from "./types.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",

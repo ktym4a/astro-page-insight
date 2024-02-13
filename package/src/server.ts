@@ -5,12 +5,7 @@ import type {
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
 import { CATEGORIES } from "./constants.js";
-import type {
-	Categories,
-	ElementType,
-	LHOptions,
-	LHResult,
-} from "./types.js";
+import type { Categories, ElementType, LHOptions, LHResult } from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
