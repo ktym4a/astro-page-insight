@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.10
+
+### Patch Changes
+
+- cb478d7: Fixes types (hopefully) and improves package structure
+
 ## 0.0.9
 
 ### Patch Changes
