@@ -3,6 +3,9 @@ import type { DevToolbarTooltipSection } from "astro/runtime/client/dev-toolbar/
 import type { PositionType } from "../types/client";
 import type { LHResult } from "../types/server";
 
+const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
+const BR_REGEX = /\n/g;
+
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
 	name: "PageInsight",
@@ -357,7 +360,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							.replace(/>/g, "&gt;")
 							.replace(/"/g, "&quot;"),
 						content: description.replace(
-							/\[(.*?)\]\((.*?)\)/g,
+							LINK_REGEX,
 							'<a href="$2" target="_blank">$1</a>',
 						),
 						inlineTitle: content.inlineTitle,
@@ -439,7 +442,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		function errorToast(message: string) {
 			const toast = document.createElement("div");
 			toast.classList.add("toast");
-			toast.innerHTML = message.replace(/\n/g, "<br>");
+			toast.innerHTML = message.replace(BR_REGEX, "<br>");
 			canvas.appendChild(toast);
 			setTimeout(() => {
 				toast.remove();
