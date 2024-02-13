@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.13
+
+### Patch Changes
+
+- 5cff24d: change README
+
 ## 0.0.12
 
 ### Patch Changes
