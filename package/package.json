@@ -14,13 +14,16 @@
     "withastro",
     "astro",
     "lighthouse",
-    "page-insight"
+    "page-insight",
+    "a11y",
+    "optimization"
   ],
   "homepage": "https://github.com/ktym4a/astro-page-insight",
   "publishConfig": {
     "access": "public"
   },
   "sideEffects": false,
+  "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
