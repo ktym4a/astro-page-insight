@@ -1,6 +1,6 @@
 # `astro-page-insight`
 
-This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that make Astro site insights easier and more visual.
+This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that shows everything to improve from Page Speed Insight directly on the page.
 
 ## Usage
 
