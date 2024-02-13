@@ -3,13 +3,13 @@ import {
 	defineIntegration,
 	defineOptions,
 } from "astro-integration-kit";
-import type { Options } from "../types/server";
+import { type Options, optionsSchema } from "../types/server";
 import { organizeLHResult, startLH } from "./server";
 
 export default defineIntegration({
 	name: "astro-page-insight",
 	options: defineOptions<Options>({ weight: 0, breakPoint: 768 }),
-	setup({ options }) {
+	setup({ options: inputOptions }) {
 		return {
 			"astro:config:setup": ({ addDevToolbarApp, command }) => {
 				if (command === "dev") {
@@ -18,7 +18,9 @@ export default defineIntegration({
 				}
 			},
 			"astro:server:setup": async ({ server }) => {
-				const { weight, breakPoint } = options;
+				const { weight = 0, breakPoint = 768 } =
+					optionsSchema.parse(inputOptions);
+
 				server.ws.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 					async ({ width, height, url }) => {
