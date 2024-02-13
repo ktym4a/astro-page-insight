@@ -1,6 +1,12 @@
 import { z } from "astro/zod";
 import type { Result } from "lighthouse/types/lhr/audit-result";
-import type { PositionType } from "./client";
+
+export type PositionType = {
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+};
 
 export type PluginOptions = {
 	breakPoint: number;
