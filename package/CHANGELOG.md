@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.0.9
+
+### Patch Changes
+
+- 102c37b: Refactor Astro PageInsightToolbar to use regular expressions for link and line break replacements
+- 7e3f912: add repository and change homepage url
+
 ## 0.0.8
 
 ### Patch Changes
