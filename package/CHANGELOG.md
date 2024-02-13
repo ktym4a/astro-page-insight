@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.6
+
+### Patch Changes
+
+- f9a8e91: add types for options.
+
 ## 0.0.5
 
 ### Patch Changes
