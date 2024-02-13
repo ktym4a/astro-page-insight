@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.11
+
+### Patch Changes
+
+- 53ac3d0: change description.
+
 ## 0.0.10
 
 ### Patch Changes
