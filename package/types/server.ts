@@ -34,12 +34,12 @@ export type Categories = {
 	[auditId: string]: string[];
 };
 
-const OptionsSchema = z.object({
-	weight: z.number().optional().default(0),
-	breakPoint: z.number().optional().default(768),
+export const optionsSchema = z.object({
+	weight: z.number().default(0).optional(),
+	breakPoint: z.number().default(768).optional(),
 });
 
 export type Options = {
-	weight: z.infer<typeof OptionsSchema>["weight"];
-	breakPoint: z.infer<typeof OptionsSchema>["breakPoint"];
+	weight?: z.infer<typeof optionsSchema>["weight"];
+	breakPoint?: z.infer<typeof optionsSchema>["breakPoint"];
 };
