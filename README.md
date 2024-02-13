@@ -1,6 +1,6 @@
 # astro-page-insight
 
-Integration to make Astro site insights easier and more visual.
+Shows everything to improve from Page Speed Insight directly on the page.
 
 To see how to get started, check out the [package README](./package/README.md)
 
