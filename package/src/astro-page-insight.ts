@@ -11,7 +11,7 @@ export default defineIntegration({
 		 * `weight` is the threshold value in the audit.
 		 * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
 		 *
-		 * @default 0
+		 * @default `0`
 		 */
 		weight: z.number().optional().default(0),
 		/**
