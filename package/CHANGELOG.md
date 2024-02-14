@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.14
+
+### Patch Changes
+
+- 1bc000b: add Prerequisites section
+
 ## 0.0.13
 
 ### Patch Changes
