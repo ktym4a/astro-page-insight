@@ -2,4 +2,4 @@
 "astro-page-insight": patch
 ---
 
-migrate AIK 0.2.0
+Makes options handling runtime safe
