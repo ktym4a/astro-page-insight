@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.0.15
+
+### Patch Changes
+
+- 23e32ec: update packages
+- c590f79: Makes options handling runtime safe
+
 ## 0.0.14
 
 ### Patch Changes
