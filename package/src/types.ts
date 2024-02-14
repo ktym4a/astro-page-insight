@@ -39,13 +39,3 @@ export type LHResult = {
 export type Categories = {
 	[auditId: string]: string[];
 };
-
-export const optionsSchema = z.object({
-	weight: z.number().default(0).optional(),
-	breakPoint: z.number().default(768).optional(),
-});
-
-export type Options = {
-	weight?: z.infer<typeof optionsSchema>["weight"];
-	breakPoint?: z.infer<typeof optionsSchema>["breakPoint"];
-};

@@ -1,18 +1,28 @@
-import {
-	createResolver,
-	defineIntegration,
-	defineOptions,
-} from "astro-integration-kit";
+import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
+import { z } from "astro/zod";
 import { organizeLHResult, startLH } from "./server.js";
-import { type Options, optionsSchema } from "./types.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
 	plugins: [...corePlugins],
-	options: defineOptions<Options>({ weight: 0, breakPoint: 768 }),
-	setup({ options: inputOptions }) {
-		const { weight = 0, breakPoint = 768 } = optionsSchema.parse(inputOptions);
+	optionsSchema: z.object({
+		/**
+		 * `weight` is the threshold value in the audit.
+		 * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
+		 *
+		 * @default `0`
+		 */
+		weight: z.number().optional().default(0),
+		/**
+		 * `breakPoint` is used to determine whether on mobile or desktop.
+		 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
+		 *
+		 * @default `768`
+		 */
+		breakPoint: z.number().optional().default(768),
+	}),
+	setup({ options: { weight, breakPoint } }) {
 		const { resolve } = createResolver(import.meta.url);
 
 		return {
