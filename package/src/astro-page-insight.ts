@@ -1,18 +1,17 @@
-import {
-	createResolver,
-	defineIntegration,
-	defineOptions,
-} from "astro-integration-kit";
+import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
+import { z } from "astro/zod";
 import { organizeLHResult, startLH } from "./server.js";
-import { type Options, optionsSchema } from "./types.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
 	plugins: [...corePlugins],
-	options: defineOptions<Options>({ weight: 0, breakPoint: 768 }),
+	optionsSchema: z.object({
+		weight: z.number().optional().default(0),
+		breakPoint: z.number().optional().default(768),
+	}),
 	setup({ options: inputOptions }) {
-		const { weight = 0, breakPoint = 768 } = optionsSchema.parse(inputOptions);
+		const { weight, breakPoint } = inputOptions;
 		const { resolve } = createResolver(import.meta.url);
 
 		return {
