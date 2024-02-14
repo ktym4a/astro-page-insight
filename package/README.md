@@ -4,6 +4,13 @@ This is an [Astro integration](https://docs.astro.build/en/guides/integrations-g
 
 ## Usage
 
+### Prerequisites
+
+You need to have Chrome.
+
+if you see errors like `ERR_LAUNCHER_NOT_INSTALLED`, you may need to install Chrome.
+
+
 ### Installation
 
 Install the integration **automatically** using the Astro CLI:
