@@ -18,7 +18,7 @@ export default defineIntegration({
 		 * `breakPoint` is used to determine whether on mobile or desktop.
 		 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
 		 *
-		 * @default 768
+		 * @default `768`
 		 */
 		breakPoint: z.number().optional().default(768),
 	}),
