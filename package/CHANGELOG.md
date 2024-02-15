@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.16
+
+### Patch Changes
+
+- 168b971: update README
+
 ## 0.0.15
 
 ### Patch Changes
