@@ -57,6 +57,7 @@ export default defineConfig({
 
 ### Configuration
 
+
 Here is the options:
 
 ```ts
