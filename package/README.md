@@ -57,10 +57,11 @@ export default defineConfig({
 
 ### Configuration
 
-Here is the Options:
+
+Here is the options:
 
 ```ts
-optionsSchema: z.object({
+options: z.object({
   /**
   * `weight` is the threshold value in the audit.
   * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
