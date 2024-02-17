@@ -5,7 +5,7 @@ import type {
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
 import { CATEGORIES } from "./constants.js";
-import type { Categories, ElementType, LHOptions, LHResult } from "./types.js";
+import type { AuditType, Categories, LHOptions, LHResult } from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -80,7 +80,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			if (node.devtoolsNodePath.includes("ASTRO-DEV-TOOLBAR")) continue;
 			const category = categories[incomplete.id];
 
-			const element: ElementType = {
+			const element: AuditType = {
 				score: incomplete.impact === "serious" ? 0 : 0.5,
 				scoreDisplayMode: "numeric",
 				title,
@@ -107,7 +107,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			if (node.devtoolsNodePath.includes("ASTRO-DEV-TOOLBAR")) continue;
 			const category = categories[incomplete.id];
 
-			const element: ElementType = {
+			const element: AuditType = {
 				score: incomplete.impact === "serious" ? 0 : 0.5,
 				scoreDisplayMode: "numeric",
 				title,
@@ -152,7 +152,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 const createElement = (
 	elements: LHResult["elements"],
 	selector: string,
-	element: ElementType,
+	element: AuditType,
 ) => {
 	const elementsValue = elements[selector];
 	if (elementsValue) {
@@ -188,7 +188,7 @@ const findSelector = (
 		}
 		if (item.node) {
 			if (item.node.path.includes("ASTRO-DEV-TOOLBAR")) continue;
-			const element: ElementType = {
+			const element: AuditType = {
 				score:
 					scoreDisplayMode === "manual" ||
 					scoreDisplayMode === "informative" ||

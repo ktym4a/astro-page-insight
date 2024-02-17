@@ -1,8 +1,14 @@
 import { type DevToolbarApp } from "astro";
 import type { DevToolbarTooltipSection } from "astro/runtime/client/dev-toolbar/ui-library/tooltip.js";
-import type { LHResult, PositionType } from "./types.js";
+import { CATEGORIES } from "./constants.js";
+import type { LHResult, Tooltips } from "./types.js";
+import {
+	createHighlight,
+	refreshHighlightPositions,
+	resetHighlights,
+} from "./ui/highlight.js";
+import { createTooltip } from "./ui/tooltip.js";
 
-const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 const BR_REGEX = /\n/g;
 
 const astroPageInsightToolbar: DevToolbarApp = {
@@ -47,7 +53,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				for (const [selector, value] of Object.entries(result.elements)) {
 					let selectorCategory = [] as string[];
-					let tooltipContents = [] as DevToolbarTooltipSection[];
+					const tooltips: Tooltips = {};
+
 					let score: number | null = 1;
 					if (!value[0]) continue;
 
@@ -69,19 +76,25 @@ const astroPageInsightToolbar: DevToolbarApp = {
 								new Set([...selectorCategory, ...audit.categories]),
 							),
 						];
-						tooltipContents = [
-							...tooltipContents,
-							{
-								title: audit.title,
-								content: audit.description,
-								inlineTitle: audit.categories.join(", "),
-							},
-						];
+						for (const category of audit.categories) {
+							if (!CATEGORIES.includes(category.toLowerCase())) continue;
+
+							tooltips[category] = [
+								...(tooltips[category] ?? []),
+								{
+									title: audit.title,
+									content: audit.description,
+									score: audit.score,
+									subTitle: audit.categories,
+									id: selector,
+								},
+							];
+						}
 					}
 
 					try {
 						if (selector === "") continue;
-						let position = value[0].rect;
+						const position = value[0].rect;
 						if (
 							position.width === 0 &&
 							position.height === 0 &&
@@ -90,34 +103,20 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						)
 							continue;
 
-						const targetElements = document.querySelectorAll(selector);
-						const targetElement = targetElements[0];
-						let icon: string | undefined;
-
-						if (targetElement && targetElements.length === 1) {
-							const rect = targetElement.getBoundingClientRect();
-							position = {
-								top: rect.top,
-								left: rect.left,
-								width: rect.width,
-								height: rect.height,
-							};
-						} else {
-							icon = "warning";
-						}
-
 						const highlight = createHighlight(
-							position,
-							score,
+							selector,
+							value[0].rect,
 							selectorCategory,
-							icon,
 						);
 						highlight.dataset.selector = selector;
 
-						const tooltip = createTooltip(tooltipContents, score, !icon);
-						highlight.shadowRoot.append(tooltip);
+						let title: string | undefined;
+						if (highlight.dataset.target === "rect") {
+							title =
+								"No element found or Find multiple elements, so the position is maybe not correct.";
+						}
 
-						addHighlightEvent(highlight, tooltip);
+						createTooltip(highlight, tooltips, title);
 
 						canvas.appendChild(highlight);
 					} catch (e) {
@@ -147,16 +146,16 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					);
 				}
 
-				if (globalTooltips.length > 0) {
-					const tooltip = createTooltip(globalTooltips, 0, true);
+				//   if (globalTooltips.length > 0) {
+				//     const tooltip = createTooltip(globalTooltips, 0, true);
 
-					tooltip.style.position = "fixed";
-					tooltip.style.width = "200px";
-					tooltip.style.bottom = "0";
-					tooltip.dataset.show = "true";
+				//     tooltip.style.position = 'fixed';
+				//     tooltip.style.width = '200px';
+				//     tooltip.style.bottom = '0';
+				//     tooltip.dataset.show = 'true';
 
-					canvas.appendChild(tooltip);
-				}
+				//     canvas.appendChild(tooltip);
+				//   }
 			},
 		);
 
@@ -180,6 +179,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
           font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
           color: rgba(191, 193, 201, 1);
         }
+
+		a {
+			color: #89b4fa;
+		}
+
+		a:visted {
+			color: #89b4fa;
+		}
 
         .button-wrapper {
           position: fixed;
@@ -247,6 +254,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			areaElm = createPageInsightToolArea(canvas);
 
 			fetchButton = createButton(analyzeSvg, () => {
+				resetHighlights(canvas);
 				fetchLighthouse();
 			});
 
@@ -262,141 +270,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			areaElm.appendChild(fetchButton);
 
 			for (const event of ["scroll", "resize"]) {
-				window.addEventListener(event, refreshHighlightPositions);
+				window.addEventListener(event, () => refreshHighlightPositions(canvas));
 			}
-		}
-
-		function refreshHighlightPositions() {
-			for (const highlight of canvas.querySelectorAll(
-				"astro-dev-toolbar-highlight",
-			)) {
-				const selector = highlight.dataset.selector;
-				if (selector) {
-					const targetElements = document.querySelectorAll(selector);
-					const targetElement = targetElements[0];
-					if (targetElement && targetElements.length === 1) {
-						const rect = targetElement.getBoundingClientRect();
-						highlight.style.top = `${Math.max(
-							rect.top + window.scrollY - 10,
-							0,
-						)}px`;
-						highlight.style.left = `${Math.max(
-							rect.left + window.scrollX - 10,
-							0,
-						)}px`;
-						highlight.style.width = `${rect.width + 15}px`;
-						highlight.style.height = `${rect.height + 15}px`;
-					}
-				}
-			}
-		}
-
-		function createHighlight(
-			position: PositionType,
-			score: number | null,
-			selectorCategory: string[],
-			icon?: string,
-		) {
-			const highlight = document.createElement("astro-dev-toolbar-highlight");
-
-			if (icon) {
-				highlight.icon = icon;
-				highlight.style.top = `${Math.max(position.top - 10, 0)}px`;
-				highlight.style.left = `${Math.max(position.left - 10, 0)}px`;
-			} else {
-				highlight.style.top = `${Math.max(
-					position.top + window.scrollY - 10,
-					0,
-				)}px`;
-				highlight.style.left = `${Math.max(
-					position.left + window.scrollX - 10,
-					0,
-				)}px`;
-			}
-			highlight.style.width = `${position.width + 15}px`;
-			highlight.style.height = `${position.height + 15}px`;
-			highlight.style.borderColor =
-				score === null || score < 0.5
-					? "#f38ba8"
-					: score < 0.9
-					  ? "#f9e2af"
-					  : "#a6e3a1";
-			highlight.style.zIndex = "1000";
-			highlight.shadowRoot.innerHTML += `<div style="position: absolute; bottom: 0; right: 0; background: #181825; color: #cdd6f4; padding: 5px 10px; border-radius: 5px;">${selectorCategory.join(
-				", ",
-			)}</div>`;
-
-			return highlight;
-		}
-
-		function createTooltip(
-			tooltipContents: DevToolbarTooltipSection[],
-			score: number | null,
-			hasElement: boolean,
-		) {
-			const tooltip = document.createElement("astro-dev-toolbar-tooltip");
-
-			if (!hasElement) {
-				tooltip.sections = [
-					{
-						icon: "warning",
-						title:
-							"No element found or Find multiple elements, so the position is maybe not accurate.",
-					},
-				];
-			}
-
-			// biome-ignore lint/complexity/noForEach: <explanation>
-			tooltipContents.forEach((content) => {
-				const description = content.content ?? "";
-				const title = content.title ?? "";
-				tooltip.sections = [
-					...tooltip.sections,
-					{
-						title: title
-							.replace(/&/g, "&amp;")
-							.replace(/</g, "&lt;")
-							.replace(/>/g, "&gt;")
-							.replace(/"/g, "&quot;"),
-						content: description.replace(
-							LINK_REGEX,
-							'<a href="$2" target="_blank">$1</a>',
-						),
-						inlineTitle: content.inlineTitle,
-					} as DevToolbarTooltipSection,
-				];
-			});
-
-			tooltip.style.zIndex = "1001";
-			tooltip.style.background =
-				score === null || score < 0.5
-					? "#f38ba8"
-					: score < 0.9
-					  ? "#f9e2af"
-					  : "#a6e3a1";
-			tooltip.style.color = "#181825";
-			tooltip.style.border = "1px solid #a6adc8";
-
-			return tooltip;
-		}
-
-		function addHighlightEvent(highlight: HTMLElement, tooltip: HTMLElement) {
-			// biome-ignore lint/complexity/noForEach: <explanation>
-			(["mouseover", "focus"] as const).forEach((event) => {
-				highlight.addEventListener(event, () => {
-					tooltip.dataset.show = "true";
-					tooltip.style.top = `${highlight.offsetHeight}px`;
-					highlight.style.zIndex = "1001";
-				});
-			});
-
-			// biome-ignore lint/complexity/noForEach: <explanation>
-			(["mouseout", "blur"] as const).forEach((event) => {
-				highlight.addEventListener(event, () => {
-					tooltip.dataset.show = "false";
-					highlight.style.zIndex = "1000";
-				});
-			});
 		}
 
 		function createButton(innerHTML: string, action: () => void) {
@@ -417,7 +292,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		function fetchLighthouse() {
 			if (isFetching) return;
 
-			resetHighlight();
 			isFetching = true;
 			// previewButton.disabled = true;
 			// previewButton.innerHTML = eyeXSvg;
@@ -446,14 +320,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			setTimeout(() => {
 				toast.remove();
 			}, 5000);
-		}
-
-		function resetHighlight() {
-			for (const highlight of canvas.querySelectorAll(
-				"astro-dev-toolbar-highlight",
-			)) {
-				highlight.remove();
-			}
 		}
 	},
 };

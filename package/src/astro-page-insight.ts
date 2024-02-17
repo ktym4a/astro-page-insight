@@ -61,7 +61,7 @@ export default defineIntegration({
 								);
 							}
 						} catch (error) {
-							logger.error("Something went wrong");
+							logger.error("Something went wrong.");
 							console.error(error);
 							server.hot.send(
 								"astro-dev-toolbar:astro-page-insight-app:on-error",

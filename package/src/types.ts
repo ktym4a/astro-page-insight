@@ -18,7 +18,7 @@ export type LHOptions = {
 	height: number;
 } & PluginOptions;
 
-export type ElementType = Pick<
+export type AuditType = Pick<
 	Result,
 	"score" | "scoreDisplayMode" | "title" | "description"
 > & {
@@ -28,7 +28,7 @@ export type ElementType = Pick<
 
 export type LHResult = {
 	elements: {
-		[selector: string]: Array<ElementType>;
+		[selector: string]: Array<AuditType>;
 	};
 	console: string[];
 	scoreList: { [key: string]: number | null };
@@ -37,4 +37,14 @@ export type LHResult = {
 
 export type Categories = {
 	[auditId: string]: string[];
+};
+
+export type Tooltips = {
+	[category: string]: Array<{
+		title: string;
+		content: string;
+		subTitle: string[];
+		score: number | null;
+		id: string;
+	}>;
 };
