@@ -24,7 +24,7 @@ export const createTooltip = (
 		if (!tooltip) continue;
 
 		const details = createDetails(index === tooltipsLength - 1);
-		details.dataset.category = tooltip[0];
+		details.dataset.category = tooltip[0].toLowerCase();
 
 		const summary = createSummary(tooltip[0], tooltips[1].length);
 		details.appendChild(summary);

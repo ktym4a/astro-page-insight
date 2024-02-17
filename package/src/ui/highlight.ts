@@ -1,4 +1,4 @@
-import { COLORS } from "../constants";
+import { CATEGORIES, COLORS } from "../constants";
 import type { PositionType } from "../types";
 
 export const createHighlight = (
@@ -6,17 +6,8 @@ export const createHighlight = (
 	rect: PositionType,
 	categories?: string[],
 ) => {
-	const highlight = document.createElement("div");
+	const highlight = createHighlightElement();
 	updateHHighlightPosition(highlight, selector, rect);
-	highlight.style.position = "absolute";
-	highlight.style.background =
-		"linear-gradient(180deg, rgba(224, 204, 250, 0.33) 0%, rgba(224, 204, 250, 0.0825) 100%)";
-	highlight.style.borderRadius = "5px";
-	highlight.style.zIndex = "1000";
-	highlight.style.display = "block";
-	highlight.classList.add("page-insight-highlight");
-	highlight.style.border = `2px solid ${COLORS.red}`;
-	highlight.tabIndex = 0;
 	highlight.dataset.selector = selector;
 
 	if (categories) {
@@ -46,6 +37,21 @@ export const createHighlight = (
 			}
 		});
 	}
+
+	return highlight;
+};
+
+const createHighlightElement = () => {
+	const highlight = document.createElement("div");
+	highlight.style.position = "absolute";
+	highlight.style.background =
+		"linear-gradient(180deg, rgba(224, 204, 250, 0.33) 0%, rgba(224, 204, 250, 0.0825) 100%)";
+	highlight.style.borderRadius = "5px";
+	highlight.style.zIndex = "1000";
+	highlight.style.display = "block";
+	highlight.classList.add("page-insight-highlight");
+	highlight.style.border = `2px solid ${COLORS.red}`;
+	highlight.tabIndex = 0;
 
 	return highlight;
 };
@@ -111,6 +117,11 @@ const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 	title.style.borderRadius = "5px";
 	title.style.padding = "4px 10px";
 	title.textContent = categories.join(", ");
+	for (const category of categories) {
+		if (CATEGORIES.includes(category.toLocaleLowerCase())) {
+			highlight.classList.add(category.toLocaleLowerCase());
+		}
+	}
 	highlight.appendChild(title);
 };
 
