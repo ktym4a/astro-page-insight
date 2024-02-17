@@ -1,4 +1,3 @@
-import { z } from "astro/zod";
 import type { Result } from "lighthouse/types/lhr/audit-result";
 
 export type PositionType = {
