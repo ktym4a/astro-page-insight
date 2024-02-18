@@ -5,14 +5,14 @@ import { getColorKey } from "../utils/color";
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
 export const createTooltip = (
-	tooltips: Tooltips,
-	rect: PositionType,
+	tooltips: Tooltips | ErrorTooltips,
 	titleOption: {
 		text?: string | undefined;
 		icon?: boolean;
 	},
+	rect?: PositionType,
 ) => {
-	const tooltipWrapper = createTooltipWrapper(rect.top);
+	const tooltipWrapper = createTooltipWrapper(rect?.top);
 
 	if (titleOption.text) {
 		const titleElement = createTitle(titleOption.text, titleOption.icon);
@@ -45,63 +45,12 @@ export const createTooltip = (
 			);
 			contentElement.appendChild(contentTitle);
 
-			const content = createContent(
-				tooltip.content,
-				index === tooltips[1].length - 1,
-			);
-			contentElement.appendChild(content);
-
-			contentWrapper.appendChild(contentElement);
-		}
-		details.appendChild(contentWrapper);
-
-		tooltipWrapper.appendChild(details);
-	}
-
-	return tooltipWrapper;
-};
-
-export const createErrorTooltip = (
-	tooltips: ErrorTooltips,
-	titleOption: {
-		text?: string | undefined;
-		icon?: boolean;
-	},
-) => {
-	const tooltipWrapper = createTooltipWrapper();
-
-	if (titleOption.text) {
-		const titleElement = createTitle(titleOption.text, titleOption.icon);
-		tooltipWrapper.appendChild(titleElement);
-	}
-
-	const tooltipEntries = Object.entries(tooltips);
-	const tooltipsLength = tooltipEntries.length;
-
-	for (const [index, tooltips] of tooltipEntries.entries()) {
-		const tooltip = tooltipEntries[index];
-		if (!tooltip) continue;
-
-		const details = createDetails(index === tooltipsLength - 1);
-		details.dataset.category = tooltip[0].toLowerCase();
-
-		const summary = createSummary(tooltip[0], tooltips[1].length);
-		details.appendChild(summary);
-
-		const contentWrapper = document.createElement("div");
-		contentWrapper.style.marginTop = "10px";
-		contentWrapper.style.marginLeft = "10px";
-		for (const [index, tooltip] of tooltips[1].entries()) {
-			const contentElement = document.createElement("div");
-
-			const contentTitle = createContentTitle(tooltip.title, tooltip.score);
-			contentElement.appendChild(contentTitle);
-
 			if (tooltip.content) {
 				const content = createContent(
 					tooltip.content,
 					index === tooltips[1].length - 1,
 				);
+				contentElement.appendChild(content);
 				contentElement.appendChild(content);
 			}
 
@@ -140,7 +89,7 @@ const createTooltipWrapper = (top?: number) => {
 			tooltipWrapper.style.transform = "translateY(100%)";
 		}
 	}
-	tooltipWrapper.style.zIndex = "300000";
+	tooltipWrapper.style.zIndex = "200005";
 
 	return tooltipWrapper;
 };
@@ -265,6 +214,7 @@ const createContent = (content: string, isLast: boolean) => {
 	);
 	contentElement.style.margin = "0";
 	contentElement.style.fontSize = "14px";
+	contentElement.style.wordBreak = "break-all";
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "12px";

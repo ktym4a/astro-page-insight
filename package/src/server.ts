@@ -5,7 +5,13 @@ import type {
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
 import { CATEGORIES } from "./constants.js";
-import type { AuditType, Categories, LHOptions, LHResult } from "./types.js";
+import type {
+	AuditType,
+	Categories,
+	ConsoleError,
+	LHOptions,
+	LHResult,
+} from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -42,6 +48,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		return {
 			message: msg.text,
 			level: msg.level,
+			content: msg.url,
 		};
 	});
 

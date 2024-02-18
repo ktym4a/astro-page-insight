@@ -12,7 +12,7 @@ import {
 	createToolbarButton,
 	reloadIcon,
 } from "./ui/toolbar.js";
-import { createErrorTooltip, createTooltip } from "./ui/tooltip.js";
+import { createTooltip } from "./ui/tooltip.js";
 import { fetchLighthouse } from "./utils/lh.js";
 
 const BR_REGEX = /\n/g;
@@ -47,45 +47,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				resetHighlights(canvas);
 
 				const metaErrors = [] as DevToolbarTooltipSection[];
-
-				if (
-					result.consoleErrors.length !== 0 ||
-					result.metaErrors.length !== 0
-				) {
-					const tooltips: ErrorTooltips = {};
-					for (const consoleMessage of result.consoleErrors) {
-						const category = "Console";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: consoleMessage.message,
-								score: consoleMessage.level === "error" ? 0 : 0.5,
-							},
-						];
-					}
-
-					for (const metaError of result.metaErrors) {
-						const category = "Meta";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: metaError.title,
-								score: metaError.score,
-								content: metaError.description,
-							},
-						];
-					}
-					const errorTooltips = createErrorTooltip(tooltips, {
-						text: "There are some errors in the console or meta tags.",
-					});
-					errorTooltips.style.display = "block";
-					errorTooltips.style.top = "20px";
-					errorTooltips.style.right = "10px";
-					errorTooltips.style.left = "auto";
-					errorTooltips.style.position = "fixed";
-					errorTooltips.classList.add("non-element");
-					canvas.appendChild(errorTooltips);
-				}
 
 				for (const [selector, value] of Object.entries(result.elements)) {
 					let selectorCategory = [] as string[];
@@ -153,16 +114,61 @@ const astroPageInsightToolbar: DevToolbarApp = {
 								"No element found or Find multiple elements, so the position is maybe not correct.";
 						}
 
-						const toolTip = createTooltip(tooltips, value[0].rect, {
-							text: title,
-							icon: true,
-						});
+						const toolTip = createTooltip(
+							tooltips,
+							{
+								text: title,
+								icon: true,
+							},
+							value[0].rect,
+						);
 						highlight.appendChild(toolTip);
 
 						canvas.appendChild(highlight);
 					} catch (e) {
 						console.error(e);
 					}
+				}
+
+				if (
+					result.consoleErrors.length !== 0 ||
+					result.metaErrors.length !== 0
+				) {
+					const tooltips: ErrorTooltips = {};
+					for (const consoleMessage of result.consoleErrors) {
+						const category = "Console";
+						const content = consoleMessage.content ?? "";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: consoleMessage.message,
+								score: consoleMessage.level === "error" ? 0 : 0.5,
+								content,
+							},
+						];
+					}
+
+					for (const metaError of result.metaErrors) {
+						const category = "Meta";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: metaError.title,
+								score: metaError.score,
+								content: metaError.description,
+							},
+						];
+					}
+					const errorTooltips = createTooltip(tooltips, {
+						text: "There are some errors in the console or meta tags.",
+					});
+					errorTooltips.style.display = "block";
+					errorTooltips.style.top = "20px";
+					errorTooltips.style.right = "10px";
+					errorTooltips.style.left = "auto";
+					errorTooltips.style.position = "fixed";
+					errorTooltips.classList.add("non-element");
+					canvas.appendChild(errorTooltips);
 				}
 			},
 		);
@@ -211,12 +217,16 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 			const toolbarWrap = createToolbar(canvas);
 
-			fetchButton = createToolbarButton(reloadIcon, () => {
-				if (isFetching) return;
+			fetchButton = createToolbarButton(
+				reloadIcon,
+				() => {
+					if (isFetching) return;
 
-				fetchLighthouse(fetchButton, document);
-				isFetching = true;
-			});
+					fetchLighthouse(fetchButton, document);
+					isFetching = true;
+				},
+				"Fetch Lighthouse report.",
+			);
 
 			if (isFetching) {
 				fetchButton.classList.add("animate");

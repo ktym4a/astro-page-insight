@@ -16,7 +16,7 @@ export const createHighlight = (
 
 	for (const event of ["mouseover", "focus"]) {
 		highlight.addEventListener(event, () => {
-			highlight.style.zIndex = "200001";
+			highlight.style.zIndex = "200010";
 			const tooltip = highlight.querySelector<HTMLDivElement>(
 				".page-insight-tooltip",
 			);
