@@ -1,19 +1,21 @@
 import { COLORS } from "../constants";
-import type { PositionType, Tooltips } from "../types";
-import { getColorKey } from "../util/color";
+import type { ErrorTooltips, PositionType, Tooltips } from "../types";
+import { getColorKey } from "../utils/color";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
 export const createTooltip = (
-	highlight: HTMLDivElement,
 	tooltips: Tooltips,
 	rect: PositionType,
-	title?: string,
+	titleOption: {
+		text?: string | undefined;
+		icon?: boolean;
+	},
 ) => {
 	const tooltipWrapper = createTooltipWrapper(rect.top);
 
-	if (title) {
-		const titleElement = createTitle(title);
+	if (titleOption.text) {
+		const titleElement = createTitle(titleOption.text, titleOption.icon);
 		tooltipWrapper.appendChild(titleElement);
 	}
 
@@ -56,10 +58,64 @@ export const createTooltip = (
 		tooltipWrapper.appendChild(details);
 	}
 
-	highlight.appendChild(tooltipWrapper);
+	return tooltipWrapper;
 };
 
-const createTooltipWrapper = (top: number) => {
+export const createErrorTooltip = (
+	tooltips: ErrorTooltips,
+	titleOption: {
+		text?: string | undefined;
+		icon?: boolean;
+	},
+) => {
+	const tooltipWrapper = createTooltipWrapper();
+
+	if (titleOption.text) {
+		const titleElement = createTitle(titleOption.text, titleOption.icon);
+		tooltipWrapper.appendChild(titleElement);
+	}
+
+	const tooltipEntries = Object.entries(tooltips);
+	const tooltipsLength = tooltipEntries.length;
+
+	for (const [index, tooltips] of tooltipEntries.entries()) {
+		const tooltip = tooltipEntries[index];
+		if (!tooltip) continue;
+
+		const details = createDetails(index === tooltipsLength - 1);
+		details.dataset.category = tooltip[0].toLowerCase();
+
+		const summary = createSummary(tooltip[0], tooltips[1].length);
+		details.appendChild(summary);
+
+		const contentWrapper = document.createElement("div");
+		contentWrapper.style.marginTop = "10px";
+		contentWrapper.style.marginLeft = "10px";
+		for (const [index, tooltip] of tooltips[1].entries()) {
+			const contentElement = document.createElement("div");
+
+			const contentTitle = createContentTitle(tooltip.title, tooltip.score);
+			contentElement.appendChild(contentTitle);
+
+			if (tooltip.content) {
+				const content = createContent(
+					tooltip.content,
+					index === tooltips[1].length - 1,
+				);
+				contentElement.appendChild(content);
+			}
+
+			contentWrapper.appendChild(contentElement);
+		}
+		details.appendChild(contentWrapper);
+
+		tooltipWrapper.appendChild(details);
+	}
+
+	return tooltipWrapper;
+};
+
+const createTooltipWrapper = (top?: number) => {
 	const tooltipWrapper = document.createElement("div");
 	const height = document.body.scrollHeight;
 
@@ -75,12 +131,14 @@ const createTooltipWrapper = (top: number) => {
 	tooltipWrapper.style.maxHeight = "40vh";
 	tooltipWrapper.style.overflowY = "auto";
 	tooltipWrapper.style.left = "0";
-	if (height / 2 < top) {
-		tooltipWrapper.style.top = "0";
-		tooltipWrapper.style.transform = "translateY(-100%)";
-	} else {
-		tooltipWrapper.style.bottom = "0";
-		tooltipWrapper.style.transform = "translateY(100%)";
+	if (top) {
+		if (height / 2 < top) {
+			tooltipWrapper.style.top = "0";
+			tooltipWrapper.style.transform = "translateY(-100%)";
+		} else {
+			tooltipWrapper.style.bottom = "0";
+			tooltipWrapper.style.transform = "translateY(100%)";
+		}
 	}
 	tooltipWrapper.style.zIndex = "300000";
 
@@ -97,9 +155,11 @@ const createDetails = (isLast: boolean) => {
 	return details;
 };
 
-const createTitle = (title: string) => {
+const createTitle = (title: string, icon?: boolean) => {
 	const titleWrap = document.createElement("h2");
-	titleWrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS.red}; min-width: 24px; max-width: 24px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>`;
+	if (icon) {
+		titleWrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS.red}; min-width: 24px; max-width: 24px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>`;
+	}
 
 	const titleElement = document.createElement("p");
 	titleElement.textContent = title;
@@ -136,7 +196,7 @@ const createSummary = (category: string, length: number) => {
 const createContentTitle = (
 	title: string,
 	score: number | null,
-	subTitle: string[],
+	subTitle?: string[],
 ) => {
 	const titleWrap = document.createElement("h3");
 	titleWrap.style.margin = "0";
@@ -144,6 +204,7 @@ const createContentTitle = (
 	titleWrap.style.fontWeight = "normal";
 	titleWrap.style.display = "flex";
 	titleWrap.style.gap = "5px";
+	titleWrap.style.marginBottom = "10px";
 
 	const titleDiv = document.createElement("div");
 	titleDiv.style.display = "flex";
@@ -151,7 +212,7 @@ const createContentTitle = (
 	titleDiv.style.gap = "5px";
 	titleWrap.appendChild(titleDiv);
 
-	if (subTitle.includes("LCP")) {
+	if (subTitle?.includes("LCP")) {
 		titleDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>`;
 	} else {
 		const colorKey = getColorKey(score);
@@ -203,7 +264,6 @@ const createContent = (content: string, isLast: boolean) => {
 		'<a href="$2" target="_blank">$1</a>',
 	);
 	contentElement.style.margin = "0";
-	contentElement.style.marginTop = "10px";
 	contentElement.style.fontSize = "14px";
 
 	if (!isLast) {

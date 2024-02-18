@@ -32,7 +32,10 @@ export type LHResult = {
 		[selector: string]: Array<AuditType>;
 	};
 	metaErrors: Array<AuditType>;
-	console: string[];
+	consoleErrors: Array<{
+		message: string;
+		level: string;
+	}>;
 	scoreList: { [key: string]: number | null };
 	url: string;
 };
@@ -48,5 +51,13 @@ export type Tooltips = {
 		subTitle: string[];
 		score: number | null;
 		id: string;
+	}>;
+};
+
+export type ErrorTooltips = {
+	[category: string]: Array<{
+		title: string;
+		score: number | null;
+		content?: string;
 	}>;
 };

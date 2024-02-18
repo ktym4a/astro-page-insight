@@ -36,9 +36,14 @@ export const startLH = async (options: LHOptions) => {
 export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	const { lhr, artifacts } = lhResult;
 
-	const consoleMessages = artifacts.ConsoleMessages.filter(
-		(msg) => msg.level === "error",
-	).map((msg) => (msg.url ? `${msg.text}: ${msg.url}` : msg.text));
+	const consoleErrors = artifacts.ConsoleMessages.filter(
+		(msg) => msg.level === "error" || msg.level === "warning",
+	).map((msg) => {
+		return {
+			message: msg.text,
+			level: msg.level,
+		};
+	});
 
 	const categories: Categories = {};
 	const scoreList = {} as { [key: string]: number | null };
@@ -159,7 +164,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, console: consoleMessages, scoreList, metaErrors };
+	return { elements, consoleErrors, scoreList, metaErrors };
 };
 
 const createAudit = (

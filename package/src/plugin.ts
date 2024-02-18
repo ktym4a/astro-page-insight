@@ -1,13 +1,19 @@
 import { type DevToolbarApp } from "astro";
 import type { DevToolbarTooltipSection } from "astro/runtime/client/dev-toolbar/ui-library/tooltip.js";
 import { CATEGORIES } from "./constants.js";
-import type { LHResult, Tooltips } from "./types.js";
+import type { ErrorTooltips, LHResult, Tooltips } from "./types.js";
 import {
 	createHighlight,
 	refreshHighlightPositions,
 	resetHighlights,
 } from "./ui/highlight.js";
-import { createTooltip } from "./ui/tooltip.js";
+import {
+	createToolbar,
+	createToolbarButton,
+	reloadIcon,
+} from "./ui/toolbar.js";
+import { createErrorTooltip, createTooltip } from "./ui/tooltip.js";
+import { fetchLighthouse } from "./utils/lh.js";
 
 const BR_REGEX = /\n/g;
 
@@ -17,10 +23,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	icon: "file-search",
 	init(canvas) {
 		let isFetching = false;
-		let areaElm: HTMLDivElement;
 		let fetchButton: HTMLButtonElement;
-		// let previewButton: HTMLButtonElement;
-		// let elements: LHResult['elements'];
 
 		initCanvas();
 
@@ -31,25 +34,58 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			(result: LHResult) => {
 				if (result.url !== window.location.href) {
 					errorToast("The result is not for this page.\n Please try again.");
-					if (isFetching) {
-						isFetching = false;
-						// previewButton.disabled = true;
-						// previewButton.innerHTML = eyeXSvg;
-						fetchButton.classList.remove("animate");
-						fetchButton.disabled = false;
-					}
+
+					isFetching = false;
+					fetchButton.classList.remove("animate");
+					fetchButton.disabled = false;
 					return;
 				}
 
 				isFetching = false;
-				// previewButton.disabled = false;
-				// previewButton.innerHTML = eyeSvg;
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = false;
+				resetHighlights(canvas);
 
 				const metaErrors = [] as DevToolbarTooltipSection[];
 
-				// elements = result.elements;
+				if (
+					result.consoleErrors.length !== 0 ||
+					result.metaErrors.length !== 0
+				) {
+					const tooltips: ErrorTooltips = {};
+					for (const consoleMessage of result.consoleErrors) {
+						const category = "Console";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: consoleMessage.message,
+								score: consoleMessage.level === "error" ? 0 : 0.5,
+							},
+						];
+					}
+
+					for (const metaError of result.metaErrors) {
+						const category = "Meta";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: metaError.title,
+								score: metaError.score,
+								content: metaError.description,
+							},
+						];
+					}
+					const errorTooltips = createErrorTooltip(tooltips, {
+						text: "There are some errors in the console or meta tags.",
+					});
+					errorTooltips.style.display = "block";
+					errorTooltips.style.top = "20px";
+					errorTooltips.style.right = "10px";
+					errorTooltips.style.left = "auto";
+					errorTooltips.style.position = "fixed";
+					errorTooltips.classList.add("non-element");
+					canvas.appendChild(errorTooltips);
+				}
 
 				for (const [selector, value] of Object.entries(result.elements)) {
 					let selectorCategory = [] as string[];
@@ -109,6 +145,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							selectorCategory,
 						);
 						highlight.dataset.selector = selector;
+						highlight.dataset.detailSelector = value[0].detailSelector;
 
 						let title: string | undefined;
 						if (highlight.dataset.target === "rect") {
@@ -116,46 +153,17 @@ const astroPageInsightToolbar: DevToolbarApp = {
 								"No element found or Find multiple elements, so the position is maybe not correct.";
 						}
 
-						createTooltip(highlight, tooltips, value[0].rect, title);
+						const toolTip = createTooltip(tooltips, value[0].rect, {
+							text: title,
+							icon: true,
+						});
+						highlight.appendChild(toolTip);
 
 						canvas.appendChild(highlight);
 					} catch (e) {
-						// console.error(e);
+						console.error(e);
 					}
 				}
-
-				const globalTooltips = [] as DevToolbarTooltipSection[];
-
-				if (metaErrors.length > 0) {
-					globalTooltips.push(
-						{
-							title: "Error in the meta tag.",
-						},
-						...metaErrors,
-					);
-				}
-
-				if (result.console.length > 0) {
-					globalTooltips.push(
-						{
-							title: "Error in console.",
-						},
-						...result.console.map((message) => ({
-							content: message,
-						})),
-					);
-				}
-
-				//   if (globalTooltips.length > 0) {
-				//     const tooltip = createTooltip(globalTooltips, 0, true);
-
-				//     tooltip.style.position = 'fixed';
-				//     tooltip.style.width = '200px';
-				//     tooltip.style.bottom = '0';
-				//     tooltip.dataset.show = 'true';
-
-				//     canvas.appendChild(tooltip);
-				//   }
 			},
 		);
 
@@ -163,8 +171,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:on-error",
 			(message: string) => {
 				isFetching = false;
-				// previewButton.disabled = false;
-				// previewButton.innerHTML = eyeSvg;
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = false;
 
@@ -188,54 +194,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			color: #89b4fa;
 		}
 
-        .button-wrapper {
-          position: fixed;
-          bottom: 20px;
-          right: 10px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          justify-content: center;
-          z-index: 1000;
-        }
-        .button-wrapper button {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          border: none;
-          background: #181825;
-          cursor: pointer;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: 1px solid #a6adc8;
-        }
-
-        .button-wrapper button svg {
-          width: 30px;
-          height: 30px;
-          color: #cdd6f4;
-        }
-
-        .button-wrapper button.animate svg {
-          animation: rotate 1s infinite;
-        }
-
-        .button-wrapper button:disabled {
-          cursor: not-allowed;
-          background: #585b70;
-        }
-
-        @keyframes rotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
         .toast {
           position: fixed;
           top: 20px;
@@ -251,11 +209,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
       </style>
       `;
 
-			areaElm = createPageInsightToolArea(canvas);
+			const toolbarWrap = createToolbar(canvas);
 
-			fetchButton = createButton(analyzeSvg, () => {
-				resetHighlights(canvas);
-				fetchLighthouse();
+			fetchButton = createToolbarButton(reloadIcon, () => {
+				if (isFetching) return;
+
+				fetchLighthouse(fetchButton, document);
+				isFetching = true;
 			});
 
 			if (isFetching) {
@@ -263,53 +223,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				fetchButton.disabled = true;
 			}
 
-			// previewButton = createButton(eyeXSvg, () => {});
-			// previewButton.disabled = true;
-
-			// areaElm.appendChild(previewButton);
-			areaElm.appendChild(fetchButton);
+			toolbarWrap.appendChild(fetchButton);
 
 			for (const event of ["scroll", "resize"]) {
 				window.addEventListener(event, () => refreshHighlightPositions(canvas));
 			}
-		}
-
-		function createButton(innerHTML: string, action: () => void) {
-			const button = document.createElement("button");
-			button.innerHTML = innerHTML;
-			button.addEventListener("click", action);
-			return button;
-		}
-
-		function createPageInsightToolArea(canvas: ShadowRoot) {
-			const wrapper = document.createElement("div");
-			wrapper.classList.add("button-wrapper");
-
-			canvas.appendChild(wrapper);
-			return wrapper;
-		}
-
-		function fetchLighthouse() {
-			if (isFetching) return;
-
-			isFetching = true;
-			// previewButton.disabled = true;
-			// previewButton.innerHTML = eyeXSvg;
-			fetchButton.classList.add("animate");
-			fetchButton.disabled = true;
-
-			const width = document.documentElement.clientWidth;
-			const height = document.documentElement.clientHeight;
-			const url = window.location.href;
-
-			import.meta.hot?.send(
-				"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-				{
-					width,
-					height,
-					url,
-				},
-			);
 		}
 
 		function errorToast(message: string) {
@@ -325,10 +243,3 @@ const astroPageInsightToolbar: DevToolbarApp = {
 };
 
 export default astroPageInsightToolbar;
-
-const analyzeSvg =
-	'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11a8.1 8.1 0 0 0 -6.986 -6.918a8.095 8.095 0 0 0 -8.019 3.918" /><path d="M4 13a8.1 8.1 0 0 0 15 3" /><path d="M19 16m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M5 8m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg>';
-
-// const eyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>';
-
-// const eyeXSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M13.048 17.942a9.298 9.298 0 0 1 -1.048 .058c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a17.986 17.986 0 0 1 -1.362 1.975" /><path d="M22 22l-5 -5" /><path d="M17 22l5 -5" /></svg>';

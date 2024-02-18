@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="">
 	<main>
 		<img src="/Free_Test_Data_1MB_JPG.jpg" class="w-[500px] mt-10">
 		<img src="aaaaaaaa/Free_Test_Data_1MB_JPG.jpg" class="w-[500px] mt-10">
@@ -14,6 +14,10 @@ import Layout from '../layouts/Layout.astro';
 		</p>
 		<a href="/about" style="color: gray">about</a>
 	</main>
+	<script is:inline>
+		console.warn('Console Warn');
+		console.error('Console Log Error');
+	</script>
 </Layout>
 
 <style>
