@@ -16,7 +16,7 @@ export const createHighlight = (
 
 	for (const event of ["mouseover", "focus"]) {
 		highlight.addEventListener(event, () => {
-			highlight.style.zIndex = "1001";
+			highlight.style.zIndex = "200001";
 			const tooltip = highlight.querySelector<HTMLDivElement>(
 				".page-insight-tooltip",
 			);
@@ -28,7 +28,7 @@ export const createHighlight = (
 
 	for (const event of ["mouseout", "blur"]) {
 		highlight.addEventListener(event, () => {
-			highlight.style.zIndex = "1000";
+			highlight.style.zIndex = "200000";
 			const tooltip = highlight.querySelector<HTMLDivElement>(
 				".page-insight-tooltip",
 			);
@@ -47,7 +47,7 @@ const createHighlightElement = () => {
 	highlight.style.background =
 		"linear-gradient(180deg, rgba(224, 204, 250, 0.33) 0%, rgba(224, 204, 250, 0.0825) 100%)";
 	highlight.style.borderRadius = "5px";
-	highlight.style.zIndex = "1000";
+	highlight.style.zIndex = "20000";
 	highlight.style.display = "block";
 	highlight.classList.add("page-insight-highlight");
 	highlight.style.border = `2px solid ${COLORS.red}`;
@@ -108,7 +108,7 @@ export const refreshHighlightPositions = (canvas: ShadowRoot) => {
 const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 	const title = document.createElement("div");
 	title.style.position = "absolute";
-	title.style.top = "0";
+	title.style.bottom = "0";
 	title.style.right = "0";
 	title.style.textAlign = "center";
 	title.style.fontSize = "15px";

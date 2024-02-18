@@ -1,5 +1,5 @@
 import { COLORS } from "../constants";
-import type { Tooltips } from "../types";
+import type { PositionType, Tooltips } from "../types";
 import { getColorKey } from "../util/color";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
@@ -7,9 +7,10 @@ const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 export const createTooltip = (
 	highlight: HTMLDivElement,
 	tooltips: Tooltips,
+	rect: PositionType,
 	title?: string,
 ) => {
-	const tooltipWrapper = createTooltipWrapper();
+	const tooltipWrapper = createTooltipWrapper(rect.top);
 
 	if (title) {
 		const titleElement = createTitle(title);
@@ -58,8 +59,10 @@ export const createTooltip = (
 	highlight.appendChild(tooltipWrapper);
 };
 
-const createTooltipWrapper = () => {
+const createTooltipWrapper = (top: number) => {
 	const tooltipWrapper = document.createElement("div");
+	const height = document.body.scrollHeight;
+
 	tooltipWrapper.classList.add("page-insight-tooltip");
 	tooltipWrapper.style.position = "absolute";
 	tooltipWrapper.style.background = "#181825";
@@ -69,6 +72,17 @@ const createTooltipWrapper = () => {
 	tooltipWrapper.style.border = "1px solid #cdd6f4";
 	tooltipWrapper.style.display = "none";
 	tooltipWrapper.style.width = "350px";
+	tooltipWrapper.style.maxHeight = "40vh";
+	tooltipWrapper.style.overflowY = "auto";
+	tooltipWrapper.style.left = "0";
+	if (height / 2 < top) {
+		tooltipWrapper.style.top = "0";
+		tooltipWrapper.style.transform = "translateY(-100%)";
+	} else {
+		tooltipWrapper.style.bottom = "0";
+		tooltipWrapper.style.transform = "translateY(100%)";
+	}
+	tooltipWrapper.style.zIndex = "300000";
 
 	return tooltipWrapper;
 };

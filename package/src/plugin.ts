@@ -116,7 +116,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 								"No element found or Find multiple elements, so the position is maybe not correct.";
 						}
 
-						createTooltip(highlight, tooltips, title);
+						createTooltip(highlight, tooltips, value[0].rect, title);
 
 						canvas.appendChild(highlight);
 					} catch (e) {
