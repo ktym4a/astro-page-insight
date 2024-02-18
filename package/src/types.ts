@@ -18,23 +18,46 @@ export type LHOptions = {
 	height: number;
 } & PluginOptions;
 
-export type ElementType = Pick<
+export type AuditType = Pick<
 	Result,
 	"score" | "scoreDisplayMode" | "title" | "description"
 > & {
 	categories: string[];
 	rect: PositionType;
+	detailSelector?: string;
 };
 
 export type LHResult = {
 	elements: {
-		[selector: string]: Array<ElementType>;
+		[selector: string]: Array<AuditType>;
 	};
-	console: string[];
+	metaErrors: Array<AuditType>;
+	consoleErrors: Array<{
+		message: string;
+		level: string;
+	}>;
 	scoreList: { [key: string]: number | null };
 	url: string;
 };
 
 export type Categories = {
 	[auditId: string]: string[];
+};
+
+export type Tooltips = {
+	[category: string]: Array<{
+		title: string;
+		content: string;
+		subTitle: string[];
+		score: number | null;
+		id: string;
+	}>;
+};
+
+export type ErrorTooltips = {
+	[category: string]: Array<{
+		title: string;
+		score: number | null;
+		content?: string;
+	}>;
 };

@@ -5,7 +5,7 @@ import type {
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
 import { CATEGORIES } from "./constants.js";
-import type { Categories, ElementType, LHOptions, LHResult } from "./types.js";
+import type { AuditType, Categories, LHOptions, LHResult } from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -36,9 +36,14 @@ export const startLH = async (options: LHOptions) => {
 export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	const { lhr, artifacts } = lhResult;
 
-	const consoleMessages = artifacts.ConsoleMessages.filter(
-		(msg) => msg.level === "error",
-	).map((msg) => (msg.url ? `${msg.text}: ${msg.url}` : msg.text));
+	const consoleErrors = artifacts.ConsoleMessages.filter(
+		(msg) => msg.level === "error" || msg.level === "warning",
+	).map((msg) => {
+		return {
+			message: msg.text,
+			level: msg.level,
+		};
+	});
 
 	const categories: Categories = {};
 	const scoreList = {} as { [key: string]: number | null };
@@ -71,6 +76,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	}
 
 	let elements = {} as LHResult["elements"];
+	let metaErrors = [] as LHResult["metaErrors"];
 
 	for (const incomplete of artifacts.Accessibility.violations) {
 		if (categories[incomplete.id] === undefined) continue;
@@ -80,7 +86,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			if (node.devtoolsNodePath.includes("ASTRO-DEV-TOOLBAR")) continue;
 			const category = categories[incomplete.id];
 
-			const element: ElementType = {
+			const element: AuditType = {
 				score: incomplete.impact === "serious" ? 0 : 0.5,
 				scoreDisplayMode: "numeric",
 				title,
@@ -89,13 +95,17 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 				rect: {
 					...node.boundingRect,
 				},
+				detailSelector: node.selector,
 			};
 
-			elements[getSelector(node.devtoolsNodePath)] = createElement(
-				elements,
-				getSelector(node.devtoolsNodePath),
-				element,
-			);
+			const selector = getSelector(node.devtoolsNodePath);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				metaErrors = audit;
+			} else {
+				elements[selector] = audit;
+			}
 		}
 	}
 
@@ -107,7 +117,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			if (node.devtoolsNodePath.includes("ASTRO-DEV-TOOLBAR")) continue;
 			const category = categories[incomplete.id];
 
-			const element: ElementType = {
+			const element: AuditType = {
 				score: incomplete.impact === "serious" ? 0 : 0.5,
 				scoreDisplayMode: "numeric",
 				title,
@@ -116,13 +126,17 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 				rect: {
 					...node.boundingRect,
 				},
+				detailSelector: node.selector,
 			};
 
-			elements[getSelector(node.devtoolsNodePath)] = createElement(
-				elements,
-				getSelector(node.devtoolsNodePath),
-				element,
-			);
+			const selector = getSelector(node.devtoolsNodePath);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				metaErrors = audit;
+			} else {
+				elements[selector] = audit;
+			}
 		}
 	}
 
@@ -135,7 +149,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 
 		const category = categories[audit.id] || [];
 
-		elements = findSelector(
+		const returnObj = findSelector(
 			audit.details.items,
 			audit.title,
 			audit.description,
@@ -143,17 +157,26 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			audit.scoreDisplayMode,
 			category,
 			elements,
+			metaErrors,
 		);
+
+		elements = returnObj.elements;
+		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, console: consoleMessages, scoreList };
+	return { elements, consoleErrors, scoreList, metaErrors };
 };
 
-const createElement = (
+const createAudit = (
 	elements: LHResult["elements"],
+	metaErrors: LHResult["metaErrors"],
 	selector: string,
-	element: ElementType,
+	element: AuditType,
 ) => {
+	if (selector === "") {
+		if (metaErrors.some((el) => el.title === element.title)) return metaErrors;
+		return [...metaErrors, element];
+	}
 	const elementsValue = elements[selector];
 	if (elementsValue) {
 		if (elementsValue.some((el) => el.title === element.title))
@@ -173,7 +196,11 @@ const findSelector = (
 	scoreDisplayMode: ScoreDisplayMode,
 	category: string[],
 	elements: LHResult["elements"],
+	metaErrors: LHResult["metaErrors"],
 ) => {
+	const returnElements = elements;
+	let returnMMetaErrors = metaErrors;
+
 	for (const item of items) {
 		if (item.items) {
 			findSelector(
@@ -184,11 +211,12 @@ const findSelector = (
 				scoreDisplayMode,
 				category,
 				elements,
+				metaErrors,
 			);
 		}
 		if (item.node) {
 			if (item.node.path.includes("ASTRO-DEV-TOOLBAR")) continue;
-			const element: ElementType = {
+			const element: AuditType = {
 				score:
 					scoreDisplayMode === "manual" ||
 					scoreDisplayMode === "informative" ||
@@ -203,17 +231,24 @@ const findSelector = (
 				rect: {
 					...item.node.boundingRect,
 				},
+				detailSelector: item.node.selector,
 			};
 
-			elements[getSelector(item.node.path)] = createElement(
-				elements,
-				getSelector(item.node.path),
-				element,
-			);
+			const selector = getSelector(item.node.path);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				returnMMetaErrors = audit;
+			} else {
+				returnElements[selector] = audit;
+			}
 		}
 	}
 
-	return elements;
+	return {
+		elements: returnElements,
+		metaErrors: returnMMetaErrors,
+	};
 };
 
 const getSelector = (node: string) => {
