@@ -24,12 +24,14 @@ export type AuditType = Pick<
 > & {
 	categories: string[];
 	rect: PositionType;
+	detailSelector?: string;
 };
 
 export type LHResult = {
 	elements: {
 		[selector: string]: Array<AuditType>;
 	};
+	metaErrors: Array<AuditType>;
 	console: string[];
 	scoreList: { [key: string]: number | null };
 	url: string;

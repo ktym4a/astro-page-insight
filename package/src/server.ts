@@ -71,6 +71,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	}
 
 	let elements = {} as LHResult["elements"];
+	let metaErrors = [] as LHResult["metaErrors"];
 
 	for (const incomplete of artifacts.Accessibility.violations) {
 		if (categories[incomplete.id] === undefined) continue;
@@ -89,13 +90,17 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 				rect: {
 					...node.boundingRect,
 				},
+				detailSelector: node.selector,
 			};
 
-			elements[getSelector(node.devtoolsNodePath)] = createElement(
-				elements,
-				getSelector(node.devtoolsNodePath),
-				element,
-			);
+			const selector = getSelector(node.devtoolsNodePath);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				metaErrors = audit;
+			} else {
+				elements[selector] = audit;
+			}
 		}
 	}
 
@@ -116,13 +121,17 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 				rect: {
 					...node.boundingRect,
 				},
+				detailSelector: node.selector,
 			};
 
-			elements[getSelector(node.devtoolsNodePath)] = createElement(
-				elements,
-				getSelector(node.devtoolsNodePath),
-				element,
-			);
+			const selector = getSelector(node.devtoolsNodePath);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				metaErrors = audit;
+			} else {
+				elements[selector] = audit;
+			}
 		}
 	}
 
@@ -135,7 +144,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 
 		const category = categories[audit.id] || [];
 
-		elements = findSelector(
+		const returnObj = findSelector(
 			audit.details.items,
 			audit.title,
 			audit.description,
@@ -143,17 +152,26 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			audit.scoreDisplayMode,
 			category,
 			elements,
+			metaErrors,
 		);
+
+		elements = returnObj.elements;
+		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, console: consoleMessages, scoreList };
+	return { elements, console: consoleMessages, scoreList, metaErrors };
 };
 
-const createElement = (
+const createAudit = (
 	elements: LHResult["elements"],
+	metaErrors: LHResult["metaErrors"],
 	selector: string,
 	element: AuditType,
 ) => {
+	if (selector === "") {
+		if (metaErrors.some((el) => el.title === element.title)) return metaErrors;
+		return [...metaErrors, element];
+	}
 	const elementsValue = elements[selector];
 	if (elementsValue) {
 		if (elementsValue.some((el) => el.title === element.title))
@@ -173,7 +191,11 @@ const findSelector = (
 	scoreDisplayMode: ScoreDisplayMode,
 	category: string[],
 	elements: LHResult["elements"],
+	metaErrors: LHResult["metaErrors"],
 ) => {
+	const returnElements = elements;
+	let returnMMetaErrors = metaErrors;
+
 	for (const item of items) {
 		if (item.items) {
 			findSelector(
@@ -184,6 +206,7 @@ const findSelector = (
 				scoreDisplayMode,
 				category,
 				elements,
+				metaErrors,
 			);
 		}
 		if (item.node) {
@@ -203,17 +226,24 @@ const findSelector = (
 				rect: {
 					...item.node.boundingRect,
 				},
+				detailSelector: item.node.selector,
 			};
 
-			elements[getSelector(item.node.path)] = createElement(
-				elements,
-				getSelector(item.node.path),
-				element,
-			);
+			const selector = getSelector(item.node.path);
+			const audit = createAudit(elements, metaErrors, selector, element);
+
+			if (selector === "") {
+				returnMMetaErrors = audit;
+			} else {
+				returnElements[selector] = audit;
+			}
 		}
 	}
 
-	return elements;
+	return {
+		elements: returnElements,
+		metaErrors: returnMMetaErrors,
+	};
 };
 
 const getSelector = (node: string) => {
