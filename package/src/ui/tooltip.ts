@@ -78,6 +78,7 @@ const createTooltipWrapper = (top?: number) => {
 	tooltipWrapper.style.display = "none";
 	tooltipWrapper.style.width = "350px";
 	tooltipWrapper.style.maxHeight = "40vh";
+	tooltipWrapper.style.minHeight = "360px";
 	tooltipWrapper.style.overflowY = "auto";
 	tooltipWrapper.style.left = "0";
 	if (top) {
