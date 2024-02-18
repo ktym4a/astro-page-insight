@@ -89,7 +89,7 @@ const createTooltipWrapper = (top?: number) => {
 			tooltipWrapper.style.transform = "translateY(100%)";
 		}
 	}
-	tooltipWrapper.style.zIndex = "300000";
+	tooltipWrapper.style.zIndex = "200005";
 
 	return tooltipWrapper;
 };

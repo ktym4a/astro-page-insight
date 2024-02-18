@@ -48,47 +48,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				const metaErrors = [] as DevToolbarTooltipSection[];
 
-				if (
-					result.consoleErrors.length !== 0 ||
-					result.metaErrors.length !== 0
-				) {
-					const tooltips: ErrorTooltips = {};
-					for (const consoleMessage of result.consoleErrors) {
-						const category = "Console";
-						const content = consoleMessage.content ?? "";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: consoleMessage.message,
-								score: consoleMessage.level === "error" ? 0 : 0.5,
-								content,
-							},
-						];
-					}
-
-					for (const metaError of result.metaErrors) {
-						const category = "Meta";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: metaError.title,
-								score: metaError.score,
-								content: metaError.description,
-							},
-						];
-					}
-					const errorTooltips = createTooltip(tooltips, {
-						text: "There are some errors in the console or meta tags.",
-					});
-					errorTooltips.style.display = "block";
-					errorTooltips.style.top = "20px";
-					errorTooltips.style.right = "10px";
-					errorTooltips.style.left = "auto";
-					errorTooltips.style.position = "fixed";
-					errorTooltips.classList.add("non-element");
-					canvas.appendChild(errorTooltips);
-				}
-
 				for (const [selector, value] of Object.entries(result.elements)) {
 					let selectorCategory = [] as string[];
 					const tooltips: Tooltips = {};
@@ -169,6 +128,47 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					} catch (e) {
 						console.error(e);
 					}
+				}
+
+				if (
+					result.consoleErrors.length !== 0 ||
+					result.metaErrors.length !== 0
+				) {
+					const tooltips: ErrorTooltips = {};
+					for (const consoleMessage of result.consoleErrors) {
+						const category = "Console";
+						const content = consoleMessage.content ?? "";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: consoleMessage.message,
+								score: consoleMessage.level === "error" ? 0 : 0.5,
+								content,
+							},
+						];
+					}
+
+					for (const metaError of result.metaErrors) {
+						const category = "Meta";
+						tooltips[category] = [
+							...(tooltips[category] ?? []),
+							{
+								title: metaError.title,
+								score: metaError.score,
+								content: metaError.description,
+							},
+						];
+					}
+					const errorTooltips = createTooltip(tooltips, {
+						text: "There are some errors in the console or meta tags.",
+					});
+					errorTooltips.style.display = "block";
+					errorTooltips.style.top = "20px";
+					errorTooltips.style.right = "10px";
+					errorTooltips.style.left = "auto";
+					errorTooltips.style.position = "fixed";
+					errorTooltips.classList.add("non-element");
+					canvas.appendChild(errorTooltips);
 				}
 			},
 		);
