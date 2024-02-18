@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.0.18
+
+### Patch Changes
+
+- 3522e1a: Add tooltip and improvee UI.
+- 3522e1a: change zIndex for correct position.
+
 ## 0.0.17
 
 ### Patch Changes
