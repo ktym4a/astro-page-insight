@@ -20,7 +20,7 @@ pnpm astro add astro-page-insight
 ```
 
 ```bash
-npm astro add astro-page-insight
+npx astro add astro-page-insight
 ```
 
 ```bash
