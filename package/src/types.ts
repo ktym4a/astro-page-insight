@@ -27,15 +27,18 @@ export type AuditType = Pick<
 	detailSelector?: string;
 };
 
+export type ConsoleError = {
+	message: string;
+	level: string;
+	content?: string;
+};
+
 export type LHResult = {
 	elements: {
 		[selector: string]: Array<AuditType>;
 	};
 	metaErrors: Array<AuditType>;
-	consoleErrors: Array<{
-		message: string;
-		level: string;
-	}>;
+	consoleErrors: Array<ConsoleError>;
 	scoreList: { [key: string]: number | null };
 	url: string;
 };
@@ -59,5 +62,6 @@ export type ErrorTooltips = {
 		title: string;
 		score: number | null;
 		content?: string;
+		subTitle?: string[];
 	}>;
 };

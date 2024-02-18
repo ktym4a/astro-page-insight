@@ -12,7 +12,7 @@ import {
 	createToolbarButton,
 	reloadIcon,
 } from "./ui/toolbar.js";
-import { createErrorTooltip, createTooltip } from "./ui/tooltip.js";
+import { createTooltip } from "./ui/tooltip.js";
 import { fetchLighthouse } from "./utils/lh.js";
 
 const BR_REGEX = /\n/g;
@@ -55,11 +55,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					const tooltips: ErrorTooltips = {};
 					for (const consoleMessage of result.consoleErrors) {
 						const category = "Console";
+						const content = consoleMessage.content ?? "";
 						tooltips[category] = [
 							...(tooltips[category] ?? []),
 							{
 								title: consoleMessage.message,
 								score: consoleMessage.level === "error" ? 0 : 0.5,
+								content,
 							},
 						];
 					}
@@ -75,7 +77,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							},
 						];
 					}
-					const errorTooltips = createErrorTooltip(tooltips, {
+					const errorTooltips = createTooltip(tooltips, {
 						text: "There are some errors in the console or meta tags.",
 					});
 					errorTooltips.style.display = "block";
@@ -153,10 +155,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 								"No element found or Find multiple elements, so the position is maybe not correct.";
 						}
 
-						const toolTip = createTooltip(tooltips, value[0].rect, {
-							text: title,
-							icon: true,
-						});
+						const toolTip = createTooltip(
+							tooltips,
+							{
+								text: title,
+								icon: true,
+							},
+							value[0].rect,
+						);
 						highlight.appendChild(toolTip);
 
 						canvas.appendChild(highlight);
@@ -211,12 +217,16 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 			const toolbarWrap = createToolbar(canvas);
 
-			fetchButton = createToolbarButton(reloadIcon, () => {
-				if (isFetching) return;
+			fetchButton = createToolbarButton(
+				reloadIcon,
+				() => {
+					if (isFetching) return;
 
-				fetchLighthouse(fetchButton, document);
-				isFetching = true;
-			});
+					fetchLighthouse(fetchButton, document);
+					isFetching = true;
+				},
+				"Fetch Lighthouse report.",
+			);
 
 			if (isFetching) {
 				fetchButton.classList.add("animate");

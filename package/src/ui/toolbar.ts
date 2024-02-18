@@ -65,6 +65,30 @@ export const createToolbar = (canvas: ShadowRoot) => {
               transform: rotate(360deg);
             }
         }
+
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 110%;
+            right: 0;
+            padding: 5px;
+            background-color: #181825;
+            color: #cdd6f4;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000002;
+            display: none;
+            border: 1px solid #cdd6f4;
+        }
+
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]:hover::after {
+            display: block;
+        }
+
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]:focus-visible::after {
+            display: block;
+        }
         `;
 
 	const toolbarWrap = document.createElement("div");
@@ -81,11 +105,19 @@ export const createToolbar = (canvas: ShadowRoot) => {
 	return toolbarWrap;
 };
 
-export const createToolbarButton = (icon: string, onClick: () => void) => {
+export const createToolbarButton = (
+	icon: string,
+	onClick: () => void,
+	tooltip?: string,
+) => {
 	const button = document.createElement("button");
 
 	button.innerHTML = icon;
 	button.addEventListener("click", onClick);
+
+	if (tooltip) {
+		button.dataset.tooltip = tooltip;
+	}
 
 	return button;
 };
