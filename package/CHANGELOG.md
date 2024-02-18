@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.0.17
+
+### Patch Changes
+
+- db0af1e: Improve UI
+
 ## 0.0.16
 
 ### Patch Changes
