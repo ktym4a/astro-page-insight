@@ -1,7 +1,7 @@
-import { COLORS } from "../constants";
-import type { ErrorTooltips, PositionType, Tooltips } from "../types";
-import { getColorKey } from "../utils/color";
-import { alertTriangleIcon, infoCircleIcon } from "./icons";
+import { COLORS } from "../constants/index.js";
+import type { ErrorTooltips, PositionType, Tooltips } from "../types/index.js";
+import { getColorKey } from "../utils/color.js";
+import { alertTriangleIcon, infoCircleIcon } from "./icons.js";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
@@ -61,7 +61,6 @@ export const createTooltip = (
 					index === tooltips[1].length - 1,
 				);
 				contentElement.appendChild(content);
-				contentElement.appendChild(content);
 			}
 
 			contentWrapper.appendChild(contentElement);
@@ -88,7 +87,6 @@ const createTooltipWrapper = (top?: number) => {
 	tooltipWrapper.style.display = "none";
 	tooltipWrapper.style.width = "350px";
 	tooltipWrapper.style.maxHeight = "40vh";
-	tooltipWrapper.style.minHeight = "360px";
 	tooltipWrapper.style.overflowY = "auto";
 	tooltipWrapper.style.left = "0";
 	if (top) {

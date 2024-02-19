@@ -1,3 +1,5 @@
+import { COLORS } from "../constants/index.js";
+
 export const createToolbar = (canvas: ShadowRoot) => {
 	const toolbar = document.createElement("div");
 	toolbar.classList.add("astro-page-insight-toolbar");
@@ -120,4 +122,49 @@ export const createToolbarButton = (
 	}
 
 	return button;
+};
+
+export const createToolbarWrapper = () => {
+	const toolbarWrapper = document.createElement("div");
+
+	toolbarWrapper.classList.add("page-insight-filter");
+	toolbarWrapper.style.position = "fixed";
+	toolbarWrapper.style.background = "#181825";
+	toolbarWrapper.style.color = "#cdd6f4";
+	toolbarWrapper.style.borderRadius = "5px";
+	toolbarWrapper.style.padding = "15px 10px";
+	toolbarWrapper.style.border = "1px solid #cdd6f4";
+	toolbarWrapper.style.width = "300px";
+	toolbarWrapper.style.overflowY = "auto";
+	toolbarWrapper.style.right = "65px";
+	toolbarWrapper.style.bottom = "50px";
+	toolbarWrapper.style.zIndex = "200010";
+
+	return toolbarWrapper;
+};
+
+export const createToolbarTitle = (title: string, icon: string) => {
+	const titleWrap = document.createElement("h2");
+
+	titleWrap.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 24px; max-width: 24px;">${icon}</div>`;
+
+	const titleElement = document.createElement("p");
+	titleElement.textContent = title;
+	titleElement.style.flex = "1";
+	titleElement.style.margin = "0";
+
+	titleWrap.appendChild(titleElement);
+
+	titleWrap.style.display = "flex";
+	titleWrap.style.justifyContent = "center";
+	titleWrap.style.alignItems = "center";
+	titleWrap.style.marginTop = "0";
+	titleWrap.style.marginBottom = "15px";
+	titleWrap.style.fontWeight = "normal";
+	titleWrap.style.gap = "10px";
+	titleWrap.style.fontSize = "16px";
+	titleWrap.style.borderBottom = "1px solid #cdd6f4";
+	titleWrap.style.paddingBottom = "15px";
+
+	return titleWrap;
 };

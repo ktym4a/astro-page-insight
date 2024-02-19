@@ -1,17 +1,12 @@
 import { type DevToolbarApp } from "astro";
-import type { DevToolbarTooltipSection } from "astro/runtime/client/dev-toolbar/ui-library/tooltip.js";
-import { CATEGORIES } from "./constants.js";
-import type { ErrorTooltips, LHResult, Tooltips } from "./types.js";
-import {
-	createHighlight,
-	refreshHighlightPositions,
-	resetHighlights,
-} from "./ui/highlight.js";
-import { reloadCircleIcon } from "./ui/icons.js";
+import { CATEGORIES } from "./constants/index.js";
+import type { LHResult } from "./types/index.js";
+import { createFilter } from "./ui/filter.js";
+import { refreshHighlightPositions, resetHighlights } from "./ui/highlight.js";
+import { filterIcon, reloadCircleIcon } from "./ui/icons.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
-import { createTooltip } from "./ui/tooltip.js";
-import { fetchLighthouse } from "./utils/lh.js";
+import { fetchLighthouse, mappingData } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -20,7 +15,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	init(canvas) {
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement;
+		let filterButton: HTMLButtonElement;
 		let toastArea: HTMLDivElement;
+		// const showCategory: string[] = [CATEGORIES[0]] as string[];
+		const showCategory: string[] = CATEGORIES as string[];
+		let lhResult: LHResult;
 
 		initCanvas();
 
@@ -29,6 +28,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
 			(result: LHResult) => {
+				resetHighlights(canvas);
 				if (result.url !== window.location.href) {
 					showToast(
 						toastArea,
@@ -45,132 +45,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				isFetching = false;
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = false;
-				resetHighlights(canvas);
+				lhResult = result;
 
-				const metaErrors = [] as DevToolbarTooltipSection[];
+				mappingData(canvas, lhResult, showCategory);
 
-				for (const [selector, value] of Object.entries(result.elements)) {
-					let selectorCategory = [] as string[];
-					const tooltips: Tooltips = {};
-
-					let score: number | null = 1;
-					if (!value[0]) continue;
-
-					for (const audit of value) {
-						if (selector === "") {
-							metaErrors.push({
-								title: audit.title,
-								content: audit.description,
-							});
-							continue;
-						}
-
-						score =
-							audit.score === null || score === null
-								? null
-								: Math.min(score ?? 1, audit.score);
-						selectorCategory = [
-							...Array.from(
-								new Set([...selectorCategory, ...audit.categories]),
-							),
-						];
-						for (const category of audit.categories) {
-							if (!CATEGORIES.includes(category.toLowerCase())) continue;
-
-							tooltips[category] = [
-								...(tooltips[category] ?? []),
-								{
-									title: audit.title,
-									content: audit.description,
-									score: audit.score,
-									subTitle: audit.categories,
-									id: selector,
-								},
-							];
-						}
-					}
-
-					try {
-						if (selector === "") continue;
-						const position = value[0].rect;
-						if (
-							position.width === 0 &&
-							position.height === 0 &&
-							position.top === 0 &&
-							position.left === 0
-						)
-							continue;
-
-						const highlight = createHighlight(
-							selector,
-							value[0].rect,
-							selectorCategory,
-						);
-						highlight.dataset.selector = selector;
-						highlight.dataset.detailSelector = value[0].detailSelector;
-
-						let title: string | undefined;
-						if (highlight.dataset.target === "rect") {
-							title =
-								"No element found or Find multiple elements, so the position is maybe not correct.";
-						}
-
-						const toolTip = createTooltip(
-							tooltips,
-							{
-								text: title,
-								icon: true,
-							},
-							value[0].rect,
-						);
-						highlight.appendChild(toolTip);
-
-						canvas.appendChild(highlight);
-					} catch (e) {
-						console.error(e);
-					}
-				}
-
-				if (
-					result.consoleErrors.length !== 0 ||
-					result.metaErrors.length !== 0
-				) {
-					const tooltips: ErrorTooltips = {};
-					for (const consoleMessage of result.consoleErrors) {
-						const category = "Console";
-						const content = consoleMessage.content ?? "";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: consoleMessage.message,
-								score: consoleMessage.level === "error" ? 0 : 0.5,
-								content,
-							},
-						];
-					}
-
-					for (const metaError of result.metaErrors) {
-						const category = "Meta";
-						tooltips[category] = [
-							...(tooltips[category] ?? []),
-							{
-								title: metaError.title,
-								score: metaError.score,
-								content: metaError.description,
-							},
-						];
-					}
-					const errorTooltips = createTooltip(tooltips, {
-						text: "There are some errors in the console or meta tags.",
-					});
-					errorTooltips.style.display = "block";
-					errorTooltips.style.top = "20px";
-					errorTooltips.style.right = "10px";
-					errorTooltips.style.left = "auto";
-					errorTooltips.style.position = "fixed";
-					errorTooltips.classList.add("non-element");
-					canvas.appendChild(errorTooltips);
-				}
 				showToast(
 					toastArea,
 					"Analysis of lighthouse results is complete.",
@@ -182,6 +60,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-error",
 			(message: string) => {
+				resetHighlights(canvas);
 				isFetching = false;
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = false;
@@ -229,12 +108,30 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			toastArea = createToastArea();
 			canvas.appendChild(toastArea);
 
+			const filterWrapper = createFilter();
+			canvas.appendChild(filterWrapper);
+
+			filterButton = createToolbarButton(
+				filterIcon,
+				() => {
+					console.log("filter");
+				},
+				"Filter the result.",
+			);
+			filterButton.disabled = true;
+			toolbarWrap.appendChild(filterButton);
+
 			fetchButton = createToolbarButton(
 				reloadCircleIcon,
 				() => {
 					if (isFetching) return;
-
-					fetchLighthouse(fetchButton, document);
+					fetchButton.classList.add("animate");
+					fetchButton.disabled = true;
+					fetchLighthouse(
+						document.documentElement.clientWidth,
+						document.documentElement.clientWidth,
+						window.location.href,
+					);
 					isFetching = true;
 				},
 				"Fetch Lighthouse report.",

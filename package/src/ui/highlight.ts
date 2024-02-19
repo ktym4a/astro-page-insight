@@ -1,5 +1,5 @@
-import { CATEGORIES, COLORS } from "../constants";
-import type { PositionType } from "../types";
+import { CATEGORIES, COLORS } from "../constants/index.js";
+import type { PositionType } from "../types/index.js";
 
 export const createHighlight = (
 	selector: string,

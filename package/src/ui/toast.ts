@@ -1,5 +1,5 @@
-import { COLORS } from "../constants";
-import { alertTriangleIcon, circleCheckIcon } from "./icons";
+import { COLORS } from "../constants/index.js";
+import { alertTriangleIcon, circleCheckIcon } from "./icons.js";
 
 const BR_REGEX = /\n/g;
 
