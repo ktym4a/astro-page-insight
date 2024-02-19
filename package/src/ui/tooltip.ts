@@ -1,6 +1,7 @@
 import { COLORS } from "../constants";
 import type { ErrorTooltips, PositionType, Tooltips } from "../types";
 import { getColorKey } from "../utils/color";
+import { alertTriangleIcon, infoCircleIcon } from "./icons";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
@@ -108,7 +109,7 @@ const createDetails = (isLast: boolean) => {
 const createTitle = (title: string, icon?: boolean) => {
 	const titleWrap = document.createElement("h2");
 	if (icon) {
-		titleWrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS.red}; min-width: 24px; max-width: 24px;" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>`;
+		titleWrap.innerHTML = `<div style="color: ${COLORS.red}; min-width: 24px; max-width: 24px;">${alertTriangleIcon}</div>`;
 	}
 
 	const titleElement = document.createElement("p");
@@ -163,11 +164,11 @@ const createContentTitle = (
 	titleWrap.appendChild(titleDiv);
 
 	if (subTitle?.includes("LCP")) {
-		titleDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" /></svg>`;
+		titleDiv.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;">${infoCircleIcon}</div>`;
 	} else {
 		const colorKey = getColorKey(score);
 
-		titleDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" style="color: ${COLORS[colorKey]}; min-width: 18px; max-width: 18px;" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>`;
+		titleDiv.innerHTML = `<div style="color: ${COLORS[colorKey]}; min-width: 18px; max-width: 18px;">${alertTriangleIcon}</div>`;
 	}
 
 	const titleElement = document.createElement("p");
@@ -215,7 +216,7 @@ const createContent = (content: string, isLast: boolean) => {
 	);
 	contentElement.style.margin = "0";
 	contentElement.style.fontSize = "14px";
-	contentElement.style.wordBreak = "break-all";
+	contentElement.style.wordBreak = "break-word";
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "12px";
