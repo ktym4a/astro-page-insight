@@ -7,15 +7,11 @@ import {
 	refreshHighlightPositions,
 	resetHighlights,
 } from "./ui/highlight.js";
-import {
-	createToolbar,
-	createToolbarButton,
-	reloadIcon,
-} from "./ui/toolbar.js";
+import { reloadCircleIcon } from "./ui/icons.js";
+import { createToastArea, showToast } from "./ui/toast.js";
+import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
 import { createTooltip } from "./ui/tooltip.js";
 import { fetchLighthouse } from "./utils/lh.js";
-
-const BR_REGEX = /\n/g;
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -24,6 +20,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	init(canvas) {
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement;
+		let toastArea: HTMLDivElement;
 
 		initCanvas();
 
@@ -33,7 +30,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
 			(result: LHResult) => {
 				if (result.url !== window.location.href) {
-					errorToast("The result is not for this page.\n Please try again.");
+					showToast(
+						toastArea,
+						"The result is not for this page.\n Please try again.",
+						"error",
+					);
 
 					isFetching = false;
 					fetchButton.classList.remove("animate");
@@ -170,6 +171,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					errorTooltips.classList.add("non-element");
 					canvas.appendChild(errorTooltips);
 				}
+				showToast(
+					toastArea,
+					"Analysis of lighthouse results is complete.",
+					"success",
+				);
 			},
 		);
 
@@ -180,7 +186,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = false;
 
-				errorToast(message);
+				showToast(toastArea, message, "error");
 			},
 		);
 
@@ -200,6 +206,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			color: #89b4fa;
 		}
 
+		svg {
+			width: 100%;
+			height: auto;
+		}
+
         .toast {
           position: fixed;
           top: 20px;
@@ -214,11 +225,12 @@ const astroPageInsightToolbar: DevToolbarApp = {
         }
       </style>
       `;
-
 			const toolbarWrap = createToolbar(canvas);
+			toastArea = createToastArea();
+			canvas.appendChild(toastArea);
 
 			fetchButton = createToolbarButton(
-				reloadIcon,
+				reloadCircleIcon,
 				() => {
 					if (isFetching) return;
 
@@ -238,16 +250,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			for (const event of ["scroll", "resize"]) {
 				window.addEventListener(event, () => refreshHighlightPositions(canvas));
 			}
-		}
-
-		function errorToast(message: string) {
-			const toast = document.createElement("div");
-			toast.classList.add("toast");
-			toast.innerHTML = message.replace(BR_REGEX, "<br>");
-			canvas.appendChild(toast);
-			setTimeout(() => {
-				toast.remove();
-			}, 5000);
 		}
 	},
 };
