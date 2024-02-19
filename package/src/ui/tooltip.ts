@@ -42,6 +42,7 @@ export const createTooltip = (
 			const contentTitle = createContentTitle(
 				tooltip.title,
 				tooltip.score,
+				tooltip.scoreDisplayMode,
 				tooltip.subTitle,
 			);
 			contentElement.appendChild(contentTitle);
@@ -147,6 +148,7 @@ const createSummary = (category: string, length: number) => {
 const createContentTitle = (
 	title: string,
 	score: number | null,
+	scoreDisplayMode?: string,
 	subTitle?: string[],
 ) => {
 	const titleWrap = document.createElement("h3");
@@ -163,7 +165,7 @@ const createContentTitle = (
 	titleDiv.style.gap = "5px";
 	titleWrap.appendChild(titleDiv);
 
-	if (subTitle?.includes("LCP")) {
+	if (subTitle?.includes("LCP") && scoreDisplayMode === "informative") {
 		titleDiv.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;">${infoCircleIcon}</div>`;
 	} else {
 		const colorKey = getColorKey(score);

@@ -53,6 +53,7 @@ export type Tooltips = {
 		content: string;
 		subTitle: string[];
 		score: number | null;
+		scoreDisplayMode: string;
 		id: string;
 	}>;
 };
@@ -62,6 +63,7 @@ export type ErrorTooltips = {
 		title: string;
 		score: number | null;
 		content?: string;
+		scoreDisplayMode: string;
 		subTitle?: string[];
 	}>;
 };

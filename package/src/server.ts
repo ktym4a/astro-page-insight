@@ -1,17 +1,12 @@
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse, { type RunnerResult } from "lighthouse";
 import type {
+	MetricSavings,
 	Result,
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
 import { CATEGORIES } from "./constants.js";
-import type {
-	AuditType,
-	Categories,
-	ConsoleError,
-	LHOptions,
-	LHResult,
-} from "./types.js";
+import type { AuditType, Categories, LHOptions, LHResult } from "./types.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -165,6 +160,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			category,
 			elements,
 			metaErrors,
+			audit.metricSavings,
 		);
 
 		elements = returnObj.elements;
@@ -204,6 +200,7 @@ const findSelector = (
 	category: string[],
 	elements: LHResult["elements"],
 	metaErrors: LHResult["metaErrors"],
+	metricSavings?: MetricSavings,
 ) => {
 	const returnElements = elements;
 	let returnMMetaErrors = metaErrors;
@@ -219,18 +216,33 @@ const findSelector = (
 				category,
 				elements,
 				metaErrors,
+				metricSavings,
 			);
 		}
 		if (item.node) {
 			if (item.node.path.includes("ASTRO-DEV-TOOLBAR")) continue;
+			let scoreValue = score;
+			if (
+				scoreDisplayMode === "manual" ||
+				scoreDisplayMode === "informative" ||
+				scoreDisplayMode === "notApplicable" ||
+				scoreDisplayMode === "error"
+			) {
+				scoreValue = null;
+			}
+			if (scoreDisplayMode === "metricSavings" && metricSavings !== undefined) {
+				if (Object.keys(metricSavings).length > 0) {
+					const metricScore = Object.values(metricSavings).filter(
+						(el) => typeof el === "number",
+					) as number[];
+					if (metricScore.length > 0) {
+						scoreValue = Math.min(...metricScore);
+					}
+				}
+			}
+
 			const element: AuditType = {
-				score:
-					scoreDisplayMode === "manual" ||
-					scoreDisplayMode === "informative" ||
-					scoreDisplayMode === "notApplicable" ||
-					scoreDisplayMode === "error"
-						? null
-						: score,
+				score: scoreValue,
 				scoreDisplayMode,
 				title,
 				description,
