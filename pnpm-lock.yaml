@@ -21,8 +21,8 @@ importers:
         specifier: ^4.0.0
         version: 4.4.0(@types/node@20.11.19)(typescript@5.3.3)
       astro-integration-kit:
-        specifier: ^0.2.1
-        version: 0.2.1(astro@4.4.0)
+        specifier: ^0.3.0
+        version: 0.3.0(astro@4.4.0)
       chrome-launcher:
         specifier: ^1.1.0
         version: 1.1.0
@@ -1552,8 +1552,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /astro-integration-kit@0.2.1(astro@4.4.0):
-    resolution: {integrity: sha512-AWgFRvo3YSpFxVfDdhHRAkOR7KmNYrS7h4JCpOBgMtea6SrpARsmfZXXgFHF+nNFJxmIA//PYetkbB/HQGzutw==}
+  /astro-integration-kit@0.3.0(astro@4.4.0):
+    resolution: {integrity: sha512-ZrJu50KlHM9Spl6GJzRGcPVDRNR9iokEPUaszoh38EvnwQehUe5r7mdKWVWQkvuVIl8W91O5sDUsklm1Yj10vA==}
     peerDependencies:
       astro: ^4.0.0
     dependencies:

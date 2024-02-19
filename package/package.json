@@ -33,7 +33,7 @@
     "astro": "^4.0.0"
   },
   "dependencies": {
-    "astro-integration-kit": "^0.2.1",
+    "astro-integration-kit": "^0.3.0",
     "chrome-launcher": "^1.1.0",
     "lighthouse": "^11.5.0"
   },
