@@ -38,6 +38,14 @@ export const createTooltip = (
 		contentWrapper.style.marginLeft = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
+			if (
+				tooltip.subTitle?.includes("LCP") &&
+				tooltip.scoreDisplayMode === "informative"
+			) {
+				contentElement.dataset.score = "tooltip-information";
+			} else {
+				contentElement.dataset.score = `tooltip-${getColorKey(tooltip.score)}`;
+			}
 
 			const contentTitle = createContentTitle(
 				tooltip.title,
