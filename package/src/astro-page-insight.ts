@@ -65,7 +65,7 @@ export default defineIntegration({
 							console.error(error);
 							server.hot.send(
 								"astro-dev-toolbar:astro-page-insight-app:on-error",
-								"Something went wrong\nPlease try again",
+								"Something went wrong.\nPlease try again.",
 							);
 						}
 					},
