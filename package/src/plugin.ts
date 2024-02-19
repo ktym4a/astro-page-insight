@@ -29,22 +29,19 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
 			(result: LHResult) => {
 				resetHighlights(canvas);
+				isFetching = false;
+				fetchButton.classList.remove("animate");
+				fetchButton.disabled = false;
+
 				if (result.url !== window.location.href) {
 					showToast(
 						toastArea,
 						"The result is not for this page.\n Please try again.",
 						"error",
 					);
-
-					isFetching = false;
-					fetchButton.classList.remove("animate");
-					fetchButton.disabled = false;
 					return;
 				}
 
-				isFetching = false;
-				fetchButton.classList.remove("animate");
-				fetchButton.disabled = false;
 				lhResult = result;
 
 				mappingData(canvas, lhResult, showCategory);
