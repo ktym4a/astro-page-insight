@@ -122,6 +122,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				reloadCircleIcon,
 				() => {
 					if (isFetching) return;
+					isFetching = true;
 					fetchButton.classList.add("animate");
 					fetchButton.disabled = true;
 					fetchLighthouse(
@@ -129,7 +130,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						document.documentElement.clientWidth,
 						window.location.href,
 					);
-					isFetching = true;
 				},
 				"Fetch Lighthouse report.",
 			);
