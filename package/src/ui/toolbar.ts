@@ -10,7 +10,7 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 	toolbar.innerHTML = `
     <style>
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button {
             display: inline-flex;
             position: relative;
             padding: 5px;
@@ -22,40 +22,40 @@ export const createToolbar = (canvas: ShadowRoot) => {
             transition: background-color 0.2s ease;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:first-child {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap:first-child > button {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:not(:first-child) {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap:not(:first-child) > button {
             margin-top: -1px;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:last-child {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap:last-child > button {
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:hover {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:hover {
             background-color: #45475a;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:focus-visible {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:focus-visible {
             outline-offset: -2px;
             background-color: #45475a;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button:disabled {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:disabled {
             cursor: not-allowed;
             background-color: #6c7086 !important;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button > svg {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button > svg {
             width: 25px;
             height: 25px;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button.animate > svg {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.animate > svg {
             animation: rotate 1s infinite;
         }
 
@@ -68,11 +68,12 @@ export const createToolbar = (canvas: ShadowRoot) => {
             }
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]::after {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button[data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
-            top: 110%;
-            right: 0;
+            top: 50%;
+            right: 120%;
+			transform: translateY(-50%);
             padding: 5px;
             background-color: #181825;
             color: #cdd6f4;
@@ -84,11 +85,11 @@ export const createToolbar = (canvas: ShadowRoot) => {
             border: 1px solid #cdd6f4;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]:hover::after {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button[data-tooltip]:hover::after {
             display: block;
         }
 
-        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap > button[data-tooltip]:focus-visible::after {
+        .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button[data-tooltip]:focus-visible::after {
             display: block;
         }
         `;
