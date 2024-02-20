@@ -1,7 +1,7 @@
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { z } from "astro/zod";
-import { organizeLHResult, startLH } from "./server.js";
+import { organizeLHResult, startLH } from "./server/index.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",

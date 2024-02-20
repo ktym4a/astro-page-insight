@@ -1,17 +1,16 @@
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse, { type RunnerResult } from "lighthouse";
 import type {
+	MetricSavings,
 	Result,
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
-import { CATEGORIES } from "./constants.js";
 import type {
 	AuditType,
 	Categories,
-	ConsoleError,
 	LHOptions,
 	LHResult,
-} from "./types.js";
+} from "../types/index.js";
 
 export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
@@ -23,7 +22,7 @@ export const startLH = async (options: LHOptions) => {
 		output: "json",
 		formFactor: isMobile ? "mobile" : "desktop",
 		disableFullPageScreenshot: true,
-		onlyCategories: CATEGORIES,
+		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
 		screenEmulation: {
 			mobile: isMobile,
 			width: options.width,
@@ -60,11 +59,15 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		for (const audit of value.auditRefs) {
 			if (audit.weight < weight) continue;
 			const auditValue = categories[audit.id];
-			const type = audit.acronym ?? value.title;
 			if (auditValue) {
-				categories[audit.id] = Array.from(new Set([...auditValue, type]));
+				categories[audit.id] = Array.from(
+					new Set([...auditValue, value.title]),
+				);
 			} else {
-				categories[audit.id] = [type];
+				categories[audit.id] = [value.title];
+			}
+			if (audit.acronym) {
+				categories[audit.id]?.push(audit.acronym);
 			}
 
 			if (audit.relevantAudits) {
@@ -72,11 +75,12 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 					const relevantValue = categories[relevant];
 					if (relevantValue) {
 						categories[relevant] = Array.from(
-							new Set([...relevantValue, type]),
+							new Set([...relevantValue, value.title]),
 						);
 					} else {
-						categories[relevant] = [type];
+						categories[relevant] = [value.title];
 					}
+					if (audit.acronym) categories[relevant]?.push(audit.acronym);
 				}
 			}
 		}
@@ -165,6 +169,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			category,
 			elements,
 			metaErrors,
+			audit.metricSavings,
 		);
 
 		elements = returnObj.elements;
@@ -204,6 +209,7 @@ const findSelector = (
 	category: string[],
 	elements: LHResult["elements"],
 	metaErrors: LHResult["metaErrors"],
+	metricSavings?: MetricSavings,
 ) => {
 	const returnElements = elements;
 	let returnMMetaErrors = metaErrors;
@@ -219,18 +225,33 @@ const findSelector = (
 				category,
 				elements,
 				metaErrors,
+				metricSavings,
 			);
 		}
 		if (item.node) {
 			if (item.node.path.includes("ASTRO-DEV-TOOLBAR")) continue;
+			let scoreValue = score;
+			if (
+				scoreDisplayMode === "manual" ||
+				scoreDisplayMode === "informative" ||
+				scoreDisplayMode === "notApplicable" ||
+				scoreDisplayMode === "error"
+			) {
+				scoreValue = null;
+			}
+			if (scoreDisplayMode === "metricSavings" && metricSavings !== undefined) {
+				if (Object.keys(metricSavings).length > 0) {
+					const metricScore = Object.values(metricSavings).filter(
+						(el) => typeof el === "number",
+					) as number[];
+					if (metricScore.length > 0) {
+						scoreValue = Math.min(...metricScore);
+					}
+				}
+			}
+
 			const element: AuditType = {
-				score:
-					scoreDisplayMode === "manual" ||
-					scoreDisplayMode === "informative" ||
-					scoreDisplayMode === "notApplicable" ||
-					scoreDisplayMode === "error"
-						? null
-						: score,
+				score: scoreValue,
 				scoreDisplayMode,
 				title,
 				description,

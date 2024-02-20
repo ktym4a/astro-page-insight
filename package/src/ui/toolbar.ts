@@ -1,3 +1,5 @@
+import { COLORS } from "../constants/index.js";
+
 export const createToolbar = (canvas: ShadowRoot) => {
 	const toolbar = document.createElement("div");
 	toolbar.classList.add("astro-page-insight-toolbar");
@@ -107,17 +109,87 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 export const createToolbarButton = (
 	icon: string,
-	onClick: () => void,
+	onClick?: () => void,
 	tooltip?: string,
 ) => {
 	const button = document.createElement("button");
 
 	button.innerHTML = icon;
-	button.addEventListener("click", onClick);
+	button.type = "button";
+	if (onClick) button.onclick = onClick;
 
 	if (tooltip) {
 		button.dataset.tooltip = tooltip;
 	}
 
 	return button;
+};
+
+export const createToolbarWrapper = (type: string) => {
+	const toolbarWrapper = document.createElement("div");
+	toolbarWrapper.dataset.type = type;
+
+	toolbarWrapper.classList.add(`astro-page-insight-${type}`);
+	toolbarWrapper.style.position = "fixed";
+	toolbarWrapper.style.background = "#181825";
+	toolbarWrapper.style.color = "#cdd6f4";
+	toolbarWrapper.style.borderRadius = "5px";
+	toolbarWrapper.style.padding = "15px 10px";
+	toolbarWrapper.style.border = "1px solid #cdd6f4";
+	toolbarWrapper.style.width = "300px";
+	toolbarWrapper.style.overflowY = "auto";
+	toolbarWrapper.style.right = "65px";
+	toolbarWrapper.style.bottom = "50px";
+	toolbarWrapper.style.display = "none";
+	toolbarWrapper.style.zIndex = "200010";
+
+	return toolbarWrapper;
+};
+
+export const createToolbarTitle = (title: string, icon: string) => {
+	const titleWrap = document.createElement("h2");
+
+	titleWrap.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 24px; max-width: 24px;">${icon}</div>`;
+
+	const titleElement = document.createElement("p");
+	titleElement.textContent = title;
+	titleElement.style.flex = "1";
+	titleElement.style.margin = "0";
+
+	titleWrap.appendChild(titleElement);
+
+	titleWrap.style.display = "flex";
+	titleWrap.style.justifyContent = "center";
+	titleWrap.style.alignItems = "center";
+	titleWrap.style.marginTop = "0";
+	titleWrap.style.marginBottom = "15px";
+	titleWrap.style.fontWeight = "normal";
+	titleWrap.style.gap = "10px";
+	titleWrap.style.fontSize = "16px";
+	titleWrap.style.borderBottom = "1px solid #cdd6f4";
+	titleWrap.style.paddingBottom = "15px";
+
+	return titleWrap;
+};
+
+export const createDetails = (isLast: boolean) => {
+	const details = document.createElement("details");
+	details.open = true;
+	if (!isLast) {
+		details.style.paddingBottom = "15px";
+	}
+
+	return details;
+};
+
+export const createSummary = (category: string) => {
+	const summary = document.createElement("summary");
+	summary.textContent = `${category}`;
+	summary.style.cursor = "pointer";
+	summary.style.background = "#45475a";
+	summary.style.fontWeight = "normal";
+	summary.style.padding = "5px 10px";
+	summary.style.borderRadius = "5px";
+
+	return summary;
 };

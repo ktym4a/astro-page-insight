@@ -1,7 +1,7 @@
-import { COLORS } from "../constants";
-import type { ErrorTooltips, PositionType, Tooltips } from "../types";
-import { getColorKey } from "../utils/color";
-import { alertTriangleIcon, infoCircleIcon } from "./icons";
+import { COLORS } from "../constants/index.js";
+import type { ErrorTooltips, PositionType, Tooltips } from "../types/index.js";
+import { getColorKey } from "../utils/color.js";
+import { alertTriangleIcon, infoCircleIcon } from "./icons.js";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
@@ -20,7 +20,10 @@ export const createTooltip = (
 		tooltipWrapper.appendChild(titleElement);
 	}
 
-	const tooltipEntries = Object.entries(tooltips);
+	const tooltipEntries = Object.entries(tooltips).sort((a, b) =>
+		a[0].localeCompare(b[0]),
+	);
+
 	const tooltipsLength = tooltipEntries.length;
 
 	for (const [index, tooltips] of tooltipEntries.entries()) {
@@ -28,9 +31,9 @@ export const createTooltip = (
 		if (!tooltip) continue;
 
 		const details = createDetails(index === tooltipsLength - 1);
-		details.dataset.category = tooltip[0].toLowerCase();
+		const category = tooltip[0];
 
-		const summary = createSummary(tooltip[0], tooltips[1].length);
+		const summary = createSummary(category, tooltips[1].length);
 		details.appendChild(summary);
 
 		const contentWrapper = document.createElement("div");
@@ -38,10 +41,12 @@ export const createTooltip = (
 		contentWrapper.style.marginLeft = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
+			contentElement.dataset.filterCategory = category;
 
 			const contentTitle = createContentTitle(
 				tooltip.title,
 				tooltip.score,
+				tooltip.scoreDisplayMode,
 				tooltip.subTitle,
 			);
 			contentElement.appendChild(contentTitle);
@@ -51,7 +56,6 @@ export const createTooltip = (
 					tooltip.content,
 					index === tooltips[1].length - 1,
 				);
-				contentElement.appendChild(content);
 				contentElement.appendChild(content);
 			}
 
@@ -69,7 +73,7 @@ const createTooltipWrapper = (top?: number) => {
 	const tooltipWrapper = document.createElement("div");
 	const height = document.body.scrollHeight;
 
-	tooltipWrapper.classList.add("page-insight-tooltip");
+	tooltipWrapper.classList.add("astro-page-insight-tooltip");
 	tooltipWrapper.style.position = "absolute";
 	tooltipWrapper.style.background = "#181825";
 	tooltipWrapper.style.color = "#cdd6f4";
@@ -79,7 +83,6 @@ const createTooltipWrapper = (top?: number) => {
 	tooltipWrapper.style.display = "none";
 	tooltipWrapper.style.width = "350px";
 	tooltipWrapper.style.maxHeight = "40vh";
-	tooltipWrapper.style.minHeight = "360px";
 	tooltipWrapper.style.overflowY = "auto";
 	tooltipWrapper.style.left = "0";
 	if (top) {
@@ -147,6 +150,7 @@ const createSummary = (category: string, length: number) => {
 const createContentTitle = (
 	title: string,
 	score: number | null,
+	scoreDisplayMode?: string,
 	subTitle?: string[],
 ) => {
 	const titleWrap = document.createElement("h3");
@@ -163,7 +167,7 @@ const createContentTitle = (
 	titleDiv.style.gap = "5px";
 	titleWrap.appendChild(titleDiv);
 
-	if (subTitle?.includes("LCP")) {
+	if (subTitle?.includes("LCP") && scoreDisplayMode === "informative") {
 		titleDiv.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;">${infoCircleIcon}</div>`;
 	} else {
 		const colorKey = getColorKey(score);
@@ -193,7 +197,7 @@ const createContentTitle = (
 		subTitleWrap.style.flexWrap = "wrap";
 		titleWrap.appendChild(subTitleWrap);
 
-		for (const category of subTitle) {
+		for (const category of subTitle.sort()) {
 			const subTitleElement = document.createElement("p");
 			subTitleElement.textContent = category;
 			subTitleElement.style.margin = "0";
