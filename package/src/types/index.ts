@@ -67,3 +67,7 @@ export type ErrorTooltips = {
 		subTitle?: string[];
 	}>;
 };
+
+export type CategoriesCount = {
+	[category: string]: number;
+};

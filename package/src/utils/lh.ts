@@ -1,4 +1,3 @@
-import { CATEGORIES } from "../constants/index.js";
 import type {
 	AuditType,
 	ErrorTooltips,
@@ -84,11 +83,7 @@ const createAuditData = (
 		if (selector === "") {
 			continue;
 		}
-		if (
-			!audit.categories.some((category) =>
-				showCategory.includes(category.toLowerCase()),
-			)
-		)
+		if (!audit.categories.some((category) => showCategory.includes(category)))
 			continue;
 
 		score =
@@ -99,7 +94,7 @@ const createAuditData = (
 			...Array.from(new Set([...selectorCategory, ...audit.categories])),
 		];
 		for (const category of audit.categories) {
-			if (!CATEGORIES.includes(category.toLowerCase())) continue;
+			if (!showCategory.includes(category)) continue;
 
 			tooltips[category] = [
 				...(tooltips[category] ?? []),

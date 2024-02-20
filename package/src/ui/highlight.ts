@@ -1,4 +1,4 @@
-import { CATEGORIES, COLORS } from "../constants/index.js";
+import { COLORS } from "../constants/index.js";
 import type { PositionType } from "../types/index.js";
 
 export const createHighlight = (
@@ -116,12 +116,8 @@ const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 	title.style.background = "#181825";
 	title.style.borderRadius = "5px";
 	title.style.padding = "4px 10px";
-	title.textContent = categories.join(", ");
-	for (const category of categories) {
-		if (CATEGORIES.includes(category.toLocaleLowerCase())) {
-			highlight.classList.add(category.toLocaleLowerCase());
-		}
-	}
+	title.textContent = categories.sort().join(", ");
+
 	highlight.appendChild(title);
 };
 

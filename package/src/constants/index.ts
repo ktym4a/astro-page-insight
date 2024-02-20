@@ -1,10 +1,3 @@
-export const CATEGORIES = [
-	"accessibility",
-	"best-practices",
-	"performance",
-	"seo",
-];
-
 export const COLORS = {
 	green: "#a6e3a1",
 	yellow: "#f9e2af",

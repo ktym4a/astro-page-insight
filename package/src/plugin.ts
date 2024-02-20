@@ -1,5 +1,4 @@
 import { type DevToolbarApp } from "astro";
-import { CATEGORIES } from "./constants/index.js";
 import type { LHResult } from "./types/index.js";
 import { createFilter } from "./ui/filter.js";
 import { refreshHighlightPositions, resetHighlights } from "./ui/highlight.js";
@@ -17,8 +16,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let fetchButton: HTMLButtonElement;
 		let filterButton: HTMLButtonElement;
 		let toastArea: HTMLDivElement;
-		// const showCategory: string[] = [CATEGORIES[0]] as string[];
-		const showCategory: string[] = CATEGORIES as string[];
+		let showCategory: string[];
+		let filterCategory: string[];
 		let lhResult: LHResult;
 
 		initCanvas();
@@ -43,8 +42,12 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				}
 
 				lhResult = result;
+				showCategory = filterCategory = Object.keys(lhResult.scoreList).sort();
 
-				mappingData(canvas, lhResult, showCategory);
+				mappingData(canvas, lhResult, filterCategory);
+
+				const filter = createFilter(canvas, showCategory);
+				canvas.appendChild(filter);
 
 				showToast(
 					toastArea,
@@ -105,8 +108,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			toastArea = createToastArea();
 			canvas.appendChild(toastArea);
 
-			const filterWrapper = createFilter();
-			canvas.appendChild(filterWrapper);
+			// const filterWrapper = createFilter(canvas);
+			// canvas.appendChild(filterWrapper);
 
 			filterButton = createToolbarButton(
 				filterIcon,

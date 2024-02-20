@@ -5,7 +5,6 @@ import type {
 	Result,
 	ScoreDisplayMode,
 } from "lighthouse/types/lhr/audit-result";
-import { CATEGORIES } from "../constants/index.js";
 import type {
 	AuditType,
 	Categories,
@@ -23,7 +22,7 @@ export const startLH = async (options: LHOptions) => {
 		output: "json",
 		formFactor: isMobile ? "mobile" : "desktop",
 		disableFullPageScreenshot: true,
-		onlyCategories: CATEGORIES,
+		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
 		screenEmulation: {
 			mobile: isMobile,
 			width: options.width,
@@ -60,11 +59,15 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		for (const audit of value.auditRefs) {
 			if (audit.weight < weight) continue;
 			const auditValue = categories[audit.id];
-			const type = audit.acronym ?? value.title;
 			if (auditValue) {
-				categories[audit.id] = Array.from(new Set([...auditValue, type]));
+				categories[audit.id] = Array.from(
+					new Set([...auditValue, value.title]),
+				);
 			} else {
-				categories[audit.id] = [type];
+				categories[audit.id] = [value.title];
+			}
+			if (audit.acronym) {
+				categories[audit.id]?.push(audit.acronym);
 			}
 
 			if (audit.relevantAudits) {
@@ -72,11 +75,12 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 					const relevantValue = categories[relevant];
 					if (relevantValue) {
 						categories[relevant] = Array.from(
-							new Set([...relevantValue, type]),
+							new Set([...relevantValue, value.title]),
 						);
 					} else {
-						categories[relevant] = [type];
+						categories[relevant] = [value.title];
 					}
+					if (audit.acronym) categories[relevant]?.push(audit.acronym);
 				}
 			}
 		}

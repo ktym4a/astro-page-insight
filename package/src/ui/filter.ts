@@ -1,28 +1,33 @@
-import { CATEGORIES, COLORS } from "../constants/index.js";
+import { COLORS } from "../constants/index.js";
 import { getColorKey } from "../utils/color.js";
 import { alertTriangleIcon, filterIcon, infoCircleIcon } from "./icons.js";
 import { createToolbarTitle, createToolbarWrapper } from "./toolbar.js";
 
 const LINK_REGEX = /\[(.*?)\]\((.*?)\)/g;
 
-export const createFilter = () => {
-	const toolbarWrapper = createToolbarWrapper();
+export const createFilter = (canvas: ShadowRoot, showCategory: string[]) => {
+	const toolbarWrapper = createToolbarWrapper("filter");
 
 	const titleElement = createToolbarTitle("Filter", filterIcon);
 	toolbarWrapper.appendChild(titleElement);
 
 	const details = createDetails(true);
 
-	const summary = createSummary("Category");
+	const summary = createSummary("Categories");
 	details.appendChild(summary);
 
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 	contentWrapper.style.marginLeft = "10px";
-	for (const category of CATEGORIES) {
+	for (const [index, category] of showCategory.entries()) {
 		const contentElement = document.createElement("div");
+		const categoryCount = canvas.querySelectorAll(
+			`[data-filter-category="${category.toLowerCase()}"]`,
+		).length;
 
-		const content = createContent(category, false);
+		const text = `${category} (${categoryCount})`;
+
+		const content = createContent(text, index === showCategory.length - 1);
 		contentElement.appendChild(content);
 
 		contentWrapper.appendChild(contentElement);

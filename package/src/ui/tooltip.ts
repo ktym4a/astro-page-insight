@@ -20,7 +20,10 @@ export const createTooltip = (
 		tooltipWrapper.appendChild(titleElement);
 	}
 
-	const tooltipEntries = Object.entries(tooltips);
+	const tooltipEntries = Object.entries(tooltips).sort((a, b) =>
+		a[0].localeCompare(b[0]),
+	);
+
 	const tooltipsLength = tooltipEntries.length;
 
 	for (const [index, tooltips] of tooltipEntries.entries()) {
@@ -28,9 +31,9 @@ export const createTooltip = (
 		if (!tooltip) continue;
 
 		const details = createDetails(index === tooltipsLength - 1);
-		details.dataset.category = tooltip[0].toLowerCase();
+		const category = tooltip[0];
 
-		const summary = createSummary(tooltip[0], tooltips[1].length);
+		const summary = createSummary(category, tooltips[1].length);
 		details.appendChild(summary);
 
 		const contentWrapper = document.createElement("div");
@@ -38,14 +41,7 @@ export const createTooltip = (
 		contentWrapper.style.marginLeft = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
-			if (
-				tooltip.subTitle?.includes("LCP") &&
-				tooltip.scoreDisplayMode === "informative"
-			) {
-				contentElement.dataset.score = "tooltip-information";
-			} else {
-				contentElement.dataset.score = `tooltip-${getColorKey(tooltip.score)}`;
-			}
+			contentElement.dataset.filterCategory = category.toLowerCase();
 
 			const contentTitle = createContentTitle(
 				tooltip.title,
@@ -201,7 +197,7 @@ const createContentTitle = (
 		subTitleWrap.style.flexWrap = "wrap";
 		titleWrap.appendChild(subTitleWrap);
 
-		for (const category of subTitle) {
+		for (const category of subTitle.sort()) {
 			const subTitleElement = document.createElement("p");
 			subTitleElement.textContent = category;
 			subTitleElement.style.margin = "0";

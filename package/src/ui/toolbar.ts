@@ -124,8 +124,9 @@ export const createToolbarButton = (
 	return button;
 };
 
-export const createToolbarWrapper = () => {
+export const createToolbarWrapper = (type: string) => {
 	const toolbarWrapper = document.createElement("div");
+	toolbarWrapper.dataset.type = type;
 
 	toolbarWrapper.classList.add("page-insight-filter");
 	toolbarWrapper.style.position = "fixed";
