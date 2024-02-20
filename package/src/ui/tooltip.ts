@@ -41,7 +41,7 @@ export const createTooltip = (
 		contentWrapper.style.marginLeft = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
-			contentElement.dataset.filterCategory = category.toLowerCase();
+			contentElement.dataset.filterCategory = category;
 
 			const contentTitle = createContentTitle(
 				tooltip.title,
@@ -73,7 +73,7 @@ const createTooltipWrapper = (top?: number) => {
 	const tooltipWrapper = document.createElement("div");
 	const height = document.body.scrollHeight;
 
-	tooltipWrapper.classList.add("page-insight-tooltip");
+	tooltipWrapper.classList.add("astro-page-insight-tooltip");
 	tooltipWrapper.style.position = "absolute";
 	tooltipWrapper.style.background = "#181825";
 	tooltipWrapper.style.color = "#cdd6f4";

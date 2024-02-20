@@ -22,7 +22,7 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 export const mappingData = (
 	canvas: ShadowRoot,
 	lhResult: LHResult,
-	showCategory: string[],
+	filterCategory: string[],
 ) => {
 	for (const [selector, value] of Object.entries(lhResult.elements)) {
 		if (!value[0]) continue;
@@ -34,7 +34,7 @@ export const mappingData = (
 		const { tooltips, selectorCategory } = createAuditData(
 			value,
 			selector,
-			showCategory,
+			filterCategory,
 		);
 
 		if (Object.keys(tooltips).length === 0) continue;
@@ -73,7 +73,7 @@ const checkAudit = (selector: string, position: PositionType) => {
 const createAuditData = (
 	value: AuditType[],
 	selector: string,
-	showCategory: string[],
+	filterCategory: string[],
 ) => {
 	let score: number | null = 1;
 	let selectorCategory = [] as string[];
@@ -83,7 +83,7 @@ const createAuditData = (
 		if (selector === "") {
 			continue;
 		}
-		if (!audit.categories.some((category) => showCategory.includes(category)))
+		if (!audit.categories.some((category) => filterCategory.includes(category)))
 			continue;
 
 		score =
@@ -94,7 +94,7 @@ const createAuditData = (
 			...Array.from(new Set([...selectorCategory, ...audit.categories])),
 		];
 		for (const category of audit.categories) {
-			if (!showCategory.includes(category)) continue;
+			if (!filterCategory.includes(category)) continue;
 
 			tooltips[category] = [
 				...(tooltips[category] ?? []),
@@ -125,7 +125,6 @@ const createMapElement = (
 ) => {
 	try {
 		const highlight = createHighlight(selector, position, selectorCategory);
-		highlight.dataset.selector = selector;
 		highlight.dataset.detailSelector = detailSelector;
 
 		let title: string | undefined;
@@ -175,7 +174,7 @@ const createErrorTooltipsData = (result: LHResult) => {
 	}
 
 	for (const metaError of result.metaErrors) {
-		const category = "Meta";
+		const category = "Document";
 		tooltips[category] = [
 			...(tooltips[category] ?? []),
 			{
@@ -192,7 +191,7 @@ const createErrorTooltipsData = (result: LHResult) => {
 
 const createErrorTooltip = (tooltips: ErrorTooltips) => {
 	const errorTooltips = createTooltip(tooltips, {
-		text: "There are some errors in the console or meta tags.",
+		text: "There are some errors in the console or document.",
 	});
 	errorTooltips.style.display = "block";
 	errorTooltips.style.top = "20px";
@@ -202,4 +201,22 @@ const createErrorTooltip = (tooltips: ErrorTooltips) => {
 	errorTooltips.classList.add("non-element");
 
 	return errorTooltips;
+};
+
+export const resetLH = (canvas: ShadowRoot) => {
+	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-highlight",
+	)) {
+		highlight.remove();
+	}
+	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-tooltip",
+	)) {
+		tooltip.remove();
+	}
+	for (const filter of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-filter",
+	)) {
+		filter.remove();
+	}
 };

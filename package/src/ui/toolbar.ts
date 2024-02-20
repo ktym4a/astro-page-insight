@@ -109,13 +109,14 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 export const createToolbarButton = (
 	icon: string,
-	onClick: () => void,
+	onClick?: () => void,
 	tooltip?: string,
 ) => {
 	const button = document.createElement("button");
 
 	button.innerHTML = icon;
-	button.addEventListener("click", onClick);
+	button.type = "button";
+	if (onClick) button.onclick = onClick;
 
 	if (tooltip) {
 		button.dataset.tooltip = tooltip;
@@ -128,7 +129,7 @@ export const createToolbarWrapper = (type: string) => {
 	const toolbarWrapper = document.createElement("div");
 	toolbarWrapper.dataset.type = type;
 
-	toolbarWrapper.classList.add("page-insight-filter");
+	toolbarWrapper.classList.add(`astro-page-insight-${type}`);
 	toolbarWrapper.style.position = "fixed";
 	toolbarWrapper.style.background = "#181825";
 	toolbarWrapper.style.color = "#cdd6f4";
@@ -139,6 +140,7 @@ export const createToolbarWrapper = (type: string) => {
 	toolbarWrapper.style.overflowY = "auto";
 	toolbarWrapper.style.right = "65px";
 	toolbarWrapper.style.bottom = "50px";
+	toolbarWrapper.style.display = "none";
 	toolbarWrapper.style.zIndex = "200010";
 
 	return toolbarWrapper;
@@ -168,4 +170,26 @@ export const createToolbarTitle = (title: string, icon: string) => {
 	titleWrap.style.paddingBottom = "15px";
 
 	return titleWrap;
+};
+
+export const createDetails = (isLast: boolean) => {
+	const details = document.createElement("details");
+	details.open = true;
+	if (!isLast) {
+		details.style.paddingBottom = "15px";
+	}
+
+	return details;
+};
+
+export const createSummary = (category: string) => {
+	const summary = document.createElement("summary");
+	summary.textContent = `${category}`;
+	summary.style.cursor = "pointer";
+	summary.style.background = "#45475a";
+	summary.style.fontWeight = "normal";
+	summary.style.padding = "5px 10px";
+	summary.style.borderRadius = "5px";
+
+	return summary;
 };

@@ -18,7 +18,7 @@ export const createHighlight = (
 		highlight.addEventListener(event, () => {
 			highlight.style.zIndex = "200010";
 			const tooltip = highlight.querySelector<HTMLDivElement>(
-				".page-insight-tooltip",
+				".astro-page-insight-tooltip",
 			);
 			if (tooltip) {
 				tooltip.style.display = "block";
@@ -30,7 +30,7 @@ export const createHighlight = (
 		highlight.addEventListener(event, () => {
 			highlight.style.zIndex = "200000";
 			const tooltip = highlight.querySelector<HTMLDivElement>(
-				".page-insight-tooltip",
+				".astro-page-insight-tooltip",
 			);
 			if (tooltip) {
 				tooltip.style.display = "none";
@@ -49,7 +49,7 @@ const createHighlightElement = () => {
 	highlight.style.borderRadius = "5px";
 	highlight.style.zIndex = "20000";
 	highlight.style.display = "block";
-	highlight.classList.add("page-insight-highlight");
+	highlight.classList.add("astro-page-insight-highlight");
 	highlight.style.border = `2px solid ${COLORS.red}`;
 	highlight.tabIndex = 0;
 
@@ -82,7 +82,7 @@ const updateHHighlightPosition = (
 
 export const refreshHighlightPositions = (canvas: ShadowRoot) => {
 	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
-		".page-insight-highlight",
+		".astro-page-insight-highlight",
 	)) {
 		const selector = highlight.dataset.selector;
 		if (selector) {
@@ -123,8 +123,13 @@ const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 
 export const resetHighlights = (canvas: ShadowRoot) => {
 	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
-		".page-insight-highlight",
+		".astro-page-insight-highlight",
 	)) {
 		highlight.remove();
+	}
+	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-tooltip",
+	)) {
+		tooltip.remove();
 	}
 };
