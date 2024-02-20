@@ -19,6 +19,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let showCategory: string[];
 		let filterCategory: string[];
 		let filterElement: HTMLDivElement | null;
+		let filterButtonWrap: HTMLDivElement;
 		let lhResult: LHResult;
 
 		initCanvas();
@@ -50,7 +51,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					filterCategory,
 					lhResult,
 				});
-				canvas.appendChild(filterElement);
+				filterButtonWrap.appendChild(filterElement);
 
 				isFetching = false;
 				fetchButton.classList.remove("animate");
@@ -82,7 +83,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
       <style>
         :host {
           font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-          color: rgba(191, 193, 201, 1);
+          color: #cdd6f4;
         }
 
 		a {
@@ -126,7 +127,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				"Filter the result.",
 			);
 			filterButton.disabled = true;
-			toolbarWrap.appendChild(filterButton);
+			filterButtonWrap = document.createElement("div");
+			filterButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
+			filterButtonWrap.appendChild(filterButton);
+			toolbarWrap.appendChild(filterButtonWrap);
 
 			fetchButton = createToolbarButton(
 				reloadCircleIcon,
@@ -150,8 +154,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				fetchButton.classList.add("animate");
 				fetchButton.disabled = true;
 			}
-
-			toolbarWrap.appendChild(fetchButton);
+			const fetchButtonWrap = document.createElement("div");
+			fetchButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
+			fetchButtonWrap.appendChild(fetchButton);
+			toolbarWrap.appendChild(fetchButtonWrap);
 
 			for (const event of ["scroll", "resize"]) {
 				window.addEventListener(event, () => refreshHighlightPositions(canvas));
