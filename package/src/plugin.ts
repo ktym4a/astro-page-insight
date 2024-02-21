@@ -2,9 +2,14 @@ import { type DevToolbarApp } from "astro";
 import type { LHResult } from "./types/index.js";
 import { createFilter } from "./ui/filter.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
-import { filterIcon, reloadCircleIcon } from "./ui/icons.js";
+import { analyticsIcon, filterIcon, reloadCircleIcon } from "./ui/icons.js";
+import { createScore } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
-import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
+import {
+	createToolbar,
+	createToolbarButton,
+	toggleToolbarWrapper,
+} from "./ui/toolbar.js";
 import { fetchLighthouse, mappingData, resetLH } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
@@ -14,12 +19,15 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	init(canvas) {
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement;
-		let filterButton: HTMLButtonElement;
 		let toastArea: HTMLDivElement;
 		let showCategory: string[];
 		let filterCategory: string[];
+		let filterButton: HTMLButtonElement;
 		let filterElement: HTMLDivElement | null;
 		let filterButtonWrap: HTMLDivElement;
+		let scoreButton: HTMLButtonElement;
+		let scoreElement: HTMLDivElement | null;
+		let scoreButtonWrap: HTMLDivElement;
 		let lhResult: LHResult;
 
 		initCanvas();
@@ -31,9 +39,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			(result: LHResult) => {
 				resetLH(canvas);
 				if (result.url !== window.location.href) {
-					isFetching = false;
-					fetchButton.classList.remove("animate");
-					fetchButton.disabled = false;
+					errorToggle();
+
 					showToast(
 						toastArea,
 						"The result is not for this page.\n Please try again.",
@@ -53,10 +60,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				});
 				filterButtonWrap.appendChild(filterElement);
 
-				isFetching = false;
-				fetchButton.classList.remove("animate");
-				fetchButton.disabled = false;
-				filterButton.disabled = false;
+				scoreElement = createScore(lhResult.scoreList);
+				scoreButtonWrap.appendChild(scoreElement);
+
+				fetchSuccess();
 
 				showToast(
 					toastArea,
@@ -70,9 +77,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:on-error",
 			(message: string) => {
 				resetLH(canvas);
-				isFetching = false;
-				fetchButton.classList.remove("animate");
-				fetchButton.disabled = false;
+				errorToggle();
 
 				showToast(toastArea, message, "error");
 			},
@@ -117,12 +122,27 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			toastArea = createToastArea();
 			canvas.appendChild(toastArea);
 
+			scoreButton = createToolbarButton(
+				analyticsIcon,
+				"score",
+				() => {
+					if (!scoreElement) return;
+					toggleToolbarWrapper(canvas, "score");
+				},
+				"Show the score of each category.",
+			);
+			scoreButton.disabled = true;
+			scoreButtonWrap = document.createElement("div");
+			scoreButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
+			scoreButtonWrap.appendChild(scoreButton);
+			toolbarWrap.appendChild(scoreButtonWrap);
+
 			filterButton = createToolbarButton(
 				filterIcon,
+				"filter",
 				() => {
 					if (!filterElement) return;
-					filterElement.style.display =
-						filterElement.style.display === "none" ? "block" : "none";
+					toggleToolbarWrapper(canvas, "filter");
 				},
 				"Filter the result.",
 			);
@@ -134,12 +154,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 			fetchButton = createToolbarButton(
 				reloadCircleIcon,
+				"fetch",
 				() => {
 					if (isFetching) return;
-					isFetching = true;
-					fetchButton.classList.add("animate");
-					fetchButton.disabled = true;
-					filterButton.disabled = true;
+					fetchStart();
 
 					fetchLighthouse(
 						document.documentElement.clientWidth,
@@ -151,8 +169,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			);
 
 			if (isFetching) {
-				fetchButton.classList.add("animate");
-				fetchButton.disabled = true;
+				fetchStart();
 			}
 			const fetchButtonWrap = document.createElement("div");
 			fetchButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
@@ -162,6 +179,30 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			for (const event of ["scroll", "resize"]) {
 				window.addEventListener(event, () => refreshHighlightPositions(canvas));
 			}
+		}
+
+		function fetchStart() {
+			isFetching = true;
+			fetchButton.classList.add("animate");
+			fetchButton.disabled = true;
+			filterButton.disabled = true;
+			scoreButton.disabled = true;
+		}
+
+		function fetchSuccess() {
+			isFetching = false;
+			fetchButton.classList.remove("animate");
+			fetchButton.disabled = false;
+			filterButton.disabled = false;
+			scoreButton.disabled = false;
+		}
+
+		function errorToggle() {
+			isFetching = false;
+			fetchButton.classList.remove("animate");
+			fetchButton.disabled = false;
+			filterButton.disabled = true;
+			scoreButton.disabled = true;
 		}
 	},
 };

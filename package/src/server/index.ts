@@ -10,6 +10,7 @@ import type {
 	Categories,
 	LHOptions,
 	LHResult,
+	ScoreListType,
 } from "../types/index.js";
 
 export const startLH = async (options: LHOptions) => {
@@ -30,6 +31,11 @@ export const startLH = async (options: LHOptions) => {
 			deviceScaleFactor: 1,
 		},
 		throttlingMethod: "provided",
+		throttling: {
+			rttMs: 40,
+			throughputKbps: 10 * 1024,
+			cpuSlowdownMultiplier: 1,
+		},
 		emulatedUserAgent: false,
 	});
 
@@ -52,7 +58,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	});
 
 	const categories: Categories = {};
-	const scoreList = {} as { [key: string]: number | null };
+	const scoreList = {} as ScoreListType;
 
 	for (const value of Object.values(lhr.categories)) {
 		scoreList[value.title] = value.score;
