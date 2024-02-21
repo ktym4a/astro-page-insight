@@ -219,4 +219,9 @@ export const resetLH = (canvas: ShadowRoot) => {
 	)) {
 		filter.remove();
 	}
+	for (const score of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-score",
+	)) {
+		score.remove();
+	}
 };

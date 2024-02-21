@@ -36,6 +36,14 @@ export const createToolbar = (canvas: ShadowRoot) => {
             border-bottom-right-radius: 5px;
         }
 
+		.astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.active {
+			background-color: #45475a;
+		}
+
+		.astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.active + div {
+			display: block !important;
+		}
+
         .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:hover {
             background-color: #45475a;
         }
@@ -110,6 +118,7 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 export const createToolbarButton = (
 	icon: string,
+	type?: string,
 	onClick?: () => void,
 	tooltip?: string,
 ) => {
@@ -117,6 +126,7 @@ export const createToolbarButton = (
 
 	button.innerHTML = icon;
 	button.type = "button";
+	if (type) button.dataset.buttonType = type;
 	if (onClick) button.onclick = onClick;
 
 	if (tooltip) {
@@ -193,4 +203,22 @@ export const createSummary = (category: string) => {
 	summary.style.borderRadius = "5px";
 
 	return summary;
+};
+
+export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
+	const button = canvas.querySelector<HTMLButtonElement>(
+		`[data-button-type="${type}"]`,
+	);
+	if (!button) return;
+	const isOpen = button.classList.contains("active");
+
+	const buttons =
+		canvas.querySelectorAll<HTMLButtonElement>("[data-button-type]");
+	for (const button of buttons) {
+		button.classList.remove("active");
+	}
+
+	if (!isOpen) {
+		button.classList.add("active");
+	}
 };

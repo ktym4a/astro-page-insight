@@ -33,13 +33,15 @@ export type ConsoleError = {
 	content?: string;
 };
 
+export type ScoreListType = { [key: string]: number | null };
+
 export type LHResult = {
 	elements: {
 		[selector: string]: Array<AuditType>;
 	};
 	metaErrors: Array<AuditType>;
 	consoleErrors: Array<ConsoleError>;
-	scoreList: { [key: string]: number | null };
+	scoreList: ScoreListType;
 	url: string;
 };
 
