@@ -42,21 +42,21 @@ export default defineIntegration({
 					server.hot.send("astro-dev-toolbar:astro-page-insight-app:ready", {
 						breakPoint,
 					});
-				})
+				});
 
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 					async ({ width, height, url }) => {
 						try {
-							const lhResult = await startLH({
+							const lhData = await startLH({
 								url,
 								width,
 								height,
 								breakPoint,
 								weight,
 							});
-							if (lhResult) {
-								const result = organizeLHResult(lhResult, weight);
+							if (lhData.result) {
+								const result = organizeLHResult(lhData.result, weight);
 
 								server.hot.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-success",

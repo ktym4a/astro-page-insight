@@ -35,10 +35,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		document.addEventListener("astro:after-swap", initCanvas);
 
-		import.meta.hot?.send('astro-dev-toolbar:astro-page-insight-app:ready');
-		import.meta.hot?.on('astro-dev-toolbar:astro-page-insight-app:ready', ({ breakPoint: bp }) => {
-			breakPoint = bp;
-		});
+		import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:ready");
+		import.meta.hot?.on(
+			"astro-dev-toolbar:astro-page-insight-app:ready",
+			({ breakPoint: bp }) => {
+				breakPoint = bp;
+			},
+		);
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-success",

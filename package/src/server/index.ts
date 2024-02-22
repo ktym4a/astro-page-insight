@@ -17,11 +17,12 @@ export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
 
 	const isMobile = options.width <= options.breakPoint;
+	const formFactor = isMobile ? "mobile" : "desktop";
 
 	const result = await lighthouse(options.url, {
 		port: chrome.port,
 		output: "json",
-		formFactor: isMobile ? "mobile" : "desktop",
+		formFactor: formFactor,
 		disableFullPageScreenshot: true,
 		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
 		screenEmulation: {
@@ -30,7 +31,7 @@ export const startLH = async (options: LHOptions) => {
 			height: options.height,
 			deviceScaleFactor: 1,
 		},
-		throttlingMethod: "provided",
+		throttlingMethod: "simulate",
 		throttling: {
 			rttMs: 40,
 			throughputKbps: 10 * 1024,
@@ -41,7 +42,10 @@ export const startLH = async (options: LHOptions) => {
 
 	await chrome.kill();
 
-	return result;
+	return {
+		result,
+		formFactor,
+	};
 };
 
 export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
