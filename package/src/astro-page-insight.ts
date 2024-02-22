@@ -38,6 +38,12 @@ export default defineIntegration({
 				}
 			},
 			"astro:server:setup": async ({ server, logger }) => {
+				server.hot.on("astro-dev-toolbar:astro-page-insight-app:ready", () => {
+					server.hot.send("astro-dev-toolbar:astro-page-insight-app:ready", {
+						breakPoint,
+					});
+				})
+
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 					async ({ width, height, url }) => {
