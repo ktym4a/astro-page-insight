@@ -43,6 +43,7 @@ export type LHResult = {
 	consoleErrors: Array<ConsoleError>;
 	scoreList: ScoreListType;
 	url: string;
+	formFactor: "mobile" | "desktop";
 };
 
 export type Categories = {

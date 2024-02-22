@@ -17,12 +17,12 @@ export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
 
 	const isMobile = options.width <= options.breakPoint;
-	const formFactor = isMobile ? "mobile" : "desktop";
+	const formFactor = isMobile ? "mobile" : ("desktop" as const);
 
 	const result = await lighthouse(options.url, {
 		port: chrome.port,
 		output: "json",
-		formFactor: formFactor,
+		formFactor,
 		disableFullPageScreenshot: true,
 		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
 		screenEmulation: {

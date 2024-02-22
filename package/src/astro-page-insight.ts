@@ -63,6 +63,7 @@ export default defineIntegration({
 									{
 										...result,
 										url,
+										formFactor: lhData.formFactor,
 									},
 								);
 							}

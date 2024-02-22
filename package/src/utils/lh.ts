@@ -44,6 +44,7 @@ export const mappingData = (
 			position,
 			tooltips,
 			selectorCategory,
+			lhResult.formFactor,
 			detailSelector,
 		);
 
@@ -121,11 +122,13 @@ const createMapElement = (
 	position: PositionType,
 	tooltips: Tooltips,
 	selectorCategory: string[],
+	formFactor: LHResult["formFactor"],
 	detailSelector?: string,
 ) => {
 	try {
 		const highlight = createHighlight(selector, position, selectorCategory);
 		highlight.dataset.detailSelector = detailSelector;
+		highlight.dataset.formFactor = formFactor;
 
 		let title: string | undefined;
 		if (highlight.dataset.target === "rect") {

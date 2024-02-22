@@ -40,6 +40,34 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:ready",
 			({ breakPoint: bp }) => {
 				breakPoint = bp;
+
+				// const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
+
+				// const handleMediaQuery = (mql: MediaQueryListEvent) => {
+				// 	if (mql.matches) {
+				// 	//
+				// 	} else {
+				// 	  // 769px未満の場合の処理
+				// 	  console.log('769px未満');
+				// 	}
+				//   };
+
+				// mediaQuery.addEventListener('change', handleMediaQuery)
+				// add style
+				const style = document.createElement("style");
+				style.textContent = `
+					@media (max-width: ${breakPoint}px) {
+						.astro-page-insight-highlight[data-form-factor="desktop"] {
+							display: none !important;
+						}
+					}
+					@media (min-width: ${breakPoint + 1}px) {
+						.astro-page-insight-highlight[data-form-factor="mobile"] {
+							display: none !important;
+						}
+					}
+				`;
+				canvas.appendChild(style);
 			},
 		);
 
