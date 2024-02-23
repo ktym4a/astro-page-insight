@@ -169,7 +169,7 @@ const createContentTitle = (
 	titleDiv.style.gap = "5px";
 	titleWrap.appendChild(titleDiv);
 
-	if (subTitle?.includes("LCP") && scoreDisplayMode === "informative") {
+	if (subTitle?.includes("LCP") && scoreDisplayMode === "metricSavings") {
 		titleDiv.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;">${infoCircleIcon}</div>`;
 	} else {
 		const colorKey = getColorKey(score);

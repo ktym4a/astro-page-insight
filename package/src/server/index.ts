@@ -19,7 +19,10 @@ export const startLH = async (options: LHOptions) => {
 	const isMobile = options.width <= options.breakPoint;
 	const formFactor = isMobile ? "mobile" : ("desktop" as const);
 
-	const result = await lighthouse(options.url, {
+	const url = new URL(options.url);
+	url.searchParams.set("astro-page-insight", "true");
+
+	const result = await lighthouse(url.toString(), {
 		port: chrome.port,
 		output: "json",
 		formFactor,
@@ -54,10 +57,15 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	const consoleErrors = artifacts.ConsoleMessages.filter(
 		(msg) => msg.level === "error" || msg.level === "warning",
 	).map((msg) => {
+		let url: string | URL = "";
+		if (msg.url) {
+			url = new URL(msg.url);
+			url.searchParams.delete("astro-dev-toolbar");
+		}
 		return {
 			message: msg.text,
 			level: msg.level,
-			content: msg.url,
+			content: url.toString(),
 		};
 	});
 

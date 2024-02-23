@@ -53,7 +53,7 @@ export const mappingData = (
 
 	if (checkErrors(lhResult)) {
 		const tooltips = createErrorTooltipsData(lhResult);
-		const errorTooltips = createErrorTooltip(tooltips);
+		const errorTooltips = createErrorTooltip(tooltips, lhResult.formFactor);
 		canvas.appendChild(errorTooltips);
 	}
 };
@@ -192,7 +192,10 @@ const createErrorTooltipsData = (result: LHResult) => {
 	return tooltips;
 };
 
-const createErrorTooltip = (tooltips: ErrorTooltips) => {
+const createErrorTooltip = (
+	tooltips: ErrorTooltips,
+	formFactor: LHResult["formFactor"],
+) => {
 	const errorTooltips = createTooltip(tooltips, {
 		text: "There are some errors in the console or document.",
 	});
@@ -202,18 +205,22 @@ const createErrorTooltip = (tooltips: ErrorTooltips) => {
 	errorTooltips.style.left = "auto";
 	errorTooltips.style.position = "fixed";
 	errorTooltips.classList.add("non-element");
+	errorTooltips.dataset.formFactor = formFactor;
 
 	return errorTooltips;
 };
 
-export const resetLH = (canvas: ShadowRoot) => {
+export const resetLH = (
+	canvas: ShadowRoot,
+	formFactor: LHResult["formFactor"],
+) => {
 	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-highlight",
+		`.astro-page-insight-highlight[data-form-factor="${formFactor}"]`,
 	)) {
 		highlight.remove();
 	}
 	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-tooltip",
+		`.astro-page-insight-tooltip[data-form-factor="${formFactor}"]`,
 	)) {
 		tooltip.remove();
 	}

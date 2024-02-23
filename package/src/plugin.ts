@@ -2,7 +2,13 @@ import { type DevToolbarApp } from "astro";
 import type { LHResult } from "./types/index.js";
 import { createFilter } from "./ui/filter.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
-import { analyticsIcon, filterIcon, reloadCircleIcon } from "./ui/icons.js";
+import {
+	analyticsIcon,
+	desktopIcon,
+	filterIcon,
+	mobileIcon,
+	reloadCircleIcon,
+} from "./ui/icons.js";
 import { createScore } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import {
@@ -29,52 +35,74 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let scoreElement: HTMLDivElement | null;
 		let scoreButtonWrap: HTMLDivElement;
 		let lhResult: LHResult;
+		let toolbarWrap: HTMLDivElement;
 		let breakPoint: number;
+
+		const isLightHouse =
+			new URL(window.location.href).searchParams.get("astro-page-insight") ===
+			"true";
+
+		if (isLightHouse) return;
 
 		initCanvas();
 
 		document.addEventListener("astro:after-swap", initCanvas);
 
-		import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:ready");
 		import.meta.hot?.on(
-			"astro-dev-toolbar:astro-page-insight-app:ready",
+			"astro-dev-toolbar:astro-page-insight-app:options",
 			({ breakPoint: bp }) => {
 				breakPoint = bp;
 
-				// const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
+				let icon = desktopIcon;
+				if (document.documentElement.clientWidth <= breakPoint) {
+					icon = mobileIcon;
+				}
+				const indicatorButton = createToolbarButton(
+					icon,
+					"indicator",
+					() => {},
+					"Here is current checked device.",
+				);
+				indicatorButton.disabled = true;
+				const indicatorButtonWrap = document.createElement("div");
+				indicatorButtonWrap.classList.add(
+					"astro-page-insight-toolbar-button-wrap",
+				);
+				indicatorButtonWrap.appendChild(indicatorButton);
+				toolbarWrap.appendChild(indicatorButtonWrap);
 
-				// const handleMediaQuery = (mql: MediaQueryListEvent) => {
-				// 	if (mql.matches) {
-				// 	//
-				// 	} else {
-				// 	  // 769px未満の場合の処理
-				// 	  console.log('769px未満');
-				// 	}
-				//   };
+				const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
 
-				// mediaQuery.addEventListener('change', handleMediaQuery)
-				// add style
-				// const style = document.createElement("style");
-				// style.textContent = `
-				// 	@media (max-width: ${breakPoint}px) {
-				// 		.astro-page-insight-highlight[data-form-factor="desktop"] {
-				// 			display: none !important;
-				// 		}
-				// 	}
-				// 	@media (min-width: ${breakPoint + 1}px) {
-				// 		.astro-page-insight-highlight[data-form-factor="mobile"] {
-				// 			display: none !important;
-				// 		}
-				// 	}
-				// `;
-				// canvas.appendChild(style);
+				const handleMediaQuery = (mql: MediaQueryListEvent) => {
+					if (mql.matches) {
+						indicatorButton.innerHTML = mobileIcon;
+					} else {
+						indicatorButton.innerHTML = desktopIcon;
+					}
+				};
+
+				mediaQuery.addEventListener("change", handleMediaQuery);
+
+				const style = document.createElement("style");
+				style.textContent = `
+					@media (max-width: ${breakPoint}px) {
+						*[data-form-factor="desktop"] {
+							display: none !important;
+						}
+					}
+					@media (min-width: ${breakPoint + 1}px) {
+						*[data-form-factor="mobile"] {
+							display: none !important;
+						}
+					}
+				`;
+				canvas.appendChild(style);
 			},
 		);
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
 			(result: LHResult) => {
-				resetLH(canvas);
 				if (result.url !== window.location.href) {
 					errorToggle();
 
@@ -85,6 +113,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					);
 					return;
 				}
+
+				resetLH(canvas, result.formFactor);
 
 				lhResult = result;
 				showCategory = filterCategory = Object.keys(lhResult.scoreList).sort();
@@ -113,7 +143,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-error",
 			(message: string) => {
-				resetLH(canvas);
 				errorToggle();
 
 				showToast(toastArea, message, "error");
@@ -155,7 +184,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
         }
       </style>
       `;
-			const toolbarWrap = createToolbar(canvas);
+			toolbarWrap = createToolbar(canvas);
 			toastArea = createToastArea();
 			canvas.appendChild(toastArea);
 
@@ -216,6 +245,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			for (const event of ["scroll", "resize"]) {
 				window.addEventListener(event, () => refreshHighlightPositions(canvas));
 			}
+
+			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init");
 		}
 
 		function fetchStart() {

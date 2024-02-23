@@ -70,8 +70,8 @@ const updateHHighlightPosition = (
 		highlight.style.width = `${rect.width + 15}px`;
 		highlight.style.height = `${rect.height + 15}px`;
 	} else if (rect) {
-		highlight.style.top = `${Math.max(rect.top + window.scrollY - 10, 0)}px`;
-		highlight.style.left = `${Math.max(rect.left + window.scrollX - 10, 0)}px`;
+		highlight.style.top = `${Math.max(rect.top - 10, 0)}px`;
+		highlight.style.left = `${Math.max(rect.left - 10, 0)}px`;
 		highlight.style.width = `${rect.width + 15}px`;
 		highlight.style.height = `${rect.height + 15}px`;
 		highlight.dataset.target = "rect";
