@@ -54,20 +54,20 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				// mediaQuery.addEventListener('change', handleMediaQuery)
 				// add style
-				const style = document.createElement("style");
-				style.textContent = `
-					@media (max-width: ${breakPoint}px) {
-						.astro-page-insight-highlight[data-form-factor="desktop"] {
-							display: none !important;
-						}
-					}
-					@media (min-width: ${breakPoint + 1}px) {
-						.astro-page-insight-highlight[data-form-factor="mobile"] {
-							display: none !important;
-						}
-					}
-				`;
-				canvas.appendChild(style);
+				// const style = document.createElement("style");
+				// style.textContent = `
+				// 	@media (max-width: ${breakPoint}px) {
+				// 		.astro-page-insight-highlight[data-form-factor="desktop"] {
+				// 			display: none !important;
+				// 		}
+				// 	}
+				// 	@media (min-width: ${breakPoint + 1}px) {
+				// 		.astro-page-insight-highlight[data-form-factor="mobile"] {
+				// 			display: none !important;
+				// 		}
+				// 	}
+				// `;
+				// canvas.appendChild(style);
 			},
 		);
 

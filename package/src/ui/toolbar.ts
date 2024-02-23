@@ -147,7 +147,9 @@ export const createToolbarWrapper = (type: string) => {
 	toolbarWrapper.style.borderRadius = "5px";
 	toolbarWrapper.style.padding = "15px 10px";
 	toolbarWrapper.style.border = "1px solid #cdd6f4";
-	toolbarWrapper.style.width = "300px";
+	toolbarWrapper.style.maxWidth = "300px";
+	toolbarWrapper.style.minWidth = "200px";
+	toolbarWrapper.style.width = "50vw";
 	toolbarWrapper.style.overflowY = "auto";
 	toolbarWrapper.style.right = "65px";
 	toolbarWrapper.style.bottom = "50px";

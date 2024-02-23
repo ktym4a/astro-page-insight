@@ -11,7 +11,9 @@ export const createToastArea = () => {
 	toastArea.style.display = "flex";
 	toastArea.style.flexDirection = "column";
 	toastArea.style.gap = "15px";
-	toastArea.style.width = "380px";
+	toastArea.style.maxWidth = "380px";
+	toastArea.style.minWidth = "200px";
+	toastArea.style.width = "50vw";
 	toastArea.style.zIndex = "4000000";
 
 	return toastArea;
