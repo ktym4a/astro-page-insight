@@ -12,13 +12,13 @@ import {
 
 export const createFilter = (
 	canvas: ShadowRoot,
-	showCategory: string[],
-	data: {
-		lhResult: LHResult;
-		filterCategory: string[];
+	categories: {
+		[category: string]: boolean;
 	},
+	lhResult: LHResult,
 ) => {
 	const toolbarWrapper = createToolbarWrapper("filter");
+	toolbarWrapper.dataset.formFactor = lhResult.formFactor;
 	toolbarWrapper.innerHTML = `
     <style>
         .astro-page-insight-filter button {
@@ -64,19 +64,23 @@ export const createFilter = (
 
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
-	for (const [index, category] of showCategory.entries()) {
+
+	const categoryArray = Object.entries(categories);
+
+	for (const [index, category] of categoryArray.entries()) {
 		const categoryCount = canvas.querySelectorAll(
-			`[data-filter-category="${category}"]`,
+			`[data-filter-category="${category[0]}"]`,
 		).length;
 
-		const text = `${category} (${categoryCount})`;
+		const text = `${category[0]} (${categoryCount})`;
 
 		const content = createContent(
 			canvas,
 			text,
-			index === showCategory.length - 1,
-			category,
-			data,
+			index === categoryArray.length - 1,
+			category[0],
+			lhResult,
+			categories,
 		);
 		contentWrapper.appendChild(content);
 	}
@@ -92,9 +96,9 @@ const createContent = (
 	content: string,
 	isLast: boolean,
 	category: string,
-	data: {
-		lhResult: LHResult;
-		filterCategory: string[];
+	lhResult: LHResult,
+	categories: {
+		[category: string]: boolean;
 	},
 ) => {
 	const contentElement = document.createElement("div");
@@ -113,22 +117,21 @@ const createContent = (
 	textElement.style.margin = "0";
 	contentWrapper.appendChild(textElement);
 
-	const button = createToolbarButton(eyeIcon);
+	const button = createToolbarButton(eyeIcon, contentWrapper);
 	button.classList.add("astro-page-insight-filter-button");
 	button.addEventListener("click", () => {
-		if (data.filterCategory.includes(category)) {
-			data.filterCategory.splice(data.filterCategory.indexOf(category), 1);
+		if (categories[category]) {
+			categories[category] = false;
 			button.innerHTML = eyeXIcon;
 			contentWrapper.style.background = "#6c7086";
 		} else {
-			data.filterCategory.push(category);
+			categories[category] = true;
 			button.innerHTML = eyeIcon;
 			contentWrapper.style.background = "transparent";
 		}
-		resetHighlights(canvas);
-		mappingData(canvas, data.lhResult, data.filterCategory);
+		resetHighlights(canvas, lhResult.formFactor);
+		mappingData(canvas, lhResult, categories);
 	});
-	contentWrapper.appendChild(button);
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "12px";

@@ -22,7 +22,9 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 export const mappingData = (
 	canvas: ShadowRoot,
 	lhResult: LHResult,
-	filterCategory: string[],
+	filterCategory: {
+		[category: string]: boolean;
+	},
 ) => {
 	for (const [selector, value] of Object.entries(lhResult.elements)) {
 		if (!value[0]) continue;
@@ -74,7 +76,9 @@ const checkAudit = (selector: string, position: PositionType) => {
 const createAuditData = (
 	value: AuditType[],
 	selector: string,
-	filterCategory: string[],
+	filterCategory: {
+		[category: string]: boolean;
+	},
 ) => {
 	let score: number | null = 1;
 	let selectorCategory = [] as string[];
@@ -84,7 +88,7 @@ const createAuditData = (
 		if (selector === "") {
 			continue;
 		}
-		if (!audit.categories.some((category) => filterCategory.includes(category)))
+		if (!audit.categories.some((category) => filterCategory[category]))
 			continue;
 
 		score =
@@ -95,7 +99,7 @@ const createAuditData = (
 			...Array.from(new Set([...selectorCategory, ...audit.categories])),
 		];
 		for (const category of audit.categories) {
-			if (!filterCategory.includes(category)) continue;
+			if (!filterCategory[category]) continue;
 
 			tooltips[category] = [
 				...(tooltips[category] ?? []),
@@ -225,12 +229,12 @@ export const resetLH = (
 		tooltip.remove();
 	}
 	for (const filter of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-filter",
+		`.astro-page-insight-filter[data-form-factor="${formFactor}"]`,
 	)) {
 		filter.remove();
 	}
 	for (const score of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-score",
+		`.astro-page-insight-score[data-form-factor="${formFactor}"]`,
 	)) {
 		score.remove();
 	}

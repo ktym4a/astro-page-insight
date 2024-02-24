@@ -24,19 +24,20 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	icon: "file-search",
 	init(canvas) {
 		let isFetching = false;
-		let fetchButton: HTMLButtonElement;
-		let toastArea: HTMLDivElement;
-		let showCategory: string[];
-		let filterCategory: string[];
-		let filterButton: HTMLButtonElement;
-		let filterElement: HTMLDivElement | null;
-		let filterButtonWrap: HTMLDivElement;
-		let scoreButton: HTMLButtonElement;
-		let scoreElement: HTMLDivElement | null;
-		let scoreButtonWrap: HTMLDivElement;
-		let lhResult: LHResult;
-		let toolbarWrap: HTMLDivElement;
-		let breakPoint: number;
+		let fetchButton: HTMLButtonElement | undefined;
+		let categories:
+			| {
+					[category: string]: boolean;
+			  }
+			| undefined;
+		let filterButton: HTMLButtonElement | undefined;
+		let filterElement: HTMLDivElement | undefined;
+		let filterButtonWrap: HTMLDivElement | undefined;
+		let scoreButton: HTMLButtonElement | undefined;
+		let scoreElement: HTMLDivElement | undefined;
+		let scoreButtonWrap: HTMLDivElement | undefined;
+		let breakPoint: number | undefined;
+		let isFirstLoad = true;
 
 		const isLightHouse =
 			new URL(window.location.href).searchParams.get("astro-page-insight") ===
@@ -45,43 +46,92 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		if (isLightHouse) return;
 
 		initCanvas();
-
-		document.addEventListener("astro:after-swap", initCanvas);
+		document.addEventListener("astro:page-load", initCanvas);
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:options",
-			({ breakPoint: bp }) => {
+			({
+				breakPoint: bp,
+			}: {
+				breakPoint: number;
+			}) => {
 				breakPoint = bp;
 
-				let icon = desktopIcon;
-				if (document.documentElement.clientWidth <= breakPoint) {
-					icon = mobileIcon;
-				}
-				const indicatorButton = createToolbarButton(
+				const toolbarWrap = createToolbar(canvas);
+				createToastArea(canvas);
+
+				scoreButton = createToolbarButton(
+					analyticsIcon,
+					toolbarWrap,
+					true,
+					"score",
+					() => {
+						if (!scoreElement) return;
+						toggleToolbarWrapper(canvas, "score");
+					},
+					"Show the score of each category.",
+				);
+
+				filterButton = createToolbarButton(
+					filterIcon,
+					toolbarWrap,
+					true,
+					"filter",
+					() => {
+						if (!filterElement) return;
+						toggleToolbarWrapper(canvas, "filter");
+					},
+					"Filter the result.",
+				);
+
+				fetchButton = createToolbarButton(
+					reloadCircleIcon,
+					toolbarWrap,
+					false,
+					"fetch",
+					() => {
+						if (isFetching) return;
+						fetchStart();
+						fetchLighthouse(
+							document.documentElement.clientWidth,
+							document.documentElement.clientWidth,
+							window.location.href,
+						);
+					},
+					"Fetch Lighthouse report.",
+				);
+
+				const icon =
+					document.documentElement.clientWidth <= breakPoint
+						? mobileIcon
+						: desktopIcon;
+				createToolbarButton(
 					icon,
+					toolbarWrap,
+					true,
 					"indicator",
 					() => {},
 					"Here is current checked device.",
 				);
-				indicatorButton.disabled = true;
-				const indicatorButtonWrap = document.createElement("div");
-				indicatorButtonWrap.classList.add(
-					"astro-page-insight-toolbar-button-wrap",
-				);
-				indicatorButtonWrap.appendChild(indicatorButton);
-				toolbarWrap.appendChild(indicatorButtonWrap);
 
-				const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
+				if (isFirstLoad) {
+					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
 
-				const handleMediaQuery = (mql: MediaQueryListEvent) => {
-					if (mql.matches) {
-						indicatorButton.innerHTML = mobileIcon;
-					} else {
-						indicatorButton.innerHTML = desktopIcon;
-					}
-				};
+					const handleMediaQuery = (mql: MediaQueryListEvent) => {
+						const indicatorButton = canvas.querySelector<HTMLButtonElement>(
+							'button[data-button-type="indicator"]',
+						);
+						if (!indicatorButton) return;
+						if (mql.matches) {
+							indicatorButton.innerHTML = mobileIcon;
+						} else {
+							indicatorButton.innerHTML = desktopIcon;
+						}
+					};
 
-				mediaQuery.addEventListener("change", handleMediaQuery);
+					mediaQuery.addEventListener("change", handleMediaQuery);
+					isFirstLoad = false;
+				}
 
 				const style = document.createElement("style");
 				style.textContent = `
@@ -107,7 +157,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					errorToggle();
 
 					showToast(
-						toastArea,
 						"The result is not for this page.\n Please try again.",
 						"error",
 					);
@@ -116,27 +165,30 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				resetLH(canvas, result.formFactor);
 
-				lhResult = result;
-				showCategory = filterCategory = Object.keys(lhResult.scoreList).sort();
+				if (!categories) {
+					categories = Object.keys(result.scoreList)
+						.sort()
+						.reduce((acc, cur) => {
+							// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+							return { ...acc, [cur]: true };
+						}, {});
+				}
 
-				mappingData(canvas, lhResult, filterCategory);
+				mappingData(canvas, result, categories);
 
-				filterElement = createFilter(canvas, showCategory, {
-					filterCategory,
-					lhResult,
-				});
-				filterButtonWrap.appendChild(filterElement);
+				if (filterButtonWrap) {
+					filterElement = createFilter(canvas, categories, result);
+					filterButtonWrap.appendChild(filterElement);
+				}
 
-				scoreElement = createScore(lhResult.scoreList);
-				scoreButtonWrap.appendChild(scoreElement);
+				if (scoreButtonWrap) {
+					scoreElement = createScore(result.scoreList, result.formFactor);
+					scoreButtonWrap.appendChild(scoreElement);
+				}
 
 				fetchSuccess();
 
-				showToast(
-					toastArea,
-					"Analysis of lighthouse results is complete.",
-					"success",
-				);
+				showToast("Analysis of lighthouse results is complete.", "success");
 			},
 		);
 
@@ -145,7 +197,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			(message: string) => {
 				errorToggle();
 
-				showToast(toastArea, message, "error");
+				showToast(message, "error");
 			},
 		);
 
@@ -184,93 +236,42 @@ const astroPageInsightToolbar: DevToolbarApp = {
         }
       </style>
       `;
-			toolbarWrap = createToolbar(canvas);
-			toastArea = createToastArea();
-			canvas.appendChild(toastArea);
-
-			scoreButton = createToolbarButton(
-				analyticsIcon,
-				"score",
-				() => {
-					if (!scoreElement) return;
-					toggleToolbarWrapper(canvas, "score");
-				},
-				"Show the score of each category.",
-			);
-			scoreButton.disabled = true;
-			scoreButtonWrap = document.createElement("div");
-			scoreButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
-			scoreButtonWrap.appendChild(scoreButton);
-			toolbarWrap.appendChild(scoreButtonWrap);
-
-			filterButton = createToolbarButton(
-				filterIcon,
-				"filter",
-				() => {
-					if (!filterElement) return;
-					toggleToolbarWrapper(canvas, "filter");
-				},
-				"Filter the result.",
-			);
-			filterButton.disabled = true;
-			filterButtonWrap = document.createElement("div");
-			filterButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
-			filterButtonWrap.appendChild(filterButton);
-			toolbarWrap.appendChild(filterButtonWrap);
-
-			fetchButton = createToolbarButton(
-				reloadCircleIcon,
-				"fetch",
-				() => {
-					if (isFetching) return;
-					fetchStart();
-
-					fetchLighthouse(
-						document.documentElement.clientWidth,
-						document.documentElement.clientWidth,
-						window.location.href,
-					);
-				},
-				"Fetch Lighthouse report.",
-			);
-
-			if (isFetching) {
-				fetchStart();
+			if (isFirstLoad) {
+				for (const event of ["scroll", "resize"]) {
+					window.addEventListener(event, () => {
+						refreshHighlightPositions(canvas);
+					});
+				}
 			}
-			const fetchButtonWrap = document.createElement("div");
-			fetchButtonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
-			fetchButtonWrap.appendChild(fetchButton);
-			toolbarWrap.appendChild(fetchButtonWrap);
-
-			for (const event of ["scroll", "resize"]) {
-				window.addEventListener(event, () => refreshHighlightPositions(canvas));
-			}
-
 			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init");
 		}
 
 		function fetchStart() {
 			isFetching = true;
-			fetchButton.classList.add("animate");
-			fetchButton.disabled = true;
-			filterButton.disabled = true;
-			scoreButton.disabled = true;
+			if (fetchButton) {
+				fetchButton.classList.add("animate");
+				fetchButton.disabled = isFetching;
+			}
+			if (filterButton) filterButton.disabled = isFetching;
+			if (scoreButton) scoreButton.disabled = isFetching;
 		}
 
 		function fetchSuccess() {
 			isFetching = false;
-			fetchButton.classList.remove("animate");
-			fetchButton.disabled = false;
-			filterButton.disabled = false;
-			scoreButton.disabled = false;
+			if (fetchButton) {
+				fetchButton.classList.remove("animate");
+				fetchButton.disabled = isFetching;
+			}
+			if (filterButton) filterButton.disabled = isFetching;
+			if (scoreButton) scoreButton.disabled = isFetching;
 		}
 
 		function errorToggle() {
 			isFetching = false;
-			fetchButton.classList.remove("animate");
-			fetchButton.disabled = false;
-			filterButton.disabled = true;
-			scoreButton.disabled = true;
+			if (fetchButton) {
+				fetchButton.classList.remove("animate");
+				fetchButton.disabled = isFetching;
+			}
 		}
 	},
 };

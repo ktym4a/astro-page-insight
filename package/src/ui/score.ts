@@ -1,11 +1,15 @@
 import { COLORS } from "../constants/index.js";
-import type { ScoreListType } from "../types/index.js";
+import type { LHResult, ScoreListType } from "../types/index.js";
 import { getColorKey } from "../utils/color.js";
 import { analyticsIcon } from "./icons.js";
 import { createToolbarTitle, createToolbarWrapper } from "./toolbar.js";
 
-export const createScore = (scoreList: ScoreListType) => {
+export const createScore = (
+	scoreList: ScoreListType,
+	formFactor: LHResult["formFactor"],
+) => {
 	const scoreWrapper = createToolbarWrapper("score");
+	scoreWrapper.dataset.formFactor = formFactor;
 
 	const titleElement = createToolbarTitle("Score", analyticsIcon);
 	scoreWrapper.appendChild(titleElement);

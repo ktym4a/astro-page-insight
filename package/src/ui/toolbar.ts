@@ -118,6 +118,8 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 export const createToolbarButton = (
 	icon: string,
+	buttonParent: HTMLDivElement,
+	disabled?: boolean,
 	type?: string,
 	onClick?: () => void,
 	tooltip?: string,
@@ -126,12 +128,20 @@ export const createToolbarButton = (
 
 	button.innerHTML = icon;
 	button.type = "button";
+	if (disabled) button.disabled = true;
 	if (type) button.dataset.buttonType = type;
 	if (onClick) button.onclick = onClick;
 
 	if (tooltip) {
 		button.dataset.tooltip = tooltip;
 	}
+
+	const buttonWrap = document.createElement("div");
+	buttonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
+	buttonWrap.classList.add(`astro-page-insight-toolbar-button-wrap-${type}`);
+	buttonWrap.appendChild(button);
+
+	buttonParent.appendChild(buttonWrap);
 
 	return button;
 };
