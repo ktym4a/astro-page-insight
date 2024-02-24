@@ -150,7 +150,7 @@ export const createToolbarWrapper = (type: string) => {
 	const toolbarWrapper = document.createElement("div");
 	toolbarWrapper.dataset.type = type;
 
-	toolbarWrapper.classList.add(`astro-page-insight-${type}`);
+	toolbarWrapper.classList.add(`astro-page-insight-modal-${type}`);
 	toolbarWrapper.style.position = "fixed";
 	toolbarWrapper.style.background = "#181825";
 	toolbarWrapper.style.color = "#cdd6f4";

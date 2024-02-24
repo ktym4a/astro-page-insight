@@ -1,15 +1,18 @@
 import { type DevToolbarApp } from "astro";
-import type { LHResult } from "./types/index.js";
+import type {
+	LHResult,
+	ScoreListByFormFactor,
+	ScoreListType,
+} from "./types/index.js";
 import { createFilter } from "./ui/filter.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
 import {
-	analyticsIcon,
 	desktopIcon,
 	filterIcon,
 	mobileIcon,
 	reloadCircleIcon,
 } from "./ui/icons.js";
-import { createScore } from "./ui/score.js";
+import { createScore, createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import {
 	createToolbar,
@@ -34,10 +37,10 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let filterElement: HTMLDivElement | undefined;
 		let filterButtonWrap: HTMLDivElement | undefined;
 		let scoreButton: HTMLButtonElement | undefined;
-		let scoreElement: HTMLDivElement | undefined;
-		let scoreButtonWrap: HTMLDivElement | undefined;
 		let breakPoint: number | undefined;
 		let isFirstLoad = true;
+		let scoreListByFormFactor: ScoreListByFormFactor;
+		let formFactor: "mobile" | "desktop" = "desktop";
 
 		const isLightHouse =
 			new URL(window.location.href).searchParams.get("astro-page-insight") ===
@@ -52,30 +55,22 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			"astro-dev-toolbar:astro-page-insight-app:options",
 			({
 				breakPoint: bp,
+				categories,
 			}: {
 				breakPoint: number;
+				categories: string[];
 			}) => {
 				breakPoint = bp;
 
 				const toolbarWrap = createToolbar(canvas);
 				createToastArea(canvas);
 
-				scoreButton = createToolbarButton(
-					analyticsIcon,
-					toolbarWrap,
-					true,
-					"score",
-					() => {
-						if (!scoreElement) return;
-						toggleToolbarWrapper(canvas, "score");
-					},
-					"Show the score of each category.",
-				);
+				scoreButton = createScoreButton(canvas, toolbarWrap);
 
 				filterButton = createToolbarButton(
 					filterIcon,
 					toolbarWrap,
-					true,
+					false,
 					"filter",
 					() => {
 						if (!filterElement) return;
@@ -101,10 +96,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					"Fetch Lighthouse report.",
 				);
 
-				const icon =
+				formFactor =
 					document.documentElement.clientWidth <= breakPoint
-						? mobileIcon
-						: desktopIcon;
+						? "mobile"
+						: "desktop";
+				const icon = formFactor === "mobile" ? mobileIcon : desktopIcon;
 				createToolbarButton(
 					icon,
 					toolbarWrap,
@@ -113,25 +109,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					() => {},
 					"Here is current checked device.",
 				);
-
-				if (isFirstLoad) {
-					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
-
-					const handleMediaQuery = (mql: MediaQueryListEvent) => {
-						const indicatorButton = canvas.querySelector<HTMLButtonElement>(
-							'button[data-button-type="indicator"]',
-						);
-						if (!indicatorButton) return;
-						if (mql.matches) {
-							indicatorButton.innerHTML = mobileIcon;
-						} else {
-							indicatorButton.innerHTML = desktopIcon;
-						}
-					};
-
-					mediaQuery.addEventListener("change", handleMediaQuery);
-					isFirstLoad = false;
-				}
 
 				const style = document.createElement("style");
 				style.textContent = `
@@ -147,6 +124,39 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					}
 				`;
 				canvas.appendChild(style);
+
+				const scoreList: ScoreListType = categories.reduce((acc, cur) => {
+					// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+					return { ...acc, [cur]: null };
+				}, {});
+				scoreListByFormFactor = {
+					mobile: scoreList,
+					desktop: scoreList,
+				};
+
+				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
+
+				if (isFirstLoad) {
+					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
+
+					const handleMediaQuery = (mql: MediaQueryListEvent) => {
+						const indicatorButton = canvas.querySelector<HTMLButtonElement>(
+							'button[data-button-type="indicator"]',
+						);
+						if (!indicatorButton) return;
+						if (mql.matches) {
+							formFactor = "mobile";
+							indicatorButton.innerHTML = mobileIcon;
+						} else {
+							formFactor = "desktop";
+							indicatorButton.innerHTML = desktopIcon;
+						}
+						createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
+					};
+
+					mediaQuery.addEventListener("change", handleMediaQuery);
+					isFirstLoad = false;
+				}
 			},
 		);
 
@@ -181,10 +191,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					filterButtonWrap.appendChild(filterElement);
 				}
 
-				if (scoreButtonWrap) {
-					scoreElement = createScore(result.scoreList, result.formFactor);
-					scoreButtonWrap.appendChild(scoreElement);
-				}
+				scoreListByFormFactor[result.formFactor] = result.scoreList;
+				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 
 				fetchSuccess();
 

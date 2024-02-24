@@ -35,6 +35,11 @@ export type ConsoleError = {
 
 export type ScoreListType = { [key: string]: number | null };
 
+export type ScoreListByFormFactor = {
+	mobile: ScoreListType;
+	desktop: ScoreListType;
+};
+
 export type LHResult = {
 	elements: {
 		[selector: string]: Array<AuditType>;

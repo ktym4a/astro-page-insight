@@ -1,6 +1,7 @@
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { z } from "astro/zod";
+import { CATEGORIES } from "./constants/index.js";
 import { organizeLHResult, startLH } from "./server/index.js";
 
 export default defineIntegration({
@@ -41,6 +42,7 @@ export default defineIntegration({
 				server.hot.on("astro-dev-toolbar:astro-page-insight-app:init", () => {
 					server.hot.send("astro-dev-toolbar:astro-page-insight-app:options", {
 						breakPoint,
+						categories: CATEGORIES,
 					});
 				});
 
