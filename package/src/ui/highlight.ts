@@ -1,5 +1,5 @@
 import { COLORS } from "../constants/index.js";
-import type { LHResult, PositionType } from "../types/index.js";
+import type { PositionType } from "../types/index.js";
 
 export const createHighlight = (
 	selector: string,
@@ -119,15 +119,4 @@ const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 	title.textContent = categories.sort().join(", ");
 
 	highlight.appendChild(title);
-};
-
-export const resetHighlights = (
-	canvas: ShadowRoot,
-	formFactor: LHResult["formFactor"],
-) => {
-	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
-		`.astro-page-insight-highlight[data-form-factor="${formFactor}"]`,
-	)) {
-		highlight.remove();
-	}
 };

@@ -2,7 +2,10 @@ import type {
 	CategoryCountType,
 	FilterCategoryType,
 	LHResult,
+	LHResultByFormFactor,
+	LHResultForTooltip,
 } from "../types/index.js";
+import { mappingData } from "../utils/lh.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
 	createDetails,
@@ -36,6 +39,7 @@ export const createFilter = (
 	formFactor: LHResult["formFactor"],
 	categoryCount: CategoryCountType,
 	filterCategories: FilterCategoryType,
+	lhResult: LHResultForTooltip,
 ) => {
 	const existingFilter = canvas.querySelector(
 		".astro-page-insight-modal-filter",
@@ -105,6 +109,10 @@ export const createFilter = (
 			index === categoryArray.length - 1,
 			category[0],
 			filterCategories,
+			{
+				canvas,
+				lhResult,
+			},
 		);
 		contentWrapper.appendChild(content);
 	}
@@ -124,6 +132,13 @@ const createContent = (
 	isLast: boolean,
 	category: string,
 	filterCategories: FilterCategoryType,
+	{
+		canvas,
+		lhResult,
+	}: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
 ) => {
 	const contentElement = document.createElement("div");
 	const contentWrapper = document.createElement("div");
@@ -158,6 +173,7 @@ const createContent = (
 			button.innerHTML = eyeXIcon;
 			contentWrapper.style.background = "#6c7086";
 		}
+		mappingData(canvas, lhResult, filterCategories);
 	});
 
 	if (!isLast) {

@@ -44,6 +44,10 @@ export const createToolbar = (canvas: ShadowRoot) => {
 			display: block !important;
 		}
 
+		.astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.active:disabled + div {
+			display: none !important;
+		}
+
         .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:hover {
             background-color: #45475a;
         }

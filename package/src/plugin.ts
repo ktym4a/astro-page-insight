@@ -3,6 +3,7 @@ import type {
 	CategoryCountByFormFactor,
 	FilterCategoryType,
 	LHResult,
+	LHResultByFormFactor,
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
@@ -12,7 +13,7 @@ import { desktopIcon, mobileIcon, reloadCircleIcon } from "./ui/icons.js";
 import { createScore, createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
-import { fetchLighthouse, mappingData, resetLH } from "./utils/lh.js";
+import { fetchLighthouse, mappingData } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -28,6 +29,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let filterCategories: FilterCategoryType;
 		let scoreListByFormFactor: ScoreListByFormFactor;
 		let categoryCountByFormFactor: CategoryCountByFormFactor;
+		let lhResultByFormFactor: LHResultByFormFactor;
 		let formFactor: "mobile" | "desktop" = "desktop";
 
 		const isLightHouse =
@@ -122,6 +124,18 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					mobile: {},
 					desktop: {},
 				};
+				lhResultByFormFactor = {
+					mobile: {
+						elements: {},
+						metaErrors: [],
+						consoleErrors: [],
+					},
+					desktop: {
+						elements: {},
+						metaErrors: [],
+						consoleErrors: [],
+					},
+				};
 
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 				createFilter(
@@ -129,6 +143,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					formFactor,
 					categoryCountByFormFactor[formFactor],
 					filterCategories,
+					lhResultByFormFactor[formFactor],
 				);
 
 				if (isFirstLoad) {
@@ -145,12 +160,18 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							formFactor = "desktop";
 							if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
 						}
+						mappingData(
+							canvas,
+							lhResultByFormFactor[formFactor],
+							filterCategories,
+						);
 						createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 						createFilter(
 							canvas,
 							formFactor,
 							categoryCountByFormFactor[formFactor],
 							filterCategories,
+							lhResultByFormFactor[formFactor],
 						);
 					};
 					mediaQuery.addEventListener("change", handleMediaQuery);
@@ -172,32 +193,22 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					return;
 				}
 
-				resetLH(canvas, result.formFactor);
-
-				// if (!categories) {
-				// 	categories = Object.keys(result.scoreList)
-				// 		.sort()
-				// 		.reduce((acc, cur) => {
-				// 			// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-				// 			return { ...acc, [cur]: true };
-				// 		}, {});
-				// }
-
-				// mappingData(canvas, result, categories);
-
-				// if (filterButtonWrap) {
-				// 	filterElement = createFilter(canvas, categories, result);
-				// 	filterButtonWrap.appendChild(filterElement);
-				// }
-
+				lhResultByFormFactor[result.formFactor] = {
+					elements: result.elements,
+					metaErrors: result.metaErrors,
+					consoleErrors: result.consoleErrors,
+				};
 				scoreListByFormFactor[result.formFactor] = result.scoreList;
 				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
+
+				mappingData(canvas, lhResultByFormFactor[formFactor], filterCategories);
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 				createFilter(
 					canvas,
 					formFactor,
 					categoryCountByFormFactor[formFactor],
 					filterCategories,
+					lhResultByFormFactor[formFactor],
 				);
 
 				fetchSuccess();
