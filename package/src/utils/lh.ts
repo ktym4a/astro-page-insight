@@ -8,7 +8,34 @@ import type {
 	Tooltips,
 } from "../types/index.js";
 import { createHighlight } from "../ui/highlight.js";
+import { reloadCircleIcon } from "../ui/icons.js";
+import { createToolbarButton } from "../ui/toolbar.js";
 import { createTooltip } from "../ui/tooltip.js";
+
+export const createFetchButton = (
+	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
+	fetchStart: () => void,
+) => {
+	const fetchButton = createToolbarButton(
+		reloadCircleIcon,
+		toolbarWrap,
+		false,
+		"fetch",
+		() => {
+			if (isFetching) return;
+			fetchStart();
+			fetchLighthouse(
+				document.documentElement.clientWidth,
+				document.documentElement.clientWidth,
+				window.location.href,
+			);
+		},
+		"Fetch Lighthouse report.",
+	);
+
+	return fetchButton;
+};
 
 export const fetchLighthouse = (width: number, height: number, url: string) => {
 	import.meta.hot?.send(

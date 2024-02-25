@@ -10,10 +10,15 @@ import type {
 import { createFilter, createFilterButton } from "./ui/filter.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
 import { desktopIcon, mobileIcon, reloadCircleIcon } from "./ui/icons.js";
+import {
+	createIndicatorButton,
+	getFormFactor,
+	getIcon,
+} from "./ui/indicator.js";
 import { createScore, createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
-import { fetchLighthouse, mappingData } from "./utils/lh.js";
+import { createFetchButton, fetchLighthouse, mappingData } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -59,36 +64,12 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				filterButton = createFilterButton(canvas, toolbarWrap);
 
-				fetchButton = createToolbarButton(
-					reloadCircleIcon,
-					toolbarWrap,
-					false,
-					"fetch",
-					() => {
-						if (isFetching) return;
-						fetchStart();
-						fetchLighthouse(
-							document.documentElement.clientWidth,
-							document.documentElement.clientWidth,
-							window.location.href,
-						);
-					},
-					"Fetch Lighthouse report.",
-				);
+				fetchButton = createFetchButton(toolbarWrap, isFetching, fetchStart);
 
-				formFactor =
-					document.documentElement.clientWidth <= breakPoint
-						? "mobile"
-						: "desktop";
-				const icon = formFactor === "mobile" ? mobileIcon : desktopIcon;
-				createToolbarButton(
-					icon,
-					toolbarWrap,
-					true,
-					"indicator",
-					() => {},
-					"Here is current checked device.",
-				);
+				formFactor = getFormFactor(breakPoint);
+
+				const icon = getIcon(formFactor);
+				createIndicatorButton(toolbarWrap, icon);
 
 				const style = document.createElement("style");
 				style.textContent = `

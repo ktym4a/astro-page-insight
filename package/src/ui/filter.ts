@@ -2,7 +2,6 @@ import type {
 	CategoryCountType,
 	FilterCategoryType,
 	LHResult,
-	LHResultByFormFactor,
 	LHResultForTooltip,
 } from "../types/index.js";
 import { mappingData } from "../utils/lh.js";
