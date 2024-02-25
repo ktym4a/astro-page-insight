@@ -7,7 +7,7 @@ export type PositionType = {
 	height: number;
 };
 
-export type PluginOptions = {
+type PluginOptions = {
 	breakPoint: number;
 	weight: number;
 };
@@ -27,17 +27,27 @@ export type AuditType = Pick<
 	detailSelector?: string;
 };
 
-export type ConsoleError = {
+type ConsoleError = {
 	message: string;
 	level: string;
 	content?: string;
 };
 
 export type ScoreListType = { [key: string]: number | null };
+export type CategoryCountType = { [key: string]: number };
 
 export type ScoreListByFormFactor = {
 	mobile: ScoreListType;
 	desktop: ScoreListType;
+};
+
+export type CategoryCountByFormFactor = {
+	mobile: CategoryCountType;
+	desktop: CategoryCountType;
+};
+
+export type FilterCategoryType = {
+	[category: string]: boolean;
 };
 
 export type LHResult = {
@@ -47,6 +57,7 @@ export type LHResult = {
 	metaErrors: Array<AuditType>;
 	consoleErrors: Array<ConsoleError>;
 	scoreList: ScoreListType;
+	categoryCount: CategoryCountType;
 	url: string;
 	formFactor: "mobile" | "desktop";
 };
@@ -74,8 +85,4 @@ export type ErrorTooltips = {
 		scoreDisplayMode: string;
 		subTitle?: string[];
 	}>;
-};
-
-export type CategoriesCount = {
-	[category: string]: number;
 };

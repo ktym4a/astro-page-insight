@@ -38,7 +38,6 @@ export const createScore = (
 	}
 
 	const scoreWrapper = createToolbarWrapper("score");
-	scoreWrapper.dataset.formFactor = formFactor;
 
 	const titleElement = createToolbarTitle(
 		`Score - (${formFactor})`,

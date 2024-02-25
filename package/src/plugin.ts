@@ -1,24 +1,17 @@
 import { type DevToolbarApp } from "astro";
 import type {
+	CategoryCountByFormFactor,
+	FilterCategoryType,
 	LHResult,
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
-import { createFilter } from "./ui/filter.js";
+import { createFilter, createFilterButton } from "./ui/filter.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
-import {
-	desktopIcon,
-	filterIcon,
-	mobileIcon,
-	reloadCircleIcon,
-} from "./ui/icons.js";
+import { desktopIcon, mobileIcon, reloadCircleIcon } from "./ui/icons.js";
 import { createScore, createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
-import {
-	createToolbar,
-	createToolbarButton,
-	toggleToolbarWrapper,
-} from "./ui/toolbar.js";
+import { createToolbar, createToolbarButton } from "./ui/toolbar.js";
 import { fetchLighthouse, mappingData, resetLH } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
@@ -28,18 +21,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	init(canvas) {
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement | undefined;
-		let categories:
-			| {
-					[category: string]: boolean;
-			  }
-			| undefined;
 		let filterButton: HTMLButtonElement | undefined;
-		let filterElement: HTMLDivElement | undefined;
-		let filterButtonWrap: HTMLDivElement | undefined;
 		let scoreButton: HTMLButtonElement | undefined;
 		let breakPoint: number | undefined;
 		let isFirstLoad = true;
+		let filterCategories: FilterCategoryType;
 		let scoreListByFormFactor: ScoreListByFormFactor;
+		let categoryCountByFormFactor: CategoryCountByFormFactor;
 		let formFactor: "mobile" | "desktop" = "desktop";
 
 		const isLightHouse =
@@ -67,17 +55,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				scoreButton = createScoreButton(canvas, toolbarWrap);
 
-				filterButton = createToolbarButton(
-					filterIcon,
-					toolbarWrap,
-					false,
-					"filter",
-					() => {
-						if (!filterElement) return;
-						toggleToolbarWrapper(canvas, "filter");
-					},
-					"Filter the result.",
-				);
+				filterButton = createFilterButton(canvas, toolbarWrap);
 
 				fetchButton = createToolbarButton(
 					reloadCircleIcon,
@@ -133,8 +111,25 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					mobile: scoreList,
 					desktop: scoreList,
 				};
+				filterCategories = categories.reduce((acc, cur) => {
+					return {
+						// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+						...acc,
+						[cur]: false,
+					};
+				}, {});
+				categoryCountByFormFactor = {
+					mobile: {},
+					desktop: {},
+				};
 
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
+				createFilter(
+					canvas,
+					formFactor,
+					categoryCountByFormFactor[formFactor],
+					filterCategories,
+				);
 
 				if (isFirstLoad) {
 					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
@@ -143,17 +138,21 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						const indicatorButton = canvas.querySelector<HTMLButtonElement>(
 							'button[data-button-type="indicator"]',
 						);
-						if (!indicatorButton) return;
 						if (mql.matches) {
 							formFactor = "mobile";
-							indicatorButton.innerHTML = mobileIcon;
+							if (indicatorButton) indicatorButton.innerHTML = mobileIcon;
 						} else {
 							formFactor = "desktop";
-							indicatorButton.innerHTML = desktopIcon;
+							if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
 						}
 						createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
+						createFilter(
+							canvas,
+							formFactor,
+							categoryCountByFormFactor[formFactor],
+							filterCategories,
+						);
 					};
-
 					mediaQuery.addEventListener("change", handleMediaQuery);
 					isFirstLoad = false;
 				}
@@ -175,24 +174,31 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				resetLH(canvas, result.formFactor);
 
-				if (!categories) {
-					categories = Object.keys(result.scoreList)
-						.sort()
-						.reduce((acc, cur) => {
-							// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-							return { ...acc, [cur]: true };
-						}, {});
-				}
+				// if (!categories) {
+				// 	categories = Object.keys(result.scoreList)
+				// 		.sort()
+				// 		.reduce((acc, cur) => {
+				// 			// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+				// 			return { ...acc, [cur]: true };
+				// 		}, {});
+				// }
 
-				mappingData(canvas, result, categories);
+				// mappingData(canvas, result, categories);
 
-				if (filterButtonWrap) {
-					filterElement = createFilter(canvas, categories, result);
-					filterButtonWrap.appendChild(filterElement);
-				}
+				// if (filterButtonWrap) {
+				// 	filterElement = createFilter(canvas, categories, result);
+				// 	filterButtonWrap.appendChild(filterElement);
+				// }
 
 				scoreListByFormFactor[result.formFactor] = result.scoreList;
+				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
+				createFilter(
+					canvas,
+					formFactor,
+					categoryCountByFormFactor[formFactor],
+					filterCategories,
+				);
 
 				fetchSuccess();
 

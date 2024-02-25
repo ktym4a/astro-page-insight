@@ -8,6 +8,7 @@ import type {
 import type {
 	AuditType,
 	Categories,
+	CategoryCountType,
 	LHOptions,
 	LHResult,
 	ScoreListType,
@@ -71,9 +72,11 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 
 	const categories: Categories = {};
 	const scoreList = {} as ScoreListType;
+	const categoryCount = {} as CategoryCountType;
 
 	for (const value of Object.values(lhr.categories)) {
 		scoreList[value.title] = value.score;
+		categoryCount[value.title] = 0;
 		for (const audit of value.auditRefs) {
 			if (audit.weight < weight) continue;
 			const auditValue = categories[audit.id];
@@ -128,7 +131,13 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			};
 
 			const selector = getSelector(node.devtoolsNodePath);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				metaErrors = audit;
@@ -159,7 +168,13 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			};
 
 			const selector = getSelector(node.devtoolsNodePath);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				metaErrors = audit;
@@ -187,6 +202,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			category,
 			elements,
 			metaErrors,
+			categoryCount,
 			audit.metricSavings,
 		);
 
@@ -194,7 +210,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, consoleErrors, scoreList, metaErrors };
+	return { elements, consoleErrors, scoreList, metaErrors, categoryCount };
 };
 
 const createAudit = (
@@ -202,16 +218,31 @@ const createAudit = (
 	metaErrors: LHResult["metaErrors"],
 	selector: string,
 	element: AuditType,
+	categoryCount: CategoryCountType,
 ) => {
 	if (selector === "") {
 		if (metaErrors.some((el) => el.title === element.title)) return metaErrors;
 		return [...metaErrors, element];
 	}
 	const elementsValue = elements[selector];
+
 	if (elementsValue) {
 		if (elementsValue.some((el) => el.title === element.title))
 			return elementsValue;
+
+		for (const val of element.categories) {
+			if (val in categoryCount) {
+				categoryCount[val] += 1;
+			}
+		}
+
 		return [...elementsValue, element];
+	}
+
+	for (const val of element.categories) {
+		if (val in categoryCount) {
+			categoryCount[val] += 1;
+		}
 	}
 
 	return [element];
@@ -227,6 +258,7 @@ const findSelector = (
 	category: string[],
 	elements: LHResult["elements"],
 	metaErrors: LHResult["metaErrors"],
+	categoryCount: CategoryCountType,
 	metricSavings?: MetricSavings,
 ) => {
 	const returnElements = elements;
@@ -243,6 +275,7 @@ const findSelector = (
 				category,
 				elements,
 				metaErrors,
+				categoryCount,
 				metricSavings,
 			);
 		}
@@ -281,7 +314,13 @@ const findSelector = (
 			};
 
 			const selector = getSelector(item.node.path);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				returnMMetaErrors = audit;
