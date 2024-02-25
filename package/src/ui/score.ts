@@ -1,13 +1,48 @@
 import { COLORS } from "../constants/index.js";
-import type { ScoreListType } from "../types/index.js";
+import type { LHResult, ScoreListType } from "../types/index.js";
 import { getColorKey } from "../utils/color.js";
 import { analyticsIcon } from "./icons.js";
-import { createToolbarTitle, createToolbarWrapper } from "./toolbar.js";
+import {
+	createToolbarButton,
+	createToolbarTitle,
+	createToolbarWrapper,
+	toggleToolbarWrapper,
+} from "./toolbar.js";
 
-export const createScore = (scoreList: ScoreListType) => {
+export const createScoreButton = (
+	canvas: ShadowRoot,
+	toolbarWrap: HTMLDivElement,
+) => {
+	const scoreButton = createToolbarButton(
+		analyticsIcon,
+		toolbarWrap,
+		false,
+		"score",
+		() => {
+			toggleToolbarWrapper(canvas, "score");
+		},
+		"Show the score of each category.",
+	);
+
+	return scoreButton;
+};
+
+export const createScore = (
+	canvas: ShadowRoot,
+	formFactor: LHResult["formFactor"],
+	scoreList: ScoreListType,
+) => {
+	const existingScore = canvas.querySelector(".astro-page-insight-modal-score");
+	if (existingScore) {
+		existingScore.remove();
+	}
+
 	const scoreWrapper = createToolbarWrapper("score");
 
-	const titleElement = createToolbarTitle("Score", analyticsIcon);
+	const titleElement = createToolbarTitle(
+		`Score - (${formFactor})`,
+		analyticsIcon,
+	);
 	scoreWrapper.appendChild(titleElement);
 
 	const contentWrapper = document.createElement("div");
@@ -19,7 +54,7 @@ export const createScore = (scoreList: ScoreListType) => {
 		if (category) {
 			const content = createContent(
 				category,
-				scoreList[category] as number,
+				scoreList[category],
 				i === scoreListKeys.length - 1,
 			);
 			contentWrapper.appendChild(content);
@@ -28,10 +63,18 @@ export const createScore = (scoreList: ScoreListType) => {
 
 	scoreWrapper.appendChild(contentWrapper);
 
-	return scoreWrapper;
+	const toolbarWrap = canvas.querySelector(
+		".astro-page-insight-toolbar-button-wrap-score",
+	) as HTMLDivElement;
+
+	toolbarWrap.appendChild(scoreWrapper);
 };
 
-const createContent = (category: string, score: number, isLast: boolean) => {
+const createContent = (
+	category: string,
+	score: number | null | undefined,
+	isLast: boolean,
+) => {
 	const color = getColorKey(score);
 	const contentWrap = document.createElement("div");
 
@@ -43,7 +86,6 @@ const createContent = (category: string, score: number, isLast: boolean) => {
 	titleWrap.style.flexDirection = "space-between";
 	titleWrap.style.alignItems = "center";
 	titleWrap.style.gap = "5px";
-	titleWrap.style.marginBottom = "10px";
 
 	const titleElement = document.createElement("p");
 	titleElement.innerHTML = category;
@@ -55,27 +97,34 @@ const createContent = (category: string, score: number, isLast: boolean) => {
 
 	const scoreElement = document.createElement("p");
 	scoreElement.style.margin = "0";
-	scoreElement.textContent = `${(score * 100).toFixed(0)}`;
-	scoreElement.style.fontWeight = "bold";
-	scoreElement.style.color = COLORS[color];
+	if (score === null || score === undefined) {
+		scoreElement.textContent = "No data.";
+	} else {
+		scoreElement.textContent = `${(score * 100).toFixed(0)}`;
+		scoreElement.style.color = COLORS[color];
+		scoreElement.style.fontWeight = "bold";
+	}
 	titleWrap.appendChild(scoreElement);
 
 	contentWrap.appendChild(titleWrap);
 
-	const scoreBar = document.createElement("div");
-	scoreBar.style.width = "100%";
-	scoreBar.style.height = "7px";
-	scoreBar.style.backgroundColor = "#45475a";
-	scoreBar.style.borderRadius = "5px";
-	scoreBar.style.position = "relative";
-	contentWrap.appendChild(scoreBar);
+	if (score !== null && score !== undefined) {
+		titleWrap.style.marginBottom = "10px";
+		const scoreBar = document.createElement("div");
+		scoreBar.style.width = "100%";
+		scoreBar.style.height = "7px";
+		scoreBar.style.backgroundColor = "#45475a";
+		scoreBar.style.borderRadius = "5px";
+		scoreBar.style.position = "relative";
+		contentWrap.appendChild(scoreBar);
 
-	const scoreBarFill = document.createElement("div");
-	scoreBarFill.style.width = `${score * 100}%`;
-	scoreBarFill.style.height = "100%";
-	scoreBarFill.style.backgroundColor = COLORS[color];
-	scoreBarFill.style.borderRadius = "5px";
-	scoreBar.appendChild(scoreBarFill);
+		const scoreBarFill = document.createElement("div");
+		scoreBarFill.style.width = `${score * 100}%`;
+		scoreBarFill.style.height = "100%";
+		scoreBarFill.style.backgroundColor = COLORS[color];
+		scoreBarFill.style.borderRadius = "5px";
+		scoreBar.appendChild(scoreBarFill);
+	}
 
 	if (!isLast) {
 		contentWrap.style.marginBottom = "12px";

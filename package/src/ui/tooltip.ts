@@ -81,7 +81,9 @@ const createTooltipWrapper = (top?: number) => {
 	tooltipWrapper.style.padding = "15px 10px";
 	tooltipWrapper.style.border = "1px solid #cdd6f4";
 	tooltipWrapper.style.display = "none";
-	tooltipWrapper.style.width = "350px";
+	tooltipWrapper.style.maxWidth = "350px";
+	tooltipWrapper.style.minWidth = "200px";
+	tooltipWrapper.style.width = "50vw";
 	tooltipWrapper.style.maxHeight = "40vh";
 	tooltipWrapper.style.overflowY = "auto";
 	tooltipWrapper.style.left = "0";
@@ -167,7 +169,7 @@ const createContentTitle = (
 	titleDiv.style.gap = "5px";
 	titleWrap.appendChild(titleDiv);
 
-	if (subTitle?.includes("LCP") && scoreDisplayMode === "informative") {
+	if (subTitle?.includes("LCP") && scoreDisplayMode === "metricSavings") {
 		titleDiv.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 18px; max-width: 18px;">${infoCircleIcon}</div>`;
 	} else {
 		const colorKey = getColorKey(score);

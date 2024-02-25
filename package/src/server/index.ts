@@ -8,6 +8,7 @@ import type {
 import type {
 	AuditType,
 	Categories,
+	CategoryCountType,
 	LHOptions,
 	LHResult,
 	ScoreListType,
@@ -17,11 +18,15 @@ export const startLH = async (options: LHOptions) => {
 	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
 
 	const isMobile = options.width <= options.breakPoint;
+	const formFactor = isMobile ? "mobile" : ("desktop" as const);
 
-	const result = await lighthouse(options.url, {
+	const url = new URL(options.url);
+	url.searchParams.set("astro-page-insight", "true");
+
+	const result = await lighthouse(url.toString(), {
 		port: chrome.port,
 		output: "json",
-		formFactor: isMobile ? "mobile" : "desktop",
+		formFactor,
 		disableFullPageScreenshot: true,
 		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
 		screenEmulation: {
@@ -30,7 +35,7 @@ export const startLH = async (options: LHOptions) => {
 			height: options.height,
 			deviceScaleFactor: 1,
 		},
-		throttlingMethod: "provided",
+		throttlingMethod: "simulate",
 		throttling: {
 			rttMs: 40,
 			throughputKbps: 10 * 1024,
@@ -41,7 +46,10 @@ export const startLH = async (options: LHOptions) => {
 
 	await chrome.kill();
 
-	return result;
+	return {
+		result,
+		formFactor,
+	};
 };
 
 export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
@@ -50,18 +58,25 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 	const consoleErrors = artifacts.ConsoleMessages.filter(
 		(msg) => msg.level === "error" || msg.level === "warning",
 	).map((msg) => {
+		let url: string | URL = "";
+		if (msg.url) {
+			url = new URL(msg.url);
+			url.searchParams.delete("astro-dev-toolbar");
+		}
 		return {
 			message: msg.text,
 			level: msg.level,
-			content: msg.url,
+			content: url.toString(),
 		};
 	});
 
 	const categories: Categories = {};
 	const scoreList = {} as ScoreListType;
+	const categoryCount = {} as CategoryCountType;
 
 	for (const value of Object.values(lhr.categories)) {
 		scoreList[value.title] = value.score;
+		categoryCount[value.title] = 0;
 		for (const audit of value.auditRefs) {
 			if (audit.weight < weight) continue;
 			const auditValue = categories[audit.id];
@@ -116,7 +131,13 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			};
 
 			const selector = getSelector(node.devtoolsNodePath);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				metaErrors = audit;
@@ -147,7 +168,13 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			};
 
 			const selector = getSelector(node.devtoolsNodePath);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				metaErrors = audit;
@@ -175,6 +202,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 			category,
 			elements,
 			metaErrors,
+			categoryCount,
 			audit.metricSavings,
 		);
 
@@ -182,7 +210,7 @@ export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
 		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, consoleErrors, scoreList, metaErrors };
+	return { elements, consoleErrors, scoreList, metaErrors, categoryCount };
 };
 
 const createAudit = (
@@ -190,16 +218,31 @@ const createAudit = (
 	metaErrors: LHResult["metaErrors"],
 	selector: string,
 	element: AuditType,
+	categoryCount: CategoryCountType,
 ) => {
 	if (selector === "") {
 		if (metaErrors.some((el) => el.title === element.title)) return metaErrors;
 		return [...metaErrors, element];
 	}
 	const elementsValue = elements[selector];
+
 	if (elementsValue) {
 		if (elementsValue.some((el) => el.title === element.title))
 			return elementsValue;
+
+		for (const val of element.categories) {
+			if (val in categoryCount) {
+				categoryCount[val] += 1;
+			}
+		}
+
 		return [...elementsValue, element];
+	}
+
+	for (const val of element.categories) {
+		if (val in categoryCount) {
+			categoryCount[val] += 1;
+		}
 	}
 
 	return [element];
@@ -215,6 +258,7 @@ const findSelector = (
 	category: string[],
 	elements: LHResult["elements"],
 	metaErrors: LHResult["metaErrors"],
+	categoryCount: CategoryCountType,
 	metricSavings?: MetricSavings,
 ) => {
 	const returnElements = elements;
@@ -231,6 +275,7 @@ const findSelector = (
 				category,
 				elements,
 				metaErrors,
+				categoryCount,
 				metricSavings,
 			);
 		}
@@ -269,7 +314,13 @@ const findSelector = (
 			};
 
 			const selector = getSelector(item.node.path);
-			const audit = createAudit(elements, metaErrors, selector, element);
+			const audit = createAudit(
+				elements,
+				metaErrors,
+				selector,
+				element,
+				categoryCount,
+			);
 
 			if (selector === "") {
 				returnMMetaErrors = audit;

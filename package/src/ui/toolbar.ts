@@ -44,6 +44,10 @@ export const createToolbar = (canvas: ShadowRoot) => {
 			display: block !important;
 		}
 
+		.astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.active:disabled + div {
+			display: none !important;
+		}
+
         .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button:hover {
             background-color: #45475a;
         }
@@ -118,6 +122,8 @@ export const createToolbar = (canvas: ShadowRoot) => {
 
 export const createToolbarButton = (
 	icon: string,
+	buttonParent: HTMLDivElement,
+	disabled?: boolean,
 	type?: string,
 	onClick?: () => void,
 	tooltip?: string,
@@ -126,12 +132,20 @@ export const createToolbarButton = (
 
 	button.innerHTML = icon;
 	button.type = "button";
+	if (disabled) button.disabled = true;
 	if (type) button.dataset.buttonType = type;
 	if (onClick) button.onclick = onClick;
 
 	if (tooltip) {
 		button.dataset.tooltip = tooltip;
 	}
+
+	const buttonWrap = document.createElement("div");
+	buttonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
+	buttonWrap.classList.add(`astro-page-insight-toolbar-button-wrap-${type}`);
+	buttonWrap.appendChild(button);
+
+	buttonParent.appendChild(buttonWrap);
 
 	return button;
 };
@@ -140,14 +154,16 @@ export const createToolbarWrapper = (type: string) => {
 	const toolbarWrapper = document.createElement("div");
 	toolbarWrapper.dataset.type = type;
 
-	toolbarWrapper.classList.add(`astro-page-insight-${type}`);
+	toolbarWrapper.classList.add(`astro-page-insight-modal-${type}`);
 	toolbarWrapper.style.position = "fixed";
 	toolbarWrapper.style.background = "#181825";
 	toolbarWrapper.style.color = "#cdd6f4";
 	toolbarWrapper.style.borderRadius = "5px";
 	toolbarWrapper.style.padding = "15px 10px";
 	toolbarWrapper.style.border = "1px solid #cdd6f4";
-	toolbarWrapper.style.width = "300px";
+	toolbarWrapper.style.maxWidth = "300px";
+	toolbarWrapper.style.minWidth = "200px";
+	toolbarWrapper.style.width = "50vw";
 	toolbarWrapper.style.overflowY = "auto";
 	toolbarWrapper.style.right = "65px";
 	toolbarWrapper.style.bottom = "50px";

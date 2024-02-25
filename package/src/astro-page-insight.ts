@@ -1,6 +1,7 @@
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { z } from "astro/zod";
+import { CATEGORIES } from "./constants/index.js";
 import { organizeLHResult, startLH } from "./server/index.js";
 
 export default defineIntegration({
@@ -18,9 +19,9 @@ export default defineIntegration({
 		 * `breakPoint` is used to determine whether on mobile or desktop.
 		 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
 		 *
-		 * @default `768`
+		 * @default `767`
 		 */
-		breakPoint: z.number().optional().default(768),
+		breakPoint: z.number().optional().default(767),
 	}),
 	setup({ options: { weight, breakPoint } }) {
 		const { resolve } = createResolver(import.meta.url);
@@ -38,25 +39,33 @@ export default defineIntegration({
 				}
 			},
 			"astro:server:setup": async ({ server, logger }) => {
+				server.hot.on("astro-dev-toolbar:astro-page-insight-app:init", () => {
+					server.hot.send("astro-dev-toolbar:astro-page-insight-app:options", {
+						breakPoint,
+						categories: CATEGORIES,
+					});
+				});
+
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 					async ({ width, height, url }) => {
 						try {
-							const lhResult = await startLH({
+							const lhData = await startLH({
 								url,
 								width,
 								height,
 								breakPoint,
 								weight,
 							});
-							if (lhResult) {
-								const result = organizeLHResult(lhResult, weight);
+							if (lhData.result) {
+								const result = organizeLHResult(lhData.result, weight);
 
 								server.hot.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-success",
 									{
 										...result,
 										url,
+										formFactor: lhData.formFactor,
 									},
 								);
 							}

@@ -4,3 +4,10 @@ export const COLORS = {
 	red: "#f38ba8",
 	blue: "#89b4fa",
 } as const;
+
+export const CATEGORIES = [
+	"Accessibility",
+	"Best Practices",
+	"Performance",
+	"SEO",
+];

@@ -1,12 +1,41 @@
 import type {
 	AuditType,
 	ErrorTooltips,
+	FilterCategoryType,
 	LHResult,
+	LHResultForTooltip,
 	PositionType,
 	Tooltips,
 } from "../types/index.js";
 import { createHighlight } from "../ui/highlight.js";
+import { reloadCircleIcon } from "../ui/icons.js";
+import { createToolbarButton } from "../ui/toolbar.js";
 import { createTooltip } from "../ui/tooltip.js";
+
+export const createFetchButton = (
+	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
+	fetchStart: () => void,
+) => {
+	const fetchButton = createToolbarButton(
+		reloadCircleIcon,
+		toolbarWrap,
+		false,
+		"fetch",
+		() => {
+			if (isFetching) return;
+			fetchStart();
+			fetchLighthouse(
+				document.documentElement.clientWidth,
+				document.documentElement.clientWidth,
+				window.location.href,
+			);
+		},
+		"Fetch Lighthouse report.",
+	);
+
+	return fetchButton;
+};
 
 export const fetchLighthouse = (width: number, height: number, url: string) => {
 	import.meta.hot?.send(
@@ -21,10 +50,21 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 
 export const mappingData = (
 	canvas: ShadowRoot,
-	lhResult: LHResult,
-	filterCategory: string[],
+	result: LHResultForTooltip,
+	filterCategory: FilterCategoryType,
 ) => {
-	for (const [selector, value] of Object.entries(lhResult.elements)) {
+	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-highlight",
+	)) {
+		highlight.remove();
+	}
+	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-tooltip",
+	)) {
+		tooltip.remove();
+	}
+
+	for (const [selector, value] of Object.entries(result.elements)) {
 		if (!value[0]) continue;
 
 		const position = value[0].rect;
@@ -50,8 +90,11 @@ export const mappingData = (
 		if (mapElem) canvas.appendChild(mapElem);
 	}
 
-	if (checkErrors(lhResult)) {
-		const tooltips = createErrorTooltipsData(lhResult);
+	if (checkErrors(result.consoleErrors, result.metaErrors)) {
+		const tooltips = createErrorTooltipsData(
+			result.consoleErrors,
+			result.metaErrors,
+		);
 		const errorTooltips = createErrorTooltip(tooltips);
 		canvas.appendChild(errorTooltips);
 	}
@@ -73,7 +116,7 @@ const checkAudit = (selector: string, position: PositionType) => {
 const createAuditData = (
 	value: AuditType[],
 	selector: string,
-	filterCategory: string[],
+	filterCategory: FilterCategoryType,
 ) => {
 	let score: number | null = 1;
 	let selectorCategory = [] as string[];
@@ -83,7 +126,9 @@ const createAuditData = (
 		if (selector === "") {
 			continue;
 		}
-		if (!audit.categories.some((category) => filterCategory.includes(category)))
+		if (
+			!audit.categories.some((category) => filterCategory[category] === false)
+		)
 			continue;
 
 		score =
@@ -94,7 +139,11 @@ const createAuditData = (
 			...Array.from(new Set([...selectorCategory, ...audit.categories])),
 		];
 		for (const category of audit.categories) {
-			if (!filterCategory.includes(category)) continue;
+			if (
+				filterCategory[category] === true ||
+				filterCategory[category] === undefined
+			)
+				continue;
 
 			tooltips[category] = [
 				...(tooltips[category] ?? []),
@@ -150,16 +199,22 @@ const createMapElement = (
 	}
 };
 
-const checkErrors = (result: LHResult) => {
-	if (result.consoleErrors.length !== 0 || result.metaErrors.length !== 0) {
+const checkErrors = (
+	consoleErrors: LHResult["consoleErrors"],
+	metaErrors: LHResult["metaErrors"],
+) => {
+	if (consoleErrors.length !== 0 || metaErrors.length !== 0) {
 		return true;
 	}
 	return false;
 };
 
-const createErrorTooltipsData = (result: LHResult) => {
+const createErrorTooltipsData = (
+	consoleErrors: LHResult["consoleErrors"],
+	metaErrors: LHResult["metaErrors"],
+) => {
 	const tooltips: ErrorTooltips = {};
-	for (const consoleMessage of result.consoleErrors) {
+	for (const consoleMessage of consoleErrors) {
 		const category = "Console";
 		const content = consoleMessage.content ?? "";
 		tooltips[category] = [
@@ -173,7 +228,7 @@ const createErrorTooltipsData = (result: LHResult) => {
 		];
 	}
 
-	for (const metaError of result.metaErrors) {
+	for (const metaError of metaErrors) {
 		const category = "Document";
 		tooltips[category] = [
 			...(tooltips[category] ?? []),
@@ -201,27 +256,4 @@ const createErrorTooltip = (tooltips: ErrorTooltips) => {
 	errorTooltips.classList.add("non-element");
 
 	return errorTooltips;
-};
-
-export const resetLH = (canvas: ShadowRoot) => {
-	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-highlight",
-	)) {
-		highlight.remove();
-	}
-	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-tooltip",
-	)) {
-		tooltip.remove();
-	}
-	for (const filter of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-filter",
-	)) {
-		filter.remove();
-	}
-	for (const score of canvas.querySelectorAll<HTMLDivElement>(
-		".astro-page-insight-score",
-	)) {
-		score.remove();
-	}
 };
