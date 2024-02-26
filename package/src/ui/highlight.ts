@@ -1,5 +1,7 @@
 import { COLORS } from "../constants/index.js";
 import type { PositionType } from "../types/index.js";
+import { eyeXIcon } from "./icons.js";
+import { createToolbarButton } from "./toolbar.js";
 
 export const createHighlight = (
 	selector: string,
@@ -52,6 +54,11 @@ const createHighlightElement = () => {
 	highlight.classList.add("astro-page-insight-highlight");
 	highlight.style.border = `2px solid ${COLORS.red}`;
 	highlight.tabIndex = 0;
+
+	const button = createToolbarButton(eyeXIcon, highlight);
+	button.onclick = () => {
+		highlight.style.display = "none";
+	};
 
 	return highlight;
 };
@@ -114,8 +121,9 @@ const addTitle = (highlight: HTMLDivElement, categories: string[]) => {
 	title.style.fontSize = "15px";
 	title.style.color = "#cdd6f4";
 	title.style.background = "#181825";
-	title.style.borderRadius = "5px";
+	title.style.borderRadius = "3px";
 	title.style.padding = "4px 10px";
+	title.style.border = "1px solid #cdd6f4";
 	title.textContent = categories.sort().join(", ");
 
 	highlight.appendChild(title);

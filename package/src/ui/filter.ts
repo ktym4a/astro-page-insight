@@ -50,38 +50,11 @@ export const createFilter = (
 	const filterWrapper = createToolbarWrapper("filter");
 	filterWrapper.innerHTML = `
     <style>
-        .astro-page-insight-filter button {
-            display: inline-flex;
-            position: relative;
-            padding: 2px;
-			border-radius: 5px;
-            align-items: center;
-            border: 1px solid #cdd6f4;
-            color: #cdd6f4;
-            background-color: #181825;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+		.astro-page-insight-filter-button > svg {
+            width: 18px !important;
+            height: 18px !important;
         }
-
-		.astro-page-insight-filter button:hover {
-            background-color: #45475a;
-        }
-
-		.astro-page-insight-filter button:focus-visible {
-            outline-offset: -2px;
-            background-color: #45475a;
-        }
-
-		.astro-page-insight-filter button:disabled {
-            cursor: not-allowed;
-            background-color: #6c7086 !important;
-        }
-
-		.astro-page-insight-filter button > svg {
-            width: 16px;
-            height: 16px;
-        }
-        `;
+	</style>`;
 
 	const titleElement = createToolbarTitle(
 		`Filter - (${formFactor})`,
@@ -147,7 +120,8 @@ const createContent = (
 	contentWrapper.style.margin = "0";
 	contentWrapper.style.fontSize = "14px";
 	contentWrapper.style.wordBreak = "break-word";
-	contentWrapper.style.padding = "2px 5px";
+	contentWrapper.style.padding = "5px";
+	contentWrapper.style.borderRadius = "5px";
 	contentElement.appendChild(contentWrapper);
 
 	const textElement = document.createElement("p");
@@ -155,14 +129,7 @@ const createContent = (
 	textElement.style.margin = "0";
 	contentWrapper.appendChild(textElement);
 
-	const button = filterCategories[category]
-		? createToolbarButton(eyeXIcon, contentWrapper)
-		: createToolbarButton(eyeIcon, contentWrapper);
-	if (filterCategories[category]) {
-		contentWrapper.style.background = "#6c7086";
-	}
-	button.classList.add("astro-page-insight-filter-button");
-	button.addEventListener("click", () => {
+	const clickHandler = () => {
 		if (filterCategories[category]) {
 			filterCategories[category] = false;
 			button.innerHTML = eyeIcon;
@@ -173,7 +140,17 @@ const createContent = (
 			contentWrapper.style.background = "#6c7086";
 		}
 		mappingData(canvas, lhResult, filterCategories);
-	});
+	};
+
+	const button = filterCategories[category]
+		? createToolbarButton(eyeXIcon, contentWrapper, false, "eye", clickHandler)
+		: createToolbarButton(eyeIcon, contentWrapper, false, "eye", clickHandler);
+	button.style.padding = "2px";
+	button.style.borderRadius = "5px";
+	if (filterCategories[category]) {
+		contentWrapper.style.background = "#6c7086";
+	}
+	button.classList.add("astro-page-insight-filter-button");
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "12px";
