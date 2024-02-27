@@ -2,12 +2,14 @@ import { type DevToolbarApp } from "astro";
 import type {
 	CategoryCountByFormFactor,
 	FilterCategoryType,
+	HideElementsByFormFactor,
 	LHResult,
 	LHResultByFormFactor,
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
 import { createFilter, createFilterButton } from "./ui/filter.js";
+import { createHideButton, createHideList } from "./ui/hide.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
 import { desktopIcon, mobileIcon } from "./ui/icons.js";
 import {
@@ -29,6 +31,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let fetchButton: HTMLButtonElement | undefined;
 		let filterButton: HTMLButtonElement | undefined;
 		let scoreButton: HTMLButtonElement | undefined;
+		let hideButton: HTMLButtonElement | undefined;
 		let breakPoint: number | undefined;
 		let isFirstLoad = true;
 		let filterCategories: FilterCategoryType;
@@ -36,6 +39,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let categoryCountByFormFactor: CategoryCountByFormFactor;
 		let lhResultByFormFactor: LHResultByFormFactor;
 		let formFactor: "mobile" | "desktop" = "desktop";
+		let hideElements: HideElementsByFormFactor;
 
 		const isLightHouse =
 			new URL(window.location.href).searchParams.get("astro-page-insight") ===
@@ -59,6 +63,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				const toolbarWrap = createToolbar(canvas);
 				createToastArea(canvas);
+
+				hideButton = createHideButton(canvas, toolbarWrap);
 
 				scoreButton = createScoreButton(canvas, toolbarWrap);
 
@@ -117,7 +123,40 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						consoleErrors: [],
 					},
 				};
+				hideElements = {
+					mobile: [
+						{
+							selector: "html > body > *:nth-child(1) > *:nth-child(1)",
+							detailSelector: "body > main > img.w-[500px]",
+						},
+						{
+							selector: "html > body > *:nth-child(1) > *:nth-child(2)",
+							detailSelector: "body > main > img.w-[500px]",
+						},
+						{
+							selector:
+								"html > body > *:nth-child(1) > *:nth-child(4) > *:nth-child(2)",
+							detailSelector: "body > main > h1 > span.text-gradient",
+						},
+					],
+					desktop: [
+						{
+							selector: "html > body > *:nth-child(1) > *:nth-child(1)",
+							detailSelector: "body > main > img.w-[500px]",
+						},
+						{
+							selector: "html > body > *:nth-child(1) > *:nth-child(2)",
+							detailSelector: "body > main > img.w-[500px]",
+						},
+						{
+							selector:
+								"html > body > *:nth-child(1) > *:nth-child(4) > *:nth-child(2)",
+							detailSelector: "body > main > h1 > span.text-gradient",
+						},
+					],
+				};
 
+				createHideList(canvas, formFactor, hideElements[formFactor]);
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 				createFilter(
 					canvas,
@@ -146,6 +185,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							lhResultByFormFactor[formFactor],
 							filterCategories,
 						);
+						createHideList(canvas, formFactor, hideElements[formFactor]);
 						createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
 						createFilter(
 							canvas,
@@ -181,6 +221,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				};
 				scoreListByFormFactor[result.formFactor] = result.scoreList;
 				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
+				hideElements[result.formFactor] = [];
 
 				mappingData(canvas, lhResultByFormFactor[formFactor], filterCategories);
 				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
@@ -290,6 +331,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		function fetchStart() {
 			isFetching = true;
+			if (hideButton) hideButton.disabled = isFetching;
 			if (fetchButton) {
 				fetchButton.classList.add("animate");
 				fetchButton.disabled = isFetching;
@@ -300,6 +342,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		function fetchSuccess() {
 			isFetching = false;
+			if (hideButton) hideButton.disabled = isFetching;
 			if (fetchButton) {
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = isFetching;

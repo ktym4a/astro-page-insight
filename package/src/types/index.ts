@@ -93,7 +93,17 @@ export type LHResultForTooltip = {
 	consoleErrors: LHResult["consoleErrors"];
 };
 
+export type HideElement = {
+	selector: string;
+	detailSelector?: string;
+};
+
 export type LHResultByFormFactor = {
 	mobile: LHResultForTooltip;
 	desktop: LHResultForTooltip;
+};
+
+export type HideElementsByFormFactor = {
+	mobile: HideElement[];
+	desktop: HideElement[];
 };
