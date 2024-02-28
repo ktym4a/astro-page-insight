@@ -7,9 +7,10 @@ import type {
 import { mappingData } from "../utils/lh.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
-	createDetails,
-	createSummary,
 	createToolbarButton,
+	createToolbarContentWrapper,
+	createToolbarElement,
+	createToolbarSubTitle,
 	createToolbarTitle,
 	createToolbarWrapper,
 	toggleToolbarWrapper,
@@ -62,11 +63,6 @@ export const createFilter = (
 	);
 	filterWrapper.appendChild(titleElement);
 
-	const details = createDetails(true);
-
-	const summary = createSummary("Categories");
-	details.appendChild(summary);
-
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 
@@ -88,9 +84,7 @@ export const createFilter = (
 		);
 		contentWrapper.appendChild(content);
 	}
-	details.appendChild(contentWrapper);
-
-	filterWrapper.appendChild(details);
+	filterWrapper.appendChild(contentWrapper);
 
 	const toolbarWrap = canvas.querySelector(
 		".astro-page-insight-toolbar-button-wrap-filter",
@@ -112,21 +106,11 @@ const createContent = (
 		lhResult: LHResultForTooltip;
 	},
 ) => {
-	const contentElement = document.createElement("div");
-	const contentWrapper = document.createElement("div");
-	contentWrapper.style.display = "flex";
-	contentWrapper.style.justifyContent = "space-between";
-	contentWrapper.style.alignItems = "center";
-	contentWrapper.style.margin = "0";
-	contentWrapper.style.fontSize = "14px";
-	contentWrapper.style.wordBreak = "break-word";
-	contentWrapper.style.padding = "5px";
-	contentWrapper.style.borderRadius = "5px";
+	const contentElement = createToolbarElement(isLast);
+	const contentWrapper = createToolbarContentWrapper();
 	contentElement.appendChild(contentWrapper);
 
-	const textElement = document.createElement("p");
-	textElement.textContent = content;
-	textElement.style.margin = "0";
+	const textElement = createToolbarSubTitle(content);
 	contentWrapper.appendChild(textElement);
 
 	const clickHandler = () => {
@@ -151,12 +135,6 @@ const createContent = (
 		contentWrapper.style.background = "#6c7086";
 	}
 	button.classList.add("astro-page-insight-filter-button");
-
-	if (!isLast) {
-		contentElement.style.marginBottom = "12px";
-		contentElement.style.borderBottom = "1px solid #cdd6f4";
-		contentElement.style.paddingBottom = "12px";
-	}
 
 	return contentElement;
 };

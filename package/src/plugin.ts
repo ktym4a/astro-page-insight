@@ -124,36 +124,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					},
 				};
 				hideElements = {
-					mobile: [
-						{
-							selector: "html > body > *:nth-child(1) > *:nth-child(1)",
-							detailSelector: "body > main > img.w-[500px]",
-						},
-						{
-							selector: "html > body > *:nth-child(1) > *:nth-child(2)",
-							detailSelector: "body > main > img.w-[500px]",
-						},
-						{
-							selector:
-								"html > body > *:nth-child(1) > *:nth-child(4) > *:nth-child(2)",
-							detailSelector: "body > main > h1 > span.text-gradient",
-						},
-					],
-					desktop: [
-						{
-							selector: "html > body > *:nth-child(1) > *:nth-child(1)",
-							detailSelector: "body > main > img.w-[500px]",
-						},
-						{
-							selector: "html > body > *:nth-child(1) > *:nth-child(2)",
-							detailSelector: "body > main > img.w-[500px]",
-						},
-						{
-							selector:
-								"html > body > *:nth-child(1) > *:nth-child(4) > *:nth-child(2)",
-							detailSelector: "body > main > h1 > span.text-gradient",
-						},
-					],
+					mobile: [],
+					desktop: [],
 				};
 
 				createHideList(canvas, formFactor, hideElements[formFactor]);

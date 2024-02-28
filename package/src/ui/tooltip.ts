@@ -38,7 +38,6 @@ export const createTooltip = (
 
 		const contentWrapper = document.createElement("div");
 		contentWrapper.style.marginTop = "10px";
-		contentWrapper.style.marginLeft = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
 			contentElement.dataset.filterCategory = category;
@@ -162,6 +161,7 @@ const createContentTitle = (
 	titleWrap.style.display = "flex";
 	titleWrap.style.gap = "5px";
 	titleWrap.style.marginBottom = "10px";
+	titleWrap.style.padding = "0 5px";
 
 	const titleDiv = document.createElement("div");
 	titleDiv.style.display = "flex";
@@ -223,6 +223,7 @@ const createContent = (content: string, isLast: boolean) => {
 	contentElement.style.margin = "0";
 	contentElement.style.fontSize = "14px";
 	contentElement.style.wordBreak = "break-word";
+	contentElement.style.padding = "0 5px";
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "12px";

@@ -2,6 +2,9 @@ import type { HideElement, LHResult } from "../types/index.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
 	createToolbarButton,
+	createToolbarContentWrapper,
+	createToolbarElement,
+	createToolbarSubTitle,
 	createToolbarTitle,
 	createToolbarWrapper,
 	toggleToolbarWrapper,
@@ -14,7 +17,7 @@ export const createHideButton = (
 	const hideButton = createToolbarButton(
 		eyeXIcon,
 		toolbarWrap,
-		false,
+		true,
 		"hide",
 		() => {
 			toggleToolbarWrapper(canvas, "hide");
@@ -79,21 +82,13 @@ const createContent = (
 	isLast: boolean,
 	hideElements: HideElement[],
 ) => {
-	const contentElement = document.createElement("div");
-	const contentWrapper = document.createElement("div");
-	contentWrapper.style.display = "flex";
-	contentWrapper.style.justifyContent = "space-between";
-	contentWrapper.style.alignItems = "center";
-	contentWrapper.style.margin = "0";
-	contentWrapper.style.fontSize = "14px";
-	contentWrapper.style.wordBreak = "break-word";
-	contentWrapper.style.padding = "5px";
-	contentWrapper.style.borderRadius = "5px";
+	const contentElement = createToolbarElement(isLast);
+	const contentWrapper = createToolbarContentWrapper();
 	contentElement.appendChild(contentWrapper);
 
-	const textElement = document.createElement("p");
-	textElement.textContent = element.detailSelector ?? element.selector;
-	textElement.style.margin = "0";
+	const textElement = createToolbarSubTitle(
+		element.detailSelector ?? element.selector,
+	);
 	contentWrapper.appendChild(textElement);
 
 	const clickHandler = () => {
@@ -110,18 +105,12 @@ const createContent = (
 		eyeIcon,
 		contentWrapper,
 		false,
-		"show",
+		"hide",
 		clickHandler,
 	);
 	button.style.padding = "2px";
 	button.style.borderRadius = "5px";
-	button.classList.add("astro-page-insight-show-button");
-
-	if (!isLast) {
-		contentElement.style.marginBottom = "12px";
-		contentElement.style.borderBottom = "1px solid #cdd6f4";
-		contentElement.style.paddingBottom = "12px";
-	}
+	button.classList.add("astro-page-insight-hide-button");
 
 	return contentElement;
 };

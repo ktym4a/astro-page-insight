@@ -238,3 +238,40 @@ export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 		button.classList.add("active");
 	}
 };
+
+export const createToolbarElement = (isLast: boolean) => {
+	const contentElement = document.createElement("div");
+
+	if (!isLast) {
+		contentElement.style.marginBottom = "7px";
+		contentElement.style.borderBottom = "1px solid #cdd6f4";
+		contentElement.style.paddingBottom = "7px";
+	}
+
+	return contentElement;
+};
+
+export const createToolbarSubTitle = (title: string) => {
+	const textElement = document.createElement("p");
+	textElement.textContent = title;
+	textElement.style.margin = "0";
+	textElement.style.fontSize = "14px";
+	textElement.style.fontWeight = "bold";
+
+	return textElement;
+};
+
+export const createToolbarContentWrapper = () => {
+	const contentWrapper = document.createElement("div");
+	contentWrapper.style.display = "flex";
+	contentWrapper.style.justifyContent = "space-between";
+	contentWrapper.style.alignItems = "center";
+	contentWrapper.style.margin = "0";
+	contentWrapper.style.fontSize = "14px";
+	contentWrapper.style.wordBreak = "break-word";
+	contentWrapper.style.padding = "5px";
+	contentWrapper.style.borderRadius = "5px";
+	contentWrapper.style.gap = "10px 5px";
+
+	return contentWrapper;
+};
