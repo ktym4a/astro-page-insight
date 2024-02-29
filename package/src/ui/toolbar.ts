@@ -199,28 +199,6 @@ export const createToolbarTitle = (title: string, icon: string) => {
 	return titleWrap;
 };
 
-export const createDetails = (isLast: boolean) => {
-	const details = document.createElement("details");
-	details.open = true;
-	if (!isLast) {
-		details.style.paddingBottom = "15px";
-	}
-
-	return details;
-};
-
-export const createSummary = (category: string) => {
-	const summary = document.createElement("summary");
-	summary.textContent = `${category}`;
-	summary.style.cursor = "pointer";
-	summary.style.background = "#45475a";
-	summary.style.fontWeight = "normal";
-	summary.style.padding = "5px 10px";
-	summary.style.borderRadius = "5px";
-
-	return summary;
-};
-
 export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 	const button = canvas.querySelector<HTMLButtonElement>(
 		`[data-button-type="${type}"]`,

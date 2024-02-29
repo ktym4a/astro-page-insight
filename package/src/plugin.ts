@@ -8,8 +8,8 @@ import type {
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
-import { createFilter, createFilterButton } from "./ui/filter.js";
-import { createHideButton, createHideList } from "./ui/hide.js";
+import { createFilterButton } from "./ui/filter.js";
+import { createHideButton } from "./ui/hide.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
 import { desktopIcon, mobileIcon } from "./ui/icons.js";
 import {
@@ -17,10 +17,10 @@ import {
 	getFormFactor,
 	getIcon,
 } from "./ui/indicator.js";
-import { createScore, createScoreButton } from "./ui/score.js";
+import { createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar } from "./ui/toolbar.js";
-import { createFetchButton, mappingData } from "./utils/lh.js";
+import { createFetchButton, updateCanvas } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -128,15 +128,17 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					desktop: [],
 				};
 
-				createHideList(canvas, formFactor, hideElements[formFactor]);
-				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
-				createFilter(
+				updateCanvas({
 					canvas,
+					result: lhResultByFormFactor[formFactor],
+					filter: {
+						categories: filterCategories,
+						hideList: hideElements[formFactor],
+					},
 					formFactor,
-					categoryCountByFormFactor[formFactor],
-					filterCategories,
-					lhResultByFormFactor[formFactor],
-				);
+					scoreList: scoreListByFormFactor[formFactor],
+					categoryCount: categoryCountByFormFactor[formFactor],
+				});
 
 				if (isFirstLoad) {
 					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
@@ -152,20 +154,17 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							formFactor = "desktop";
 							if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
 						}
-						mappingData(
+						updateCanvas({
 							canvas,
-							lhResultByFormFactor[formFactor],
-							filterCategories,
-						);
-						createHideList(canvas, formFactor, hideElements[formFactor]);
-						createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
-						createFilter(
-							canvas,
+							result: lhResultByFormFactor[formFactor],
+							filter: {
+								categories: filterCategories,
+								hideList: hideElements[formFactor],
+							},
 							formFactor,
-							categoryCountByFormFactor[formFactor],
-							filterCategories,
-							lhResultByFormFactor[formFactor],
-						);
+							scoreList: scoreListByFormFactor[formFactor],
+							categoryCount: categoryCountByFormFactor[formFactor],
+						});
 					};
 					mediaQuery.addEventListener("change", handleMediaQuery);
 					isFirstLoad = false;
@@ -195,15 +194,17 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
 				hideElements[result.formFactor] = [];
 
-				mappingData(canvas, lhResultByFormFactor[formFactor], filterCategories);
-				createScore(canvas, formFactor, scoreListByFormFactor[formFactor]);
-				createFilter(
+				updateCanvas({
 					canvas,
+					result: lhResultByFormFactor[formFactor],
+					filter: {
+						categories: filterCategories,
+						hideList: hideElements[formFactor],
+					},
 					formFactor,
-					categoryCountByFormFactor[formFactor],
-					filterCategories,
-					lhResultByFormFactor[formFactor],
-				);
+					scoreList: scoreListByFormFactor[formFactor],
+					categoryCount: categoryCountByFormFactor[formFactor],
+				});
 
 				fetchSuccess();
 

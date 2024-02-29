@@ -1,6 +1,6 @@
 import type {
 	CategoryCountType,
-	FilterCategoryType,
+	FilterTypes,
 	LHResult,
 	LHResultForTooltip,
 } from "../types/index.js";
@@ -38,8 +38,8 @@ export const createFilter = (
 	canvas: ShadowRoot,
 	formFactor: LHResult["formFactor"],
 	categoryCount: CategoryCountType,
-	filterCategories: FilterCategoryType,
 	lhResult: LHResultForTooltip,
+	filter: FilterTypes,
 ) => {
 	const existingFilter = canvas.querySelector(
 		".astro-page-insight-modal-filter",
@@ -66,7 +66,7 @@ export const createFilter = (
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 
-	const categoryArray = Object.entries(filterCategories).sort();
+	const categoryArray = Object.entries(filter.categories).sort();
 
 	for (const [index, category] of categoryArray.entries()) {
 		const count = categoryCount[category[0]] ?? 0;
@@ -76,7 +76,7 @@ export const createFilter = (
 			text,
 			index === categoryArray.length - 1,
 			category[0],
-			filterCategories,
+			filter,
 			{
 				canvas,
 				lhResult,
@@ -97,7 +97,7 @@ const createContent = (
 	content: string,
 	isLast: boolean,
 	category: string,
-	filterCategories: FilterCategoryType,
+	filter: FilterTypes,
 	{
 		canvas,
 		lhResult,
@@ -114,24 +114,24 @@ const createContent = (
 	contentWrapper.appendChild(textElement);
 
 	const clickHandler = () => {
-		if (filterCategories[category]) {
-			filterCategories[category] = false;
+		if (filter.categories[category]) {
+			filter.categories[category] = false;
 			button.innerHTML = eyeIcon;
 			contentWrapper.style.background = "transparent";
 		} else {
-			filterCategories[category] = true;
+			filter.categories[category] = true;
 			button.innerHTML = eyeXIcon;
 			contentWrapper.style.background = "#6c7086";
 		}
-		mappingData(canvas, lhResult, filterCategories);
+		mappingData(canvas, lhResult, filter);
 	};
 
-	const button = filterCategories[category]
+	const button = filter.categories[category]
 		? createToolbarButton(eyeXIcon, contentWrapper, false, "eye", clickHandler)
 		: createToolbarButton(eyeIcon, contentWrapper, false, "eye", clickHandler);
 	button.style.padding = "2px";
 	button.style.borderRadius = "5px";
-	if (filterCategories[category]) {
+	if (filter.categories[category]) {
 		contentWrapper.style.background = "#6c7086";
 	}
 	button.classList.add("astro-page-insight-filter-button");

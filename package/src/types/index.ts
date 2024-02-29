@@ -107,3 +107,17 @@ export type HideElementsByFormFactor = {
 	mobile: HideElement[];
 	desktop: HideElement[];
 };
+
+export type FilterTypes = {
+	categories: FilterCategoryType;
+	hideList: HideElement[];
+};
+
+export type UpdateMappingType = {
+	canvas: ShadowRoot;
+	result: LHResultForTooltip;
+	filter: FilterTypes;
+	formFactor: LHResult["formFactor"];
+	scoreList: ScoreListType;
+	categoryCount: CategoryCountType;
+};
