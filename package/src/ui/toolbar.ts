@@ -199,28 +199,6 @@ export const createToolbarTitle = (title: string, icon: string) => {
 	return titleWrap;
 };
 
-export const createDetails = (isLast: boolean) => {
-	const details = document.createElement("details");
-	details.open = true;
-	if (!isLast) {
-		details.style.paddingBottom = "15px";
-	}
-
-	return details;
-};
-
-export const createSummary = (category: string) => {
-	const summary = document.createElement("summary");
-	summary.textContent = `${category}`;
-	summary.style.cursor = "pointer";
-	summary.style.background = "#45475a";
-	summary.style.fontWeight = "normal";
-	summary.style.padding = "5px 10px";
-	summary.style.borderRadius = "5px";
-
-	return summary;
-};
-
 export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 	const button = canvas.querySelector<HTMLButtonElement>(
 		`[data-button-type="${type}"]`,
@@ -237,4 +215,41 @@ export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 	if (!isOpen) {
 		button.classList.add("active");
 	}
+};
+
+export const createToolbarElement = (isLast: boolean) => {
+	const contentElement = document.createElement("div");
+
+	if (!isLast) {
+		contentElement.style.marginBottom = "7px";
+		contentElement.style.borderBottom = "1px solid #cdd6f4";
+		contentElement.style.paddingBottom = "7px";
+	}
+
+	return contentElement;
+};
+
+export const createToolbarSubTitle = (title: string) => {
+	const textElement = document.createElement("p");
+	textElement.textContent = title;
+	textElement.style.margin = "0";
+	textElement.style.fontSize = "14px";
+	textElement.style.fontWeight = "bold";
+
+	return textElement;
+};
+
+export const createToolbarContentWrapper = () => {
+	const contentWrapper = document.createElement("div");
+	contentWrapper.style.display = "flex";
+	contentWrapper.style.justifyContent = "space-between";
+	contentWrapper.style.alignItems = "center";
+	contentWrapper.style.margin = "0";
+	contentWrapper.style.fontSize = "14px";
+	contentWrapper.style.wordBreak = "break-word";
+	contentWrapper.style.padding = "5px";
+	contentWrapper.style.borderRadius = "5px";
+	contentWrapper.style.gap = "10px 5px";
+
+	return contentWrapper;
 };

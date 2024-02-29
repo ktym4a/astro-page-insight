@@ -4,6 +4,9 @@ import { getColorKey } from "../utils/color.js";
 import { analyticsIcon } from "./icons.js";
 import {
 	createToolbarButton,
+	createToolbarContentWrapper,
+	createToolbarElement,
+	createToolbarSubTitle,
 	createToolbarTitle,
 	createToolbarWrapper,
 	toggleToolbarWrapper,
@@ -76,7 +79,10 @@ const createContent = (
 	isLast: boolean,
 ) => {
 	const color = getColorKey(score);
-	const contentWrap = document.createElement("div");
+	const contentElement = createToolbarElement(isLast);
+	const contentWrapper = createToolbarContentWrapper();
+	contentWrapper.style.flexWrap = "wrap";
+	contentElement.appendChild(contentWrapper);
 
 	const titleWrap = document.createElement("h3");
 	titleWrap.style.margin = "0";
@@ -86,14 +92,11 @@ const createContent = (
 	titleWrap.style.flexDirection = "space-between";
 	titleWrap.style.alignItems = "center";
 	titleWrap.style.gap = "5px";
+	titleWrap.style.width = "100%";
 
-	const titleElement = document.createElement("p");
-	titleElement.innerHTML = category;
-	titleElement.style.margin = "0";
-	titleElement.style.fontSize = "14px";
-	titleElement.style.fontWeight = "bold";
-	titleElement.style.flex = "1";
-	titleWrap.appendChild(titleElement);
+	const textElement = createToolbarSubTitle(category);
+	textElement.style.flex = "1";
+	titleWrap.appendChild(textElement);
 
 	const scoreElement = document.createElement("p");
 	scoreElement.style.margin = "0";
@@ -106,17 +109,16 @@ const createContent = (
 	}
 	titleWrap.appendChild(scoreElement);
 
-	contentWrap.appendChild(titleWrap);
+	contentWrapper.appendChild(titleWrap);
 
 	if (score !== null && score !== undefined) {
-		titleWrap.style.marginBottom = "10px";
 		const scoreBar = document.createElement("div");
 		scoreBar.style.width = "100%";
 		scoreBar.style.height = "7px";
 		scoreBar.style.backgroundColor = "#45475a";
 		scoreBar.style.borderRadius = "5px";
 		scoreBar.style.position = "relative";
-		contentWrap.appendChild(scoreBar);
+		contentWrapper.appendChild(scoreBar);
 
 		const scoreBarFill = document.createElement("div");
 		scoreBarFill.style.width = `${score * 100}%`;
@@ -126,11 +128,5 @@ const createContent = (
 		scoreBar.appendChild(scoreBarFill);
 	}
 
-	if (!isLast) {
-		contentWrap.style.marginBottom = "12px";
-		contentWrap.style.borderBottom = "1px solid #cdd6f4";
-		contentWrap.style.paddingBottom = "12px";
-	}
-
-	return contentWrap;
+	return contentElement;
 };

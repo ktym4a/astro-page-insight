@@ -2,15 +2,35 @@ import type {
 	AuditType,
 	ErrorTooltips,
 	FilterCategoryType,
+	FilterTypes,
+	HideArguments,
 	LHResult,
 	LHResultForTooltip,
 	PositionType,
 	Tooltips,
+	UpdateMappingType,
 } from "../types/index.js";
+import { createFilter } from "../ui/filter.js";
+import { createHideList } from "../ui/hide.js";
 import { createHighlight } from "../ui/highlight.js";
 import { reloadCircleIcon } from "../ui/icons.js";
+import { createScore } from "../ui/score.js";
 import { createToolbarButton } from "../ui/toolbar.js";
 import { createTooltip } from "../ui/tooltip.js";
+
+export const updateCanvas = ({
+	canvas,
+	result,
+	filter,
+	formFactor,
+	scoreList,
+	categoryCount,
+}: UpdateMappingType) => {
+	mappingData(formFactor, canvas, result, filter);
+	createHideList(canvas, formFactor, filter.hideList, result, filter);
+	createScore(canvas, formFactor, scoreList);
+	createFilter(canvas, formFactor, categoryCount, result, filter);
+};
 
 export const createFetchButton = (
 	toolbarWrap: HTMLDivElement,
@@ -49,9 +69,10 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 };
 
 export const mappingData = (
+	formFactor: LHResult["formFactor"],
 	canvas: ShadowRoot,
 	result: LHResultForTooltip,
-	filterCategory: FilterCategoryType,
+	filter: FilterTypes,
 ) => {
 	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
 		".astro-page-insight-highlight",
@@ -66,6 +87,10 @@ export const mappingData = (
 
 	for (const [selector, value] of Object.entries(result.elements)) {
 		if (!value[0]) continue;
+		if (
+			filter.hideList.some((hideElement) => hideElement.selector === selector)
+		)
+			continue;
 
 		const position = value[0].rect;
 		const detailSelector = value[0].detailSelector;
@@ -74,17 +99,30 @@ export const mappingData = (
 		const { tooltips, selectorCategory } = createAuditData(
 			value,
 			selector,
-			filterCategory,
+			filter.categories,
 		);
 
 		if (Object.keys(tooltips).length === 0) continue;
 
-		const mapElem = createMapElement(
+		const hideArguments = {
 			selector,
+			hideHighlights: filter.hideList,
+			detailSelector: detailSelector ?? "",
+		};
+
+		const render = {
+			canvas,
+			lhResult: result,
+		};
+
+		const mapElem = createMapElement(
+			formFactor,
+			hideArguments,
 			position,
 			tooltips,
 			selectorCategory,
-			detailSelector,
+			filter,
+			render,
 		);
 
 		if (mapElem) canvas.appendChild(mapElem);
@@ -166,15 +204,26 @@ const createAuditData = (
 };
 
 const createMapElement = (
-	selector: string,
+	formFactor: LHResult["formFactor"],
+	hideArguments: HideArguments,
 	position: PositionType,
 	tooltips: Tooltips,
 	selectorCategory: string[],
-	detailSelector?: string,
+	filter: FilterTypes,
+	render: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
 ) => {
 	try {
-		const highlight = createHighlight(selector, position, selectorCategory);
-		highlight.dataset.detailSelector = detailSelector;
+		const highlight = createHighlight(
+			formFactor,
+			hideArguments,
+			position,
+			filter,
+			render,
+			selectorCategory,
+		);
 
 		let title: string | undefined;
 		if (highlight.dataset.target === "rect") {

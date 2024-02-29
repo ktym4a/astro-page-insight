@@ -93,7 +93,37 @@ export type LHResultForTooltip = {
 	consoleErrors: LHResult["consoleErrors"];
 };
 
+export type HideElement = {
+	selector: string;
+	detailSelector?: string;
+};
+
 export type LHResultByFormFactor = {
 	mobile: LHResultForTooltip;
 	desktop: LHResultForTooltip;
+};
+
+export type HideHighlightsByFormFactor = {
+	mobile: HideElement[];
+	desktop: HideElement[];
+};
+
+export type FilterTypes = {
+	categories: FilterCategoryType;
+	hideList: HideElement[];
+};
+
+export type HideArguments = {
+	selector: string;
+	hideHighlights: HideElement[];
+	detailSelector?: string;
+};
+
+export type UpdateMappingType = {
+	canvas: ShadowRoot;
+	result: LHResultForTooltip;
+	filter: FilterTypes;
+	formFactor: LHResult["formFactor"];
+	scoreList: ScoreListType;
+	categoryCount: CategoryCountType;
 };
