@@ -3,6 +3,7 @@ import type {
 	ErrorTooltips,
 	FilterCategoryType,
 	FilterTypes,
+	HideArguments,
 	LHResult,
 	LHResultForTooltip,
 	PositionType,
@@ -25,8 +26,8 @@ export const updateCanvas = ({
 	scoreList,
 	categoryCount,
 }: UpdateMappingType) => {
-	mappingData(canvas, result, filter);
-	createHideList(canvas, formFactor, filter.hideList);
+	mappingData(formFactor, canvas, result, filter);
+	createHideList(canvas, formFactor, filter.hideList, result, filter);
 	createScore(canvas, formFactor, scoreList);
 	createFilter(canvas, formFactor, categoryCount, result, filter);
 };
@@ -68,6 +69,7 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 };
 
 export const mappingData = (
+	formFactor: LHResult["formFactor"],
 	canvas: ShadowRoot,
 	result: LHResultForTooltip,
 	filter: FilterTypes,
@@ -102,12 +104,25 @@ export const mappingData = (
 
 		if (Object.keys(tooltips).length === 0) continue;
 
-		const mapElem = createMapElement(
+		const hideArguments = {
 			selector,
+			hideHighlights: filter.hideList,
+			detailSelector: detailSelector ?? "",
+		};
+
+		const render = {
+			canvas,
+			lhResult: result,
+		};
+
+		const mapElem = createMapElement(
+			formFactor,
+			hideArguments,
 			position,
 			tooltips,
 			selectorCategory,
-			detailSelector,
+			filter,
+			render,
 		);
 
 		if (mapElem) canvas.appendChild(mapElem);
@@ -189,15 +204,26 @@ const createAuditData = (
 };
 
 const createMapElement = (
-	selector: string,
+	formFactor: LHResult["formFactor"],
+	hideArguments: HideArguments,
 	position: PositionType,
 	tooltips: Tooltips,
 	selectorCategory: string[],
-	detailSelector?: string,
+	filter: FilterTypes,
+	render: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
 ) => {
 	try {
-		const highlight = createHighlight(selector, position, selectorCategory);
-		highlight.dataset.detailSelector = detailSelector;
+		const highlight = createHighlight(
+			formFactor,
+			hideArguments,
+			position,
+			filter,
+			render,
+			selectorCategory,
+		);
 
 		let title: string | undefined;
 		if (highlight.dataset.target === "rect") {

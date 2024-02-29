@@ -1,16 +1,34 @@
 import { COLORS } from "../constants/index.js";
-import type { PositionType } from "../types/index.js";
+import type {
+	FilterTypes,
+	HideArguments,
+	LHResult,
+	LHResultForTooltip,
+	PositionType,
+} from "../types/index.js";
+import { mappingData } from "../utils/lh.js";
+import { createHideList } from "./hide.js";
 import { eyeXIcon } from "./icons.js";
 import { createToolbarButton } from "./toolbar.js";
 
 export const createHighlight = (
-	selector: string,
+	formFactor: LHResult["formFactor"],
+	hideArguments: HideArguments,
 	rect: PositionType,
+	filter: FilterTypes,
+	render: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
 	categories?: string[],
 ) => {
-	const highlight = createHighlightElement();
-	updateHHighlightPosition(highlight, selector, rect);
-	highlight.dataset.selector = selector;
+	const highlight = createHighlightElement(
+		formFactor,
+		hideArguments,
+		filter,
+		render,
+	);
+	updateHHighlightPosition(highlight, hideArguments.selector, rect);
 
 	if (categories) {
 		addTitle(highlight, categories);
@@ -43,7 +61,15 @@ export const createHighlight = (
 	return highlight;
 };
 
-const createHighlightElement = () => {
+const createHighlightElement = (
+	formFactor: LHResult["formFactor"],
+	hideArguments: HideArguments,
+	filter: FilterTypes,
+	render: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
+) => {
 	const highlight = document.createElement("div");
 	highlight.style.position = "absolute";
 	highlight.style.background =
@@ -54,10 +80,22 @@ const createHighlightElement = () => {
 	highlight.classList.add("astro-page-insight-highlight");
 	highlight.style.border = `2px solid ${COLORS.red}`;
 	highlight.tabIndex = 0;
+	highlight.dataset.selector = hideArguments.selector;
 
 	const button = createToolbarButton(eyeXIcon, highlight);
 	button.onclick = () => {
-		highlight.style.display = "none";
+		hideArguments.hideHighlights.push({
+			selector: hideArguments.selector,
+			detailSelector: hideArguments.detailSelector || "",
+		});
+		mappingData(formFactor, render.canvas, render.lhResult, filter);
+		createHideList(
+			render.canvas,
+			formFactor,
+			hideArguments.hideHighlights,
+			render.lhResult,
+			filter,
+		);
 	};
 
 	return highlight;

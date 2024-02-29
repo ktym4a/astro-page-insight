@@ -2,7 +2,7 @@ import { type DevToolbarApp } from "astro";
 import type {
 	CategoryCountByFormFactor,
 	FilterCategoryType,
-	HideElementsByFormFactor,
+	HideHighlightsByFormFactor,
 	LHResult,
 	LHResultByFormFactor,
 	ScoreListByFormFactor,
@@ -39,7 +39,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let categoryCountByFormFactor: CategoryCountByFormFactor;
 		let lhResultByFormFactor: LHResultByFormFactor;
 		let formFactor: "mobile" | "desktop" = "desktop";
-		let hideElements: HideElementsByFormFactor;
+		let hideHighlights: HideHighlightsByFormFactor;
 
 		const isLightHouse =
 			new URL(window.location.href).searchParams.get("astro-page-insight") ===
@@ -123,7 +123,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						consoleErrors: [],
 					},
 				};
-				hideElements = {
+				hideHighlights = {
 					mobile: [],
 					desktop: [],
 				};
@@ -133,7 +133,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					result: lhResultByFormFactor[formFactor],
 					filter: {
 						categories: filterCategories,
-						hideList: hideElements[formFactor],
+						hideList: hideHighlights[formFactor],
 					},
 					formFactor,
 					scoreList: scoreListByFormFactor[formFactor],
@@ -159,7 +159,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							result: lhResultByFormFactor[formFactor],
 							filter: {
 								categories: filterCategories,
-								hideList: hideElements[formFactor],
+								hideList: hideHighlights[formFactor],
 							},
 							formFactor,
 							scoreList: scoreListByFormFactor[formFactor],
@@ -192,14 +192,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				};
 				scoreListByFormFactor[result.formFactor] = result.scoreList;
 				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
-				hideElements[result.formFactor] = [];
+				hideHighlights[result.formFactor] = [];
 
 				updateCanvas({
 					canvas,
 					result: lhResultByFormFactor[formFactor],
 					filter: {
 						categories: filterCategories,
-						hideList: hideElements[formFactor],
+						hideList: hideHighlights[formFactor],
 					},
 					formFactor,
 					scoreList: scoreListByFormFactor[formFactor],

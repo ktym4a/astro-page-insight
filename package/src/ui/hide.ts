@@ -1,4 +1,10 @@
-import type { HideElement, LHResult } from "../types/index.js";
+import type {
+	FilterTypes,
+	HideElement,
+	LHResult,
+	LHResultForTooltip,
+} from "../types/index.js";
+import { mappingData } from "../utils/lh.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
 	createToolbarButton,
@@ -17,12 +23,12 @@ export const createHideButton = (
 	const hideButton = createToolbarButton(
 		eyeXIcon,
 		toolbarWrap,
-		true,
+		false,
 		"hide",
 		() => {
 			toggleToolbarWrapper(canvas, "hide");
 		},
-		"Show the hidden elements.",
+		"Show the hidden highlights.",
 	);
 
 	return hideButton;
@@ -31,7 +37,9 @@ export const createHideButton = (
 export const createHideList = (
 	canvas: ShadowRoot,
 	formFactor: LHResult["formFactor"],
-	hideElements: HideElement[],
+	hideHighlights: HideElement[],
+	lhResult: LHResultForTooltip,
+	filter: FilterTypes,
 ) => {
 	const existingHide = canvas.querySelector(".astro-page-insight-modal-hide");
 	if (existingHide) {
@@ -48,7 +56,7 @@ export const createHideList = (
 	</style>`;
 
 	const titleElement = createToolbarTitle(
-		`Hide elements - (${formFactor})`,
+		`Hide highlights - (${formFactor})`,
 		filterIcon,
 	);
 	hideWrapper.appendChild(titleElement);
@@ -56,13 +64,20 @@ export const createHideList = (
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 
-	for (const [index, element] of hideElements.entries()) {
+	if (hideHighlights.length === 0) {
+		const textElement = createToolbarSubTitle("No hidden highlights.");
+		contentWrapper.appendChild(textElement);
+	}
+
+	for (const [index, element] of hideHighlights.entries()) {
 		const content = createContent(
 			canvas,
 			formFactor,
 			element,
-			index === hideElements.length - 1,
-			hideElements,
+			index === hideHighlights.length - 1,
+			hideHighlights,
+			lhResult,
+			filter,
 		);
 		contentWrapper.appendChild(content);
 	}
@@ -80,7 +95,9 @@ const createContent = (
 	formFactor: LHResult["formFactor"],
 	element: HideElement,
 	isLast: boolean,
-	hideElements: HideElement[],
+	hideHighlights: HideElement[],
+	lhResult: LHResultForTooltip,
+	filter: FilterTypes,
 ) => {
 	const contentElement = createToolbarElement(isLast);
 	const contentWrapper = createToolbarContentWrapper();
@@ -92,13 +109,9 @@ const createContent = (
 	contentWrapper.appendChild(textElement);
 
 	const clickHandler = () => {
-		const targetElem = canvas.querySelector(
-			`[data-selector="${element.selector}"]`,
-		) as HTMLDivElement | null;
-		if (targetElem === null) return;
-		targetElem.style.display = "block";
-		hideElements.splice(hideElements.indexOf(element), 1);
-		createHideList(canvas, formFactor, hideElements);
+		hideHighlights.splice(hideHighlights.indexOf(element), 1);
+		createHideList(canvas, formFactor, hideHighlights, lhResult, filter);
+		mappingData(formFactor, canvas, lhResult, filter);
 	};
 
 	const button = createToolbarButton(

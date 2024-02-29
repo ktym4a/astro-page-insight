@@ -73,6 +73,7 @@ export const createFilter = (
 		const text = `${category[0]} (${count})`;
 
 		const content = createContent(
+			formFactor,
 			text,
 			index === categoryArray.length - 1,
 			category[0],
@@ -94,14 +95,12 @@ export const createFilter = (
 };
 
 const createContent = (
+	formFactor: LHResult["formFactor"],
 	content: string,
 	isLast: boolean,
 	category: string,
 	filter: FilterTypes,
-	{
-		canvas,
-		lhResult,
-	}: {
+	render: {
 		canvas: ShadowRoot;
 		lhResult: LHResultForTooltip;
 	},
@@ -123,7 +122,7 @@ const createContent = (
 			button.innerHTML = eyeXIcon;
 			contentWrapper.style.background = "#6c7086";
 		}
-		mappingData(canvas, lhResult, filter);
+		mappingData(formFactor, render.canvas, render.lhResult, filter);
 	};
 
 	const button = filter.categories[category]

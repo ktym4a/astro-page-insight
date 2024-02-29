@@ -40,7 +40,6 @@ export const createTooltip = (
 		contentWrapper.style.marginTop = "10px";
 		for (const [index, tooltip] of tooltips[1].entries()) {
 			const contentElement = document.createElement("div");
-			contentElement.dataset.filterCategory = category;
 
 			const contentTitle = createContentTitle(
 				tooltip.title,

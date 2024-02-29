@@ -103,7 +103,7 @@ export type LHResultByFormFactor = {
 	desktop: LHResultForTooltip;
 };
 
-export type HideElementsByFormFactor = {
+export type HideHighlightsByFormFactor = {
 	mobile: HideElement[];
 	desktop: HideElement[];
 };
@@ -111,6 +111,12 @@ export type HideElementsByFormFactor = {
 export type FilterTypes = {
 	categories: FilterCategoryType;
 	hideList: HideElement[];
+};
+
+export type HideArguments = {
+	selector: string;
+	hideHighlights: HideElement[];
+	detailSelector?: string;
 };
 
 export type UpdateMappingType = {
