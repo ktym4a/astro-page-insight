@@ -56,7 +56,9 @@ export const createHideList = (
 	</style>`;
 
 	const titleElement = createToolbarTitle(
-		`Hide highlights - (${formFactor})`,
+		`Hide highlights - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(
+			1,
+		)})`,
 		filterIcon,
 	);
 	hideWrapper.appendChild(titleElement);
@@ -64,9 +66,14 @@ export const createHideList = (
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 
+	const button = canvas.querySelector("[data-button-type='hide']");
 	if (hideHighlights.length === 0) {
-		const textElement = createToolbarSubTitle("No hidden highlights.");
+		const textElement = createToolbarSubTitle("No hidden highlights found.");
 		contentWrapper.appendChild(textElement);
+		if (button)
+			button.classList.remove("astro-page-insight-toolbar-button-alert");
+	} else {
+		if (button) button.classList.add("astro-page-insight-toolbar-button-alert");
 	}
 
 	for (const [index, element] of hideHighlights.entries()) {

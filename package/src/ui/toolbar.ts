@@ -27,6 +27,18 @@ export const createToolbar = (canvas: ShadowRoot) => {
             border-top-right-radius: 5px;
         }
 
+		.astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap > button.astro-page-insight-toolbar-button-alert::before {
+			content: "";
+			position: absolute;
+			top: 3px;
+			right: 3px;
+			width: 7.5px;
+			height: 7.5px;
+			background-color: #f38ba8;
+			border-radius: 50%;
+			z-index: 1000001;
+		}
+
         .astro-page-insight-toolbar .astro-page-insight-toolbar-wrap .astro-page-insight-toolbar-button-wrap:not(:first-child) > button {
             margin-top: -1px;
         }
@@ -169,6 +181,8 @@ export const createToolbarWrapper = (type: string) => {
 	toolbarWrapper.style.bottom = "50px";
 	toolbarWrapper.style.display = "none";
 	toolbarWrapper.style.zIndex = "200010";
+	toolbarWrapper.style.maxHeight = "40vh";
+	toolbarWrapper.style.overflowY = "auto";
 
 	return toolbarWrapper;
 };

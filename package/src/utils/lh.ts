@@ -1,6 +1,5 @@
 import type {
 	AuditType,
-	ErrorTooltips,
 	FilterCategoryType,
 	FilterTypes,
 	HideArguments,
@@ -10,6 +9,7 @@ import type {
 	Tooltips,
 	UpdateMappingType,
 } from "../types/index.js";
+import { createConsoleErrorList } from "../ui/consoleAlert.js";
 import { createFilter } from "../ui/filter.js";
 import { createHideList } from "../ui/hide.js";
 import { createHighlight } from "../ui/highlight.js";
@@ -30,6 +30,12 @@ export const updateCanvas = ({
 	createHideList(canvas, formFactor, filter.hideList, result, filter);
 	createScore(canvas, formFactor, scoreList);
 	createFilter(canvas, formFactor, categoryCount, result, filter);
+	createConsoleErrorList(
+		canvas,
+		formFactor,
+		result.consoleErrors,
+		result.metaErrors,
+	);
 };
 
 export const createFetchButton = (
@@ -126,15 +132,6 @@ export const mappingData = (
 		);
 
 		if (mapElem) canvas.appendChild(mapElem);
-	}
-
-	if (checkErrors(result.consoleErrors, result.metaErrors)) {
-		const tooltips = createErrorTooltipsData(
-			result.consoleErrors,
-			result.metaErrors,
-		);
-		const errorTooltips = createErrorTooltip(tooltips);
-		canvas.appendChild(errorTooltips);
 	}
 };
 
@@ -246,63 +243,4 @@ const createMapElement = (
 		console.error(e);
 		return undefined;
 	}
-};
-
-const checkErrors = (
-	consoleErrors: LHResult["consoleErrors"],
-	metaErrors: LHResult["metaErrors"],
-) => {
-	if (consoleErrors.length !== 0 || metaErrors.length !== 0) {
-		return true;
-	}
-	return false;
-};
-
-const createErrorTooltipsData = (
-	consoleErrors: LHResult["consoleErrors"],
-	metaErrors: LHResult["metaErrors"],
-) => {
-	const tooltips: ErrorTooltips = {};
-	for (const consoleMessage of consoleErrors) {
-		const category = "Console";
-		const content = consoleMessage.content ?? "";
-		tooltips[category] = [
-			...(tooltips[category] ?? []),
-			{
-				title: consoleMessage.message,
-				score: consoleMessage.level === "error" ? 0 : 0.5,
-				scoreDisplayMode: "",
-				content,
-			},
-		];
-	}
-
-	for (const metaError of metaErrors) {
-		const category = "Document";
-		tooltips[category] = [
-			...(tooltips[category] ?? []),
-			{
-				title: metaError.title,
-				score: metaError.score,
-				scoreDisplayMode: "",
-				content: metaError.description,
-			},
-		];
-	}
-
-	return tooltips;
-};
-
-const createErrorTooltip = (tooltips: ErrorTooltips) => {
-	const errorTooltips = createTooltip(tooltips, {
-		text: "There are some errors in the console or document.",
-	});
-	errorTooltips.style.display = "block";
-	errorTooltips.style.top = "20px";
-	errorTooltips.style.right = "10px";
-	errorTooltips.style.left = "auto";
-	errorTooltips.style.position = "fixed";
-	errorTooltips.classList.add("non-element");
-
-	return errorTooltips;
 };
