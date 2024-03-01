@@ -1,5 +1,20 @@
 # astro-page-insight
 
+## 0.1.0
+
+### Minor Changes
+
+- 557a496: Improve show of desktop or mobile results
+- c91061a: Add the ability to toggle the display of highlights.
+- 0066aad: Add filter functionality for results
+- de190aa: Move Non-elements tooltip position to toolbar
+- c0e2bf8: Add the ability to see the result score of the light house
+
+### Patch Changes
+
+- f5d93ee: Improve Toast component
+- e1092e9: Improve UI
+
 ## 0.0.18
 
 ### Patch Changes
