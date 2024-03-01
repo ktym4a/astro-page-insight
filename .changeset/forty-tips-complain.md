@@ -1,5 +1,5 @@
 ---
-"astro-page-insight": patch
+"astro-page-insight": minor
 ---
 
-Improve clarity of desktop or mobile results
+Improve show of desktop or mobile results

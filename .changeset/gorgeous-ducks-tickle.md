@@ -1,5 +1,5 @@
 ---
-"astro-page-insight": patch
+"astro-page-insight": minor
 ---
 
-Added the ability to toggle the display of highlights.
+Add the ability to toggle the display of highlights.
