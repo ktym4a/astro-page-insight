@@ -58,7 +58,7 @@ export const createFilter = (
 	</style>`;
 
 	const titleElement = createToolbarTitle(
-		`Filter - (${formFactor})`,
+		`Filter - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(1)})`,
 		filterIcon,
 	);
 	filterWrapper.appendChild(titleElement);

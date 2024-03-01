@@ -43,7 +43,7 @@ export const createScore = (
 	const scoreWrapper = createToolbarWrapper("score");
 
 	const titleElement = createToolbarTitle(
-		`Score - (${formFactor})`,
+		`Score - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(1)})`,
 		analyticsIcon,
 	);
 	scoreWrapper.appendChild(titleElement);

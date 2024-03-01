@@ -8,6 +8,7 @@ import type {
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
+import { createConsoleAlertButton } from "./ui/consoleAlert.js";
 import { createFilterButton } from "./ui/filter.js";
 import { createHideButton } from "./ui/hide.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
@@ -32,6 +33,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let filterButton: HTMLButtonElement | undefined;
 		let scoreButton: HTMLButtonElement | undefined;
 		let hideButton: HTMLButtonElement | undefined;
+		let consoleAlertButton: HTMLButtonElement | undefined;
 		let breakPoint: number | undefined;
 		let isFirstLoad = true;
 		let filterCategories: FilterCategoryType;
@@ -63,6 +65,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				const toolbarWrap = createToolbar(canvas);
 				createToastArea(canvas);
+
+				consoleAlertButton = createConsoleAlertButton(canvas, toolbarWrap);
 
 				hideButton = createHideButton(canvas, toolbarWrap);
 
@@ -311,6 +315,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			}
 			if (filterButton) filterButton.disabled = isFetching;
 			if (scoreButton) scoreButton.disabled = isFetching;
+			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 		}
 
 		function fetchSuccess() {
@@ -322,6 +327,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			}
 			if (filterButton) filterButton.disabled = isFetching;
 			if (scoreButton) scoreButton.disabled = isFetching;
+			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 		}
 
 		function errorToggle() {

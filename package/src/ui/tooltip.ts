@@ -99,7 +99,7 @@ const createTooltipWrapper = (top?: number) => {
 	return tooltipWrapper;
 };
 
-const createDetails = (isLast: boolean) => {
+export const createDetails = (isLast: boolean) => {
 	const details = document.createElement("details");
 	details.open = true;
 	if (!isLast) {
@@ -135,7 +135,7 @@ const createTitle = (title: string, icon?: boolean) => {
 	return titleWrap;
 };
 
-const createSummary = (category: string, length: number) => {
+export const createSummary = (category: string, length: number) => {
 	const summary = document.createElement("summary");
 	summary.textContent = `${category} (${length})`;
 	summary.style.cursor = "pointer";
@@ -147,7 +147,7 @@ const createSummary = (category: string, length: number) => {
 	return summary;
 };
 
-const createContentTitle = (
+export const createContentTitle = (
 	title: string,
 	score: number | null,
 	scoreDisplayMode?: string,
@@ -213,7 +213,7 @@ const createContentTitle = (
 	return titleWrap;
 };
 
-const createContent = (content: string, isLast: boolean) => {
+export const createContent = (content: string, isLast: boolean) => {
 	const contentElement = document.createElement("p");
 	contentElement.innerHTML = content.replace(
 		LINK_REGEX,
