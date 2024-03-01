@@ -1,5 +1,5 @@
 ---
-"astro-page-insight": patch
+"astro-page-insight": minor
 ---
 
-Addition of the ability to see the result score of the light house
+Add the ability to see the result score of the light house

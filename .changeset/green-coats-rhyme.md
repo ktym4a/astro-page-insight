@@ -1,5 +1,5 @@
 ---
-"astro-page-insight": patch
+"astro-page-insight": minor
 ---
 
-Added filter functionality for results
+Add filter functionality for results
