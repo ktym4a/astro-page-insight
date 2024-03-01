@@ -1,5 +1,7 @@
 # `astro-page-insight`
 
+![](../.github/demo.png)
+
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that shows everything to improve from Lighthouse results directly on the page.
 
 ## Usage
