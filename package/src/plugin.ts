@@ -183,6 +183,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					errorToggle();
 
 					showToast(
+						canvas,
 						"The result is not for this page.\n Please try again.",
 						"error",
 					);
@@ -212,7 +213,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 				fetchSuccess();
 
-				showToast("Analysis of lighthouse results is complete.", "success");
+				showToast(
+					canvas,
+					"Analysis of lighthouse results is complete.",
+					"success",
+				);
 			},
 		);
 
@@ -221,7 +226,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			(message: string) => {
 				errorToggle();
 
-				showToast(message, "error");
+				showToast(canvas, message, "error");
 			},
 		);
 

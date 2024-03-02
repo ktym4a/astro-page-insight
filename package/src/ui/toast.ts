@@ -20,7 +20,11 @@ export const createToastArea = (canvas: ShadowRoot) => {
 	canvas.appendChild(toastArea);
 };
 
-export const showToast = (message: string, type: "success" | "error") => {
+export const showToast = (
+	canvas: ShadowRoot,
+	message: string,
+	type: "success" | "error",
+) => {
 	const colorKey = type === "success" ? "green" : ("red" as const);
 	const icon = type === "success" ? circleCheckIcon : alertTriangleIcon;
 	const color = COLORS[colorKey];
@@ -41,7 +45,7 @@ export const showToast = (message: string, type: "success" | "error") => {
     <p style="margin: 0;">${message.replace(BR_REGEX, "<br>")}</p>
   `;
 
-	const toastArea = document.getElementById("astro-page-insight-toast-area");
+	const toastArea = canvas.getElementById("astro-page-insight-toast-area");
 
 	if (!toastArea) return;
 	toastArea.appendChild(toast);
