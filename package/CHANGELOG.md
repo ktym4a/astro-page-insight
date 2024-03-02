@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.1.1
+
+### Patch Changes
+
+- 129cbcc: Fix a bug that prevented Toast from displaying correctly.
+
 ## 0.1.0
 
 ### Minor Changes
