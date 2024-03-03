@@ -12,6 +12,12 @@ type PluginOptions = {
 	weight: number;
 };
 
+export type LoadOptionsType = {
+	breakPoint: number;
+	categories: string[];
+	firstFetch: "load" | "open" | "click";
+};
+
 export type LHOptions = {
 	url: string;
 	width: number;

@@ -19,11 +19,12 @@ import {
 export const createFilterButton = (
 	canvas: ShadowRoot,
 	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
 ) => {
 	const filterButton = createToolbarButton(
 		filterIcon,
 		toolbarWrap,
-		false,
+		isFetching,
 		"filter",
 		() => {
 			toggleToolbarWrapper(canvas, "filter");

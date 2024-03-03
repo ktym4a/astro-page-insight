@@ -5,6 +5,7 @@ import type {
 	HideHighlightsByFormFactor,
 	LHResult,
 	LHResultByFormFactor,
+	LoadOptionsType,
 	ScoreListByFormFactor,
 	ScoreListType,
 } from "./types/index.js";
@@ -21,13 +22,18 @@ import {
 import { createScoreButton } from "./ui/score.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar } from "./ui/toolbar.js";
-import { createFetchButton, updateCanvas } from "./utils/lh.js";
+import {
+	createFetchButton,
+	fetchLighthouse,
+	updateCanvas,
+} from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
 	name: "PageInsight",
 	icon: "file-search",
-	init(canvas) {
+	init(canvas, eventTarget) {
+		let firstFetch: LoadOptionsType["firstFetch"] = "click";
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement | undefined;
 		let filterButton: HTMLButtonElement | undefined;
@@ -36,6 +42,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let consoleAlertButton: HTMLButtonElement | undefined;
 		let breakPoint: number | undefined;
 		let isFirstLoad = true;
+		let isFirstFetch = false;
+		let appOpen = false;
 		let filterCategories: FilterCategoryType;
 		let scoreListByFormFactor: ScoreListByFormFactor;
 		let categoryCountByFormFactor: CategoryCountByFormFactor;
@@ -54,27 +62,35 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:options",
-			({
-				breakPoint: bp,
-				categories,
-			}: {
-				breakPoint: number;
-				categories: string[];
-			}) => {
+			({ breakPoint: bp, categories, firstFetch: ff }: LoadOptionsType) => {
+				eventTarget.dispatchEvent(
+					new CustomEvent("toggle-notification", {
+						detail: {
+							state: false,
+						},
+					}),
+				);
+				isFirstFetch = false;
 				breakPoint = bp;
+				firstFetch = ff;
 
 				const toolbarWrap = createToolbar(canvas);
 				createToastArea(canvas);
 
-				consoleAlertButton = createConsoleAlertButton(canvas, toolbarWrap);
+				consoleAlertButton = createConsoleAlertButton(
+					canvas,
+					toolbarWrap,
+					isFetching,
+				);
 
-				hideButton = createHideButton(canvas, toolbarWrap);
+				hideButton = createHideButton(canvas, toolbarWrap, isFetching);
 
-				scoreButton = createScoreButton(canvas, toolbarWrap);
+				scoreButton = createScoreButton(canvas, toolbarWrap, isFetching);
 
-				filterButton = createFilterButton(canvas, toolbarWrap);
+				filterButton = createFilterButton(canvas, toolbarWrap, isFetching);
 
-				fetchButton = createFetchButton(toolbarWrap, isFetching, fetchStart);
+				fetchButton = createFetchButton(toolbarWrap, fetchStart, isFetching);
+				if (isFetching) fetchButton.classList.add("animate");
 
 				formFactor = getFormFactor(breakPoint);
 
@@ -173,8 +189,25 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					mediaQuery.addEventListener("change", handleMediaQuery);
 					isFirstLoad = false;
 				}
+
+				if (firstFetch === "load" && !isFirstFetch) {
+					isFirstFetch = true;
+					fetchStart();
+				}
+				if (firstFetch === "open" && appOpen && !isFirstFetch) {
+					isFirstFetch = true;
+					fetchStart();
+				}
 			},
 		);
+
+		eventTarget.addEventListener("app-toggled", (event) => {
+			appOpen = (<CustomEvent>event).detail.state;
+			if (firstFetch === "open" && appOpen && !isFirstFetch) {
+				isFirstFetch = true;
+				fetchStart();
+			}
+		});
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:on-success",
@@ -189,6 +222,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					);
 					return;
 				}
+
+				eventTarget.dispatchEvent(
+					new CustomEvent("toggle-notification", {
+						detail: {
+							state: true,
+						},
+					}),
+				);
 
 				lhResultByFormFactor[result.formFactor] = {
 					elements: result.elements,
@@ -312,31 +353,49 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		}
 
 		function fetchStart() {
+			if (isFetching) return;
+			eventTarget.dispatchEvent(
+				new CustomEvent("toggle-notification", {
+					detail: {
+						state: false,
+					},
+				}),
+			);
+
 			isFetching = true;
 			if (hideButton) hideButton.disabled = isFetching;
+			if (filterButton) filterButton.disabled = isFetching;
+			if (scoreButton) scoreButton.disabled = isFetching;
+			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 			if (fetchButton) {
 				fetchButton.classList.add("animate");
 				fetchButton.disabled = isFetching;
 			}
-			if (filterButton) filterButton.disabled = isFetching;
-			if (scoreButton) scoreButton.disabled = isFetching;
-			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
+			fetchLighthouse(
+				document.documentElement.clientWidth,
+				document.documentElement.clientWidth,
+				window.location.href,
+			);
 		}
 
 		function fetchSuccess() {
 			isFetching = false;
 			if (hideButton) hideButton.disabled = isFetching;
+			if (filterButton) filterButton.disabled = isFetching;
+			if (scoreButton) scoreButton.disabled = isFetching;
+			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 			if (fetchButton) {
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = isFetching;
 			}
-			if (filterButton) filterButton.disabled = isFetching;
-			if (scoreButton) scoreButton.disabled = isFetching;
-			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 		}
 
 		function errorToggle() {
 			isFetching = false;
+			if (hideButton) hideButton.disabled = isFetching;
+			if (filterButton) filterButton.disabled = isFetching;
+			if (scoreButton) scoreButton.disabled = isFetching;
+			if (consoleAlertButton) consoleAlertButton.disabled = isFetching;
 			if (fetchButton) {
 				fetchButton.classList.remove("animate");
 				fetchButton.disabled = isFetching;

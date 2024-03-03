@@ -45,8 +45,19 @@ export default defineIntegration({
 				weight: 0,
 				breakPoint: 767,
 			}),
+		/**
+		 * @name firstFetch
+		 * @default `click`
+		 * @type `load` | `open` | `click`
+		 * @description
+		 * `firstFetch` is used to determine whether to run first fetch lighthouse result.
+		 * if `firstFetch` is `load`, lighthouse will run on page load.
+		 * if `firstFetch` is `open`, lighthouse will run on app open.
+		 * if `firstFetch` is `click`, lighthouse will run on click `fetch` button.
+		 */
+		firstFetch: z.enum(["load", "open", "click"]).optional().default("click"),
 	}),
-	setup({ options: { lh } }) {
+	setup({ options: { lh, firstFetch } }) {
 		const { resolve } = createResolver(import.meta.url);
 
 		return {
@@ -66,6 +77,7 @@ export default defineIntegration({
 					server.hot.send("astro-dev-toolbar:astro-page-insight-app:options", {
 						breakPoint: lh.breakPoint,
 						categories: CATEGORIES,
+						firstFetch,
 					});
 				});
 
