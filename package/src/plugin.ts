@@ -200,8 +200,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		);
 
 		eventTarget.addEventListener("app-toggled", (event) => {
-			if (event instanceof CustomEvent)
-				appOpen = (<CustomEvent>event).detail.state;
+			if (event instanceof CustomEvent) appOpen = event.detail.state;
 			if (firstFetch === "open" && appOpen && !isFirstFetch) {
 				fetchStart();
 			}
