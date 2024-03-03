@@ -47,15 +47,15 @@ export default defineIntegration({
 			}),
 		/**
 		 * @name firstFetch
-		 * @default `click`
-		 * @type `load` | `open` | `click`
+		 * @default `none`
+		 * @type `load` | `open` | `none`
 		 * @description
-		 * `firstFetch` is used to determine whether to run first fetch lighthouse result.
-		 * if `firstFetch` is `load`, lighthouse will run on page load.
-		 * if `firstFetch` is `open`, lighthouse will run on app open.
-		 * if `firstFetch` is `click`, lighthouse will run on click `fetch` button.
+		 * `firstFetch`  is used for when to do the first fetch.
+		 * if `firstFetch` is `load`, will fetch on page load.
+		 * if `firstFetch` is `open`, will fetch on first app open.
+		 * if `firstFetch` is `none`, only fetch on user interaction.
 		 */
-		firstFetch: z.enum(["load", "open", "click"]).optional().default("click"),
+		firstFetch: z.enum(["load", "open", "none"]).optional().default("none"),
 	}),
 	setup({ options: { lh, firstFetch } }) {
 		const { resolve } = createResolver(import.meta.url);

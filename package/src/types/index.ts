@@ -15,7 +15,7 @@ type PluginOptions = {
 export type LoadOptionsType = {
 	breakPoint: number;
 	categories: string[];
-	firstFetch: "load" | "open" | "click";
+	firstFetch: "load" | "open" | "none";
 };
 
 export type LHOptions = {

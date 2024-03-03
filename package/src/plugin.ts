@@ -33,7 +33,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 	name: "PageInsight",
 	icon: "file-search",
 	init(canvas, eventTarget) {
-		let firstFetch: LoadOptionsType["firstFetch"] = "click";
+		let firstFetch: LoadOptionsType["firstFetch"] = "none";
 		let isFetching = false;
 		let fetchButton: HTMLButtonElement | undefined;
 		let filterButton: HTMLButtonElement | undefined;
@@ -191,11 +191,9 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				}
 
 				if (firstFetch === "load" && !isFirstFetch) {
-					isFirstFetch = true;
 					fetchStart();
 				}
 				if (firstFetch === "open" && appOpen && !isFirstFetch) {
-					isFirstFetch = true;
 					fetchStart();
 				}
 			},
@@ -204,7 +202,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		eventTarget.addEventListener("app-toggled", (event) => {
 			appOpen = (<CustomEvent>event).detail.state;
 			if (firstFetch === "open" && appOpen && !isFirstFetch) {
-				isFirstFetch = true;
 				fetchStart();
 			}
 		});
@@ -353,6 +350,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		}
 
 		function fetchStart() {
+			isFirstFetch = true;
 			if (isFetching) return;
 			eventTarget.dispatchEvent(
 				new CustomEvent("toggle-notification", {
