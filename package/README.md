@@ -77,7 +77,7 @@ export default defineConfig({
     pageInsight({
       lh: {
         weight: 0.5,
-        breakPoint: 768,
+        breakPoint: 1024,
       },
     }),
   ],
