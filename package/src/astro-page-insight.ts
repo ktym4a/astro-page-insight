@@ -45,8 +45,19 @@ export default defineIntegration({
 				weight: 0,
 				breakPoint: 767,
 			}),
+		/**
+		 * @name firstFetch
+		 * @default `none`
+		 * @type `load` | `open` | `none`
+		 * @description
+		 * `firstFetch` is used for when to do the first fetch.
+		 * if `firstFetch` is `load`, will fetch on page load.
+		 * if `firstFetch` is `open`, will fetch on first app open.
+		 * if `firstFetch` is `none`, only fetch on user interaction.
+		 */
+		firstFetch: z.enum(["load", "open", "none"]).optional().default("none"),
 	}),
-	setup({ options: { lh } }) {
+	setup({ options: { lh, firstFetch } }) {
 		const { resolve } = createResolver(import.meta.url);
 
 		return {
@@ -66,6 +77,7 @@ export default defineIntegration({
 					server.hot.send("astro-dev-toolbar:astro-page-insight-app:options", {
 						breakPoint: lh.breakPoint,
 						categories: CATEGORIES,
+						firstFetch,
 					});
 				});
 

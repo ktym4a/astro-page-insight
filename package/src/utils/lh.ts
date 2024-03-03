@@ -40,23 +40,15 @@ export const updateCanvas = ({
 
 export const createFetchButton = (
 	toolbarWrap: HTMLDivElement,
-	isFetching: boolean,
 	fetchStart: () => void,
+	isFetching: boolean,
 ) => {
 	const fetchButton = createToolbarButton(
 		reloadCircleIcon,
 		toolbarWrap,
-		false,
+		isFetching,
 		"fetch",
-		() => {
-			if (isFetching) return;
-			fetchStart();
-			fetchLighthouse(
-				document.documentElement.clientWidth,
-				document.documentElement.clientWidth,
-				window.location.href,
-			);
-		},
+		fetchStart,
 		"Fetch Lighthouse report.",
 	);
 

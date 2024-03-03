@@ -15,11 +15,12 @@ import {
 export const createScoreButton = (
 	canvas: ShadowRoot,
 	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
 ) => {
 	const scoreButton = createToolbarButton(
 		analyticsIcon,
 		toolbarWrap,
-		false,
+		isFetching,
 		"score",
 		() => {
 			toggleToolbarWrapper(canvas, "score");
