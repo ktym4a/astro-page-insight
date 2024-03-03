@@ -4,7 +4,7 @@
 
 Move to options for lh
 
-This is a breaking change.
+This is a **breaking change**.
 
 ```diff
 import pageInsight from "astro-page-insight";
