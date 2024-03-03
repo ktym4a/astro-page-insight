@@ -62,23 +62,26 @@ export default defineConfig({
 
 Here is the options:
 
-```ts
-options: z.object({
-  /**
-  * `weight` is the threshold value in the audit.
-  * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
-  *
-  * @default `0`
-  */
-  weight: z.number().optional().default(0),
-  /**
-  * `breakPoint` is used to determine whether on mobile or desktop.
-  * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
-  *
-  * @default `767`
-  */
-  breakPoint: z.number().optional().default(767),
-})
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `lh.weight` | `number` | `0` | `weight` is the threshold value in the audit. |
+| `lh.breakPoint` | `number` | `767` | `breakPoint` is used to determine whether on mobile or desktop. |
+
+### Example
+
+```.ts
+import pageInsight from "astro-page-insight";
+
+export default defineConfig({
+  integrations: [
+    pageInsight({
+      lh: {
+        weight: 0.5,
+        breakPoint: 768,
+      },
+    }),
+  ],
+});
 ```
 
 ## Contributing
