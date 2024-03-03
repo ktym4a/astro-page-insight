@@ -50,7 +50,7 @@ export default defineIntegration({
 		 * @default `none`
 		 * @type `load` | `open` | `none`
 		 * @description
-		 * `firstFetch`  is used for when to do the first fetch.
+		 * `firstFetch` is used for when to do the first fetch.
 		 * if `firstFetch` is `load`, will fetch on page load.
 		 * if `firstFetch` is `open`, will fetch on first app open.
 		 * if `firstFetch` is `none`, only fetch on user interaction.
