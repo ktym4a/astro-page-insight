@@ -43,6 +43,16 @@ type PageInsightOptions = {
 	 * if `firstFetch` is `none`, only fetch on user interaction.
 	 */
 	firstFetch?: "load" | "open" | "none";
+
+	/**
+	 * @name experimentalCache
+	 * @default `false`
+	 * @type `boolean`
+	 * @description
+	 * `experimentalCache` is used to enable the cache feature.
+	 * if `experimentalCache` is `true`, will enable to cache the lighthouse report.
+	 */
+	experimentalCache?: boolean;
 };
 export default function astroPageInsight(
 	options?: PageInsightOptions,

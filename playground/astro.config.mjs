@@ -7,7 +7,8 @@ export default defineConfig({
 	integrations: [
 		tailwind(),
 		astroPageInsight({
-			firstFetch: "open",
+			// firstFetch: "open",
+			// experimentalCache: true,
 		}),
 	],
 });

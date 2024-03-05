@@ -2,7 +2,12 @@ import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { z } from "astro/zod";
 import { CATEGORIES } from "./constants/index.js";
-import { organizeLHResult, startLH } from "./server/index.js";
+import {
+	getLHReport,
+	organizeLHResult,
+	saveLHReport,
+	startLH,
+} from "./server/index.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
@@ -56,9 +61,20 @@ export default defineIntegration({
 		 * if `firstFetch` is `none`, only fetch on user interaction.
 		 */
 		firstFetch: z.enum(["load", "open", "none"]).optional().default("none"),
+
+		/**
+		 * @name experimentalCache
+		 * @default `false`
+		 * @type `boolean`
+		 * @description
+		 * `experimentalCache` is used to enable the cache feature.
+		 * if `experimentalCache` is `true`, will enable to cache the lighthouse report.
+		 */
+		experimentalCache: z.boolean().optional().default(false),
 	}),
-	setup({ options: { lh, firstFetch } }) {
+	setup({ options: { lh, firstFetch, experimentalCache } }) {
 		const { resolve } = createResolver(import.meta.url);
+		const cacheDir = ".pageinsight";
 
 		return {
 			"astro:config:setup": ({
@@ -73,13 +89,33 @@ export default defineIntegration({
 				}
 			},
 			"astro:server:setup": async ({ server, logger }) => {
-				server.hot.on("astro-dev-toolbar:astro-page-insight-app:init", () => {
-					server.hot.send("astro-dev-toolbar:astro-page-insight-app:options", {
-						breakPoint: lh.breakPoint,
-						categories: CATEGORIES,
-						firstFetch,
-					});
-				});
+				server.hot.on(
+					"astro-dev-toolbar:astro-page-insight-app:init",
+					async ({ url }) => {
+						server.hot.send(
+							"astro-dev-toolbar:astro-page-insight-app:options",
+							{
+								breakPoint: lh.breakPoint,
+								categories: CATEGORIES,
+								firstFetch,
+							},
+						);
+
+						const lhReport = await getLHReport(cacheDir, url);
+						if (lhReport) {
+							const result = organizeLHResult(lhReport, lh.weight);
+
+							server.hot.send(
+								"astro-dev-toolbar:astro-page-insight-app:on-success",
+								{
+									...result,
+									url,
+									formFactor: "desktop",
+								},
+							);
+						}
+					},
+				);
 
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
@@ -93,6 +129,9 @@ export default defineIntegration({
 								weight: lh.weight,
 							});
 							if (lhData.result) {
+								if (experimentalCache)
+									await saveLHReport(cacheDir, url, lhData.result);
+
 								const result = organizeLHResult(lhData.result, lh.weight);
 
 								server.hot.send(
@@ -101,7 +140,6 @@ export default defineIntegration({
 										...result,
 										url,
 										formFactor: lhData.formFactor,
-										lhData,
 									},
 								);
 							}

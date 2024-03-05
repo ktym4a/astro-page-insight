@@ -62,7 +62,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:options",
-			({ breakPoint: bp, categories, firstFetch: ff }: LoadOptionsType) => {
+			({
+				breakPoint: bp,
+				categories,
+				firstFetch: ff,
+			}: LoadOptionsType) => {
 				eventTarget.dispatchEvent(
 					new CustomEvent("toggle-notification", {
 						detail: {
@@ -346,7 +350,9 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					});
 				}
 			}
-			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init");
+			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
+				url: window.location.href,
+			});
 		}
 
 		function fetchStart() {
