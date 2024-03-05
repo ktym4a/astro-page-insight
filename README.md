@@ -1,6 +1,6 @@
 # astro-page-insight
 
-![](./.github/demo.png)
+![](https://raw.githubusercontent.com/ktym4a/astro-page-insight/main/.github/demo.png)
 
 Shows everything to improve from Lighthouse results directly on the page.
 
