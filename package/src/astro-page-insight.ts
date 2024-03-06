@@ -101,19 +101,19 @@ export default defineIntegration({
 							},
 						);
 
-						const lhReport = await getLHReport(cacheDir, url);
-						if (lhReport) {
-							const result = organizeLHResult(lhReport, lh.weight);
+						// const lhReport = await getLHReport(cacheDir, url);
+						// if (lhReport) {
+						// 	const result = organizeLHResult(lhReport, lh.weight);
 
-							server.hot.send(
-								"astro-dev-toolbar:astro-page-insight-app:on-success",
-								{
-									...result,
-									url,
-									formFactor: "desktop",
-								},
-							);
-						}
+						// 	server.hot.send(
+						// 		"astro-dev-toolbar:astro-page-insight-app:on-success",
+						// 		{
+						// 			...result,
+						// 			url,
+						// 			formFactor: "desktop",
+						// 		},
+						// 	);
+						// }
 					},
 				);
 
@@ -130,7 +130,11 @@ export default defineIntegration({
 							});
 							if (lhData.result) {
 								if (experimentalCache)
-									await saveLHReport(cacheDir, url, lhData.result);
+									await saveLHReport(
+										`${cacheDir}/${lhData.formFactor}`,
+										url,
+										lhData.result,
+									);
 
 								const result = organizeLHResult(lhData.result, lh.weight);
 

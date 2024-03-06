@@ -62,11 +62,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:options",
-			({
-				breakPoint: bp,
-				categories,
-				firstFetch: ff,
-			}: LoadOptionsType) => {
+			({ breakPoint: bp, categories, firstFetch: ff }: LoadOptionsType) => {
 				eventTarget.dispatchEvent(
 					new CustomEvent("toggle-notification", {
 						detail: {
