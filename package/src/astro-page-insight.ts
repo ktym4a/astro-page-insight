@@ -101,19 +101,19 @@ export default defineIntegration({
 							},
 						);
 
-						// const lhReport = await getLHReport(cacheDir, url);
-						// if (lhReport) {
-						// 	const result = organizeLHResult(lhReport, lh.weight);
+						const lhReport = await getLHReport(`${cacheDir}/desktop`, url);
+						if (lhReport) {
+							const result = organizeLHResult(lhReport, lh.weight);
 
-						// 	server.hot.send(
-						// 		"astro-dev-toolbar:astro-page-insight-app:on-success",
-						// 		{
-						// 			...result,
-						// 			url,
-						// 			formFactor: "desktop",
-						// 		},
-						// 	);
-						// }
+							server.hot.send(
+								"astro-dev-toolbar:astro-page-insight-app:on-success",
+								{
+									...result,
+									url,
+									formFactor: "desktop",
+								},
+							);
+						}
 					},
 				);
 
