@@ -141,11 +141,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						elements: lhReports?.mobile?.elements || {},
 						metaErrors: lhReports?.mobile?.metaErrors || [],
 						consoleErrors: lhReports?.mobile?.consoleErrors || [],
+						pwaErrors: lhReports?.mobile?.pwaErrors || undefined,
 					},
 					desktop: {
 						elements: lhReports?.desktop?.elements || {},
 						metaErrors: lhReports?.desktop?.metaErrors || [],
 						consoleErrors: lhReports?.desktop?.consoleErrors || [],
+						pwaErrors: lhReports?.desktop?.pwaErrors || undefined,
 					},
 				};
 				hideHighlights = {
@@ -237,6 +239,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					elements: result.elements,
 					metaErrors: result.metaErrors,
 					consoleErrors: result.consoleErrors,
+					pwaErrors: result.pwaErrors,
 				};
 				scoreListByFormFactor[result.formFactor] = result.scoreList;
 				categoryCountByFormFactor[result.formFactor] = result.categoryCount;

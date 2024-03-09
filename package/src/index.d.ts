@@ -31,6 +31,15 @@ type PageInsightOptions = {
 		 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
 		 */
 		breakPoint?: number;
+		/**
+		 * @name pwa
+		 * @default `false`
+		 * @type `boolean`
+		 * @description
+		 * `pwa` is used to determine whether to include the PWA audit.
+		 * if `pwa` is `true`, will include the PWA audit.
+		 */
+		pwa?: boolean;
 	};
 	/**
 	 * @name firstFetch
