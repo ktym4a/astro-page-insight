@@ -10,6 +10,7 @@ export type PositionType = {
 type PluginOptions = {
 	breakPoint: number;
 	weight: number;
+	pwa: boolean;
 };
 
 export type LoadOptionsType = {
@@ -57,6 +58,7 @@ export type LHResult = {
 	categoryCount: CategoryCountType;
 	url: string;
 	formFactor: "mobile" | "desktop";
+	pwaErrors?: Array<ConsoleError>;
 };
 
 export type Categories = {
@@ -98,6 +100,7 @@ export type LHResultForTooltip = {
 	elements: LHResult["elements"];
 	metaErrors: LHResult["metaErrors"];
 	consoleErrors: LHResult["consoleErrors"];
+	pwaErrors: LHResult["pwaErrors"];
 };
 
 export type HideElement = {

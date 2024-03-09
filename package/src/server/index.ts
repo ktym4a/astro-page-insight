@@ -25,12 +25,16 @@ export const startLH = async (options: LHOptions) => {
 	const url = new URL(options.url);
 	url.searchParams.set("astro-page-insight", "true");
 
+	const categories = options.pwa
+		? ["accessibility", "best-practices", "performance", "seo", "pwa"]
+		: ["accessibility", "best-practices", "performance", "seo"];
+
 	const result = await lighthouse(url.toString(), {
 		port: chrome.port,
 		output: "json",
 		formFactor,
 		disableFullPageScreenshot: true,
-		onlyCategories: ["accessibility", "best-practices", "performance", "seo"],
+		onlyCategories: categories,
 		screenEmulation: {
 			mobile: isMobile,
 			width: options.width,
@@ -63,6 +67,7 @@ export const getLHReport = async (
 	cacheDir: string,
 	url: string,
 	weight: number,
+	pwa: boolean,
 ): Promise<CacheLHResultByFormFactor> => {
 	const fileName = generateLHReportFileName(url);
 	const filePathDesktop = `${cacheDir}/desktop/${fileName}`;
@@ -84,13 +89,17 @@ export const getLHReport = async (
 			categoryCount: {},
 		},
 	};
+	if (pwa) {
+		lhResult.desktop.elements.pwa = [];
+		lhResult.mobile.elements.pwa = [];
+	}
 
 	if (fs.existsSync(filePathDesktop)) {
 		const file = await fs.promises
 			.readFile(filePathDesktop, { encoding: "utf-8" })
 			.catch(() => null);
 		if (file) {
-			const result = organizeLHResult(JSON.parse(file), weight);
+			const result = organizeLHResult(JSON.parse(file), weight, pwa);
 			lhResult.desktop = result;
 		}
 	}
@@ -100,7 +109,7 @@ export const getLHReport = async (
 			.readFile(filePathMobile, { encoding: "utf-8" })
 			.catch(() => null);
 		if (file) {
-			const result = organizeLHResult(JSON.parse(file), weight);
+			const result = organizeLHResult(JSON.parse(file), weight, pwa);
 			lhResult.mobile = result;
 		}
 	}
@@ -140,6 +149,7 @@ export const saveLHReport = async (
 export const organizeLHResult = (
 	lhResult: RunnerResult,
 	weight: number,
+	pwa: boolean,
 ): Omit<LHResult, "url" | "formFactor"> => {
 	const { lhr, artifacts } = lhResult;
 
@@ -197,6 +207,10 @@ export const organizeLHResult = (
 
 	let elements = {} as LHResult["elements"];
 	let metaErrors = [] as LHResult["metaErrors"];
+	let pwaErrors: LHResult["pwaErrors"];
+	if (pwa) {
+		pwaErrors = [];
+	}
 
 	for (const incomplete of artifacts.Accessibility.violations) {
 		if (categories[incomplete.id] === undefined) continue;
@@ -273,13 +287,26 @@ export const organizeLHResult = (
 	}
 
 	for (const audit of Object.values(lhr.audits)) {
+		if (categories[audit.id] === undefined) continue;
+		const category = categories[audit.id] || [];
+
+		if (pwa && category.includes("PWA")) {
+			if (audit.score !== null && audit.score < 1) {
+				if (pwaErrors !== undefined) {
+					pwaErrors.push({
+						message: audit.title,
+						level: audit.score === 0 ? "error" : "warning",
+						content: audit.description,
+					});
+				}
+			}
+			continue;
+		}
+
 		if (!audit.details) continue;
 		if (audit.details.type !== "table" && audit.details.type !== "list")
 			continue;
 		if (audit.title === "Avoid an excessive DOM size") continue;
-		if (categories[audit.id] === undefined) continue;
-
-		const category = categories[audit.id] || [];
 
 		const returnObj = findSelector(
 			audit.details.items,
@@ -298,7 +325,23 @@ export const organizeLHResult = (
 		metaErrors = returnObj.metaErrors;
 	}
 
-	return { elements, consoleErrors, scoreList, metaErrors, categoryCount };
+	if (pwa && pwaErrors !== undefined) {
+		return {
+			elements,
+			metaErrors,
+			consoleErrors,
+			scoreList,
+			categoryCount,
+			pwaErrors,
+		};
+	}
+	return {
+		elements,
+		metaErrors,
+		consoleErrors,
+		scoreList,
+		categoryCount,
+	};
 };
 
 const createAudit = (

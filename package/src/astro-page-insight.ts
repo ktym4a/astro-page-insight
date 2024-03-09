@@ -44,6 +44,15 @@ export default defineIntegration({
 				 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
 				 */
 				breakPoint: z.number().optional().default(767),
+				/**
+				 * @name pwa
+				 * @default `false`
+				 * @type `boolean`
+				 * @description
+				 * `pwa` is used to determine whether to include the PWA audit.
+				 * if `pwa` is `true`, will include the PWA audit.
+				 */
+				pwa: z.boolean().optional().default(false),
 			})
 			.optional()
 			.default({
@@ -92,7 +101,12 @@ export default defineIntegration({
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:init",
 					async ({ url }) => {
-						const lhReports = await getLHReport(`${cacheDir}`, url, lh.weight);
+						const lhReports = await getLHReport(
+							`${cacheDir}`,
+							url,
+							lh.weight,
+							lh.pwa,
+						);
 
 						server.hot.send(
 							"astro-dev-toolbar:astro-page-insight-app:options",
@@ -116,6 +130,7 @@ export default defineIntegration({
 								height,
 								breakPoint: lh.breakPoint,
 								weight: lh.weight,
+								pwa: lh.pwa,
 							});
 							if (lhData.result) {
 								if (experimentalCache)
@@ -125,7 +140,11 @@ export default defineIntegration({
 										lhData.result,
 									);
 
-								const result = organizeLHResult(lhData.result, lh.weight);
+								const result = organizeLHResult(
+									lhData.result,
+									lh.weight,
+									lh.pwa,
+								);
 
 								server.hot.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-success",

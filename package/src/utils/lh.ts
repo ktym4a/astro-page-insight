@@ -35,6 +35,7 @@ export const updateCanvas = ({
 		formFactor,
 		result.consoleErrors,
 		result.metaErrors,
+		result.pwaErrors,
 	);
 };
 
