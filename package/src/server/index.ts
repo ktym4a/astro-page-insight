@@ -8,6 +8,7 @@ import type {
 } from "lighthouse/types/lhr/audit-result";
 import type {
 	AuditType,
+	CacheLHResultByFormFactor,
 	Categories,
 	CategoryCountType,
 	LHOptions,
@@ -58,14 +59,53 @@ const generateLHReportFileName = (url: string) => {
 	return `${fileName}.json`;
 };
 
-export const getLHReport = async (cacheDir: string, url: string) => {
+export const getLHReport = async (
+	cacheDir: string,
+	url: string,
+	weight: number,
+): Promise<CacheLHResultByFormFactor> => {
 	const fileName = generateLHReportFileName(url);
-	const filePath = `${cacheDir}/${fileName}`;
-	if (fs.existsSync(filePath)) {
-		const file = await fs.promises.readFile(filePath, { encoding: "utf-8" });
-		return JSON.parse(file);
+	const filePathDesktop = `${cacheDir}/desktop/${fileName}`;
+	const filePathMobile = `${cacheDir}/mobile/${fileName}`;
+
+	const lhResult: CacheLHResultByFormFactor = {
+		desktop: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+		mobile: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+	};
+
+	if (fs.existsSync(filePathDesktop)) {
+		const file = await fs.promises
+			.readFile(filePathDesktop, { encoding: "utf-8" })
+			.catch(() => null);
+		if (file) {
+			const result = organizeLHResult(JSON.parse(file), weight);
+			lhResult.desktop = result;
+		}
 	}
-	return null;
+
+	if (fs.existsSync(filePathMobile)) {
+		const file = await fs.promises
+			.readFile(filePathMobile, { encoding: "utf-8" })
+			.catch(() => null);
+		if (file) {
+			const result = organizeLHResult(JSON.parse(file), weight);
+			lhResult.mobile = result;
+		}
+	}
+
+	return lhResult;
 };
 
 export const saveLHReport = async (
@@ -97,7 +137,10 @@ export const saveLHReport = async (
 	});
 };
 
-export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
+export const organizeLHResult = (
+	lhResult: RunnerResult,
+	weight: number,
+): Omit<LHResult, "url" | "formFactor"> => {
 	const { lhr, artifacts } = lhResult;
 
 	const consoleErrors = artifacts.ConsoleMessages.filter(
