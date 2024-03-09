@@ -346,7 +346,9 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					});
 				}
 			}
-			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init");
+			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
+				url: window.location.href,
+			});
 		}
 
 		function fetchStart() {
