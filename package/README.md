@@ -88,6 +88,14 @@ export default defineConfig({
 });
 ```
 
+### gitignore
+
+If you want to ignore the cache, add the following to your `.gitignore`:
+
+```.gitignore
+.pageinsight
+```
+
 ## Contributing
 
 This package is structured as a monorepo:
