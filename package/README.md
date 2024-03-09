@@ -82,6 +82,7 @@ export default defineConfig({
         breakPoint: 1024,
       },
       firstFetch: "open",
+      experimentalCache: true,
     }),
   ],
 });
