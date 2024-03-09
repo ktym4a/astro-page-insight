@@ -16,6 +16,7 @@ export type LoadOptionsType = {
 	breakPoint: number;
 	categories: string[];
 	firstFetch: "load" | "open" | "none";
+	lhReports: CacheLHResultByFormFactor;
 };
 
 export type LHOptions = {
@@ -112,6 +113,11 @@ export type LHResultByFormFactor = {
 export type HideHighlightsByFormFactor = {
 	mobile: HideElement[];
 	desktop: HideElement[];
+};
+
+export type CacheLHResultByFormFactor = {
+	mobile: Omit<LHResult, "url" | "formFactor">;
+	desktop: Omit<LHResult, "url" | "formFactor">;
 };
 
 export type FilterTypes = {

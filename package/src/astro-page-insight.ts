@@ -92,28 +92,17 @@ export default defineIntegration({
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:init",
 					async ({ url }) => {
+						const lhReports = await getLHReport(`${cacheDir}`, url, lh.weight);
+
 						server.hot.send(
 							"astro-dev-toolbar:astro-page-insight-app:options",
 							{
 								breakPoint: lh.breakPoint,
 								categories: CATEGORIES,
 								firstFetch,
+								lhReports,
 							},
 						);
-
-						const lhReport = await getLHReport(`${cacheDir}/desktop`, url);
-						if (lhReport) {
-							const result = organizeLHResult(lhReport, lh.weight);
-
-							server.hot.send(
-								"astro-dev-toolbar:astro-page-insight-app:on-success",
-								{
-									...result,
-									url,
-									formFactor: "desktop",
-								},
-							);
-						}
 					},
 				);
 

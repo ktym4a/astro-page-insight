@@ -62,7 +62,12 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		import.meta.hot?.on(
 			"astro-dev-toolbar:astro-page-insight-app:options",
-			({ breakPoint: bp, categories, firstFetch: ff }: LoadOptionsType) => {
+			({
+				breakPoint: bp,
+				categories,
+				firstFetch: ff,
+				lhReports,
+			}: LoadOptionsType) => {
 				eventTarget.dispatchEvent(
 					new CustomEvent("toggle-notification", {
 						detail: {
@@ -117,8 +122,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					return { ...acc, [cur]: null };
 				}, {});
 				scoreListByFormFactor = {
-					mobile: scoreList,
-					desktop: scoreList,
+					mobile: lhReports?.mobile?.scoreList || scoreList,
+					desktop: lhReports?.desktop?.scoreList || scoreList,
 				};
 				filterCategories = categories.reduce((acc, cur) => {
 					return {
@@ -128,19 +133,19 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					};
 				}, {});
 				categoryCountByFormFactor = {
-					mobile: {},
-					desktop: {},
+					mobile: lhReports?.mobile?.categoryCount || {},
+					desktop: lhReports?.desktop?.categoryCount || {},
 				};
 				lhResultByFormFactor = {
 					mobile: {
-						elements: {},
-						metaErrors: [],
-						consoleErrors: [],
+						elements: lhReports?.mobile?.elements || {},
+						metaErrors: lhReports?.mobile?.metaErrors || [],
+						consoleErrors: lhReports?.mobile?.consoleErrors || [],
 					},
 					desktop: {
-						elements: {},
-						metaErrors: [],
-						consoleErrors: [],
+						elements: lhReports?.desktop?.elements || {},
+						metaErrors: lhReports?.desktop?.metaErrors || [],
+						consoleErrors: lhReports?.desktop?.consoleErrors || [],
 					},
 				};
 				hideHighlights = {
