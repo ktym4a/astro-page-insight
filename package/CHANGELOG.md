@@ -1,5 +1,58 @@
 # astro-page-insight
 
+## 0.2.0
+
+### Minor Changes
+
+- 32a2b3e: Add firstFetch option.
+
+  This option allows you to specify when to do the first fetch.
+
+  ```diff
+  type PageInsightOptions = {
+  	lh?: {
+  		weight?: number;
+  		breakPoint?: number;
+  	};
+  +	firstFetch?: "load" | "open" | "none";
+  };
+  ```
+
+- 32a2b3e: Add experimentalCache option.
+
+  This option allows you to enable the experimental cache.
+
+  if `experimentalCache` is `true`, will enable to cache the lighthouse report.
+
+  ```diff
+  type PageInsightOptions = {
+  	lh?: {
+  		weight?: number;
+  		breakPoint?: number;
+  	};
+  +	experimentalCache?: boolean;
+  };
+  ```
+
+- 32a2b3e: Move to options for lh
+
+  This is a **breaking change**.
+
+  ```diff
+  import pageInsight from "astro-page-insight";
+
+  export default defineConfig({
+    integrations: [
+      pageInsight({
+  +     lh: {
+         breakpoint: 768,
+         weight: 0.5,
+  +     },
+      }),
+    ],
+  });
+  ```
+
 ## 0.1.1
 
 ### Patch Changes
