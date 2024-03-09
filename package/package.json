@@ -1,48 +1,48 @@
 {
-  "name": "astro-page-insight",
-  "version": "0.2.1",
-  "description": "Shows everything to improve from Lighthouse results directly on the page.",
-  "author": {
-    "email": "shoma@ktym4a.me",
-    "name": "ktym4a",
-    "url": "https://ktym4a.me"
-  },
-  "license": "MIT",
-  "keywords": [
-    "astro-integration",
-    "astro-component",
-    "withastro",
-    "astro",
-    "lighthouse",
-    "page-insight",
-    "a11y",
-    "optimization",
-    "devtools"
-  ],
-  "homepage": "https://github.com/ktym4a/astro-page-insight",
-  "repository": "https://github.com/ktym4a/astro-page-insight",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
-  "types": "./src/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./src/index.d.ts",
-      "import": "./src/index.ts"
-    }
-  },
-  "scripts": {},
-  "type": "module",
-  "peerDependencies": {
-    "astro": "^4.0.0"
-  },
-  "dependencies": {
-    "astro-integration-kit": "^0.5.1",
-    "chrome-launcher": "^1.1.0",
-    "lighthouse": "^11.6.0"
-  },
-  "devDependencies": {
-    "vite": "^5.1.5"
-  }
+	"name": "astro-page-insight",
+	"version": "0.2.1",
+	"description": "Shows everything to improve from Lighthouse results directly on the page.",
+	"author": {
+		"email": "shoma@ktym4a.me",
+		"name": "ktym4a",
+		"url": "https://ktym4a.me"
+	},
+	"license": "MIT",
+	"keywords": [
+		"astro-integration",
+		"astro-component",
+		"withastro",
+		"astro",
+		"lighthouse",
+		"page-insight",
+		"a11y",
+		"optimization",
+		"devtools"
+	],
+	"homepage": "https://github.com/ktym4a/astro-page-insight",
+	"repository": "https://github.com/ktym4a/astro-page-insight",
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"types": "./src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.d.ts",
+			"import": "./src/index.ts"
+		}
+	},
+	"scripts": {},
+	"type": "module",
+	"peerDependencies": {
+		"astro": "^4.0.0"
+	},
+	"dependencies": {
+		"astro-integration-kit": "^0.5.1",
+		"chrome-launcher": "^1.1.0",
+		"lighthouse": "^11.6.0"
+	},
+	"devDependencies": {
+		"vite": "^5.1.5"
+	}
 }

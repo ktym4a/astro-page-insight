@@ -429,7 +429,7 @@ const getSelector = (node: string) => {
 		.split(",")
 		.slice(3)
 		.reduce((acc, cur, index) => {
-			const elemIndex = parseInt(cur);
+			const elemIndex = Number.parseInt(cur);
 			if (Number.isNaN(elemIndex)) return acc;
 
 			const elem = `*:nth-child(${elemIndex + 1})`;

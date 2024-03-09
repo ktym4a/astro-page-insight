@@ -1,4 +1,4 @@
-import { type DevToolbarApp } from "astro";
+import type { DevToolbarApp } from "astro";
 import type {
 	CategoryCountByFormFactor,
 	FilterCategoryType,
