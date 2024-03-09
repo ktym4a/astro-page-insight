@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.2.1
+
+### Patch Changes
+
+- 5ec3cc2: update README
+
 ## 0.2.0
 
 ### Minor Changes
