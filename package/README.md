@@ -67,6 +67,7 @@ Here is the options:
 | `lh.weight` | `number` | `0` | `weight` is the threshold value in the audit. |
 | `lh.breakPoint` | `number` | `767` | `breakPoint` is used to determine whether on mobile or desktop. |
 | `firstFetch` | `load`, `open`, `none` | `none` | `firstFetch` is used for when to do the first fetch.<br />if `firstFetch` is `load`, will fetch on page load.<br />if `firstFetch` is `open`, will fetch on first app open.<br />if `firstFetch` is `none`, only fetch on user interaction. |
+| `experimentalCache` | `boolean` | `false` | `experimentalCache` is used to enable the experimental cache.<br />if `experimentalCache` is `true`, will enable to cache the lighthouse report. |
 
 ### Example
 
