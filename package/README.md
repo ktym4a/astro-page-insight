@@ -1,6 +1,6 @@
 # `astro-page-insight`
 
-![](../.github/demo.png)
+![](https://raw.githubusercontent.com/ktym4a/astro-page-insight/main/.github/demo.png)
 
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that shows everything to improve from Lighthouse results directly on the page.
 
@@ -62,23 +62,29 @@ export default defineConfig({
 
 Here is the options:
 
-```ts
-options: z.object({
-  /**
-  * `weight` is the threshold value in the audit.
-  * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
-  *
-  * @default `0`
-  */
-  weight: z.number().optional().default(0),
-  /**
-  * `breakPoint` is used to determine whether on mobile or desktop.
-  * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
-  *
-  * @default `767`
-  */
-  breakPoint: z.number().optional().default(767),
-})
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `lh.weight` | `number` | `0` | `weight` is the threshold value in the audit. |
+| `lh.breakPoint` | `number` | `767` | `breakPoint` is used to determine whether on mobile or desktop. |
+| `firstFetch` | `load`, `open`, `none` | `none` | `firstFetch` is used for when to do the first fetch.<br />if `firstFetch` is `load`, will fetch on page load.<br />if `firstFetch` is `open`, will fetch on first app open.<br />if `firstFetch` is `none`, only fetch on user interaction. |
+| `experimentalCache` | `boolean` | `false` | `experimentalCache` is used to enable the experimental cache.<br />if `experimentalCache` is `true`, will enable to cache the lighthouse report. |
+
+### Example
+
+```.ts
+import pageInsight from "astro-page-insight";
+
+export default defineConfig({
+  integrations: [
+    pageInsight({
+      lh: {
+        weight: 0.5,
+        breakPoint: 1024,
+      },
+      firstFetch: "open",
+    }),
+  ],
+});
 ```
 
 ## Contributing

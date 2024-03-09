@@ -18,11 +18,12 @@ import {
 export const createConsoleAlertButton = (
 	canvas: ShadowRoot,
 	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
 ) => {
 	const hideButton = createToolbarButton(
 		alertDocumentIcon,
 		toolbarWrap,
-		false,
+		isFetching,
 		"console-alert",
 		() => {
 			toggleToolbarWrapper(canvas, "console-alert");

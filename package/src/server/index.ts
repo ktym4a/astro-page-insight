@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse, { type RunnerResult } from "lighthouse";
 import type {
@@ -7,6 +8,7 @@ import type {
 } from "lighthouse/types/lhr/audit-result";
 import type {
 	AuditType,
+	CacheLHResultByFormFactor,
 	Categories,
 	CategoryCountType,
 	LHOptions,
@@ -52,7 +54,93 @@ export const startLH = async (options: LHOptions) => {
 	};
 };
 
-export const organizeLHResult = (lhResult: RunnerResult, weight: number) => {
+const generateLHReportFileName = (url: string) => {
+	const fileName = url.replace(/[^a-zA-Z0-9]/g, "-");
+	return `${fileName}.json`;
+};
+
+export const getLHReport = async (
+	cacheDir: string,
+	url: string,
+	weight: number,
+): Promise<CacheLHResultByFormFactor> => {
+	const fileName = generateLHReportFileName(url);
+	const filePathDesktop = `${cacheDir}/desktop/${fileName}`;
+	const filePathMobile = `${cacheDir}/mobile/${fileName}`;
+
+	const lhResult: CacheLHResultByFormFactor = {
+		desktop: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+		mobile: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+	};
+
+	if (fs.existsSync(filePathDesktop)) {
+		const file = await fs.promises
+			.readFile(filePathDesktop, { encoding: "utf-8" })
+			.catch(() => null);
+		if (file) {
+			const result = organizeLHResult(JSON.parse(file), weight);
+			lhResult.desktop = result;
+		}
+	}
+
+	if (fs.existsSync(filePathMobile)) {
+		const file = await fs.promises
+			.readFile(filePathMobile, { encoding: "utf-8" })
+			.catch(() => null);
+		if (file) {
+			const result = organizeLHResult(JSON.parse(file), weight);
+			lhResult.mobile = result;
+		}
+	}
+
+	return lhResult;
+};
+
+export const saveLHReport = async (
+	cacheDir: string,
+	url: string,
+	lhResult: RunnerResult,
+) => {
+	const report = {
+		artifacts: {
+			ConsoleMessages: lhResult.artifacts.ConsoleMessages,
+			Accessibility: {
+				violations: lhResult.artifacts.Accessibility.violations,
+				incomplete: lhResult.artifacts.Accessibility.incomplete,
+			},
+		},
+		lhr: {
+			categories: lhResult.lhr.categories,
+			audits: lhResult.lhr.audits,
+		},
+	};
+	const fileName = generateLHReportFileName(url);
+	const filePath = `${cacheDir}/${fileName}`;
+	if (!fs.existsSync(cacheDir)) {
+		await fs.promises.mkdir(cacheDir, { recursive: true });
+	}
+
+	await fs.promises.writeFile(filePath, JSON.stringify(report), {
+		encoding: "utf-8",
+	});
+};
+
+export const organizeLHResult = (
+	lhResult: RunnerResult,
+	weight: number,
+): Omit<LHResult, "url" | "formFactor"> => {
 	const { lhr, artifacts } = lhResult;
 
 	const consoleErrors = artifacts.ConsoleMessages.filter(

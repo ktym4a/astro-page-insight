@@ -19,11 +19,12 @@ import {
 export const createHideButton = (
 	canvas: ShadowRoot,
 	toolbarWrap: HTMLDivElement,
+	isFetching: boolean,
 ) => {
 	const hideButton = createToolbarButton(
 		eyeXIcon,
 		toolbarWrap,
-		false,
+		isFetching,
 		"hide",
 		() => {
 			toggleToolbarWrapper(canvas, "hide");
