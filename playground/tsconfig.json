@@ -1,7 +1,12 @@
 {
 	"extends": "astro/tsconfigs/strictest",
 	"compilerOptions": {
-		"jsx": "preserve"
+		"jsx": "preserve",
+		"types": [
+			"astro/client",
+			"vite-plugin-pwa/vanillajs",
+			"vite-plugin-pwa/info"
+		]
 	},
 	"exclude": ["dist"]
 }
