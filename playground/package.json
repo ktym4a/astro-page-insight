@@ -19,6 +19,7 @@
 	"devDependencies": {
 		"@astrojs/check": "^0.5.6",
 		"@types/node": "^20.11.25",
+		"@vite-pwa/assets-generator": "^0.2.4",
 		"@vite-pwa/astro": "^0.3.0",
 		"typescript": "^5.4.2"
 	}
