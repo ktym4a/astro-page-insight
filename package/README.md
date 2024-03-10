@@ -111,10 +111,22 @@ Install dependencies using pnpm:
 pnpm i --frozen-lockfile
 ```
 
-Start the playground:
+Start the playground with blog:
 
 ```bash
-pnpm playground:dev
+pnpm playground:blog
+```
+
+Start the playground with ssr:
+
+```bash
+pnpm playground:ssr
+```
+
+Start the playground with view transitions:
+
+```bash
+pnpm playground:vw
 ```
 
 You can now edit files in `package`. Please note that making changes to those files may require restarting the playground dev server.

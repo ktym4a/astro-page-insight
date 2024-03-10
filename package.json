@@ -6,7 +6,9 @@
 		"node": ">=18.19.0"
 	},
 	"scripts": {
-		"playground:dev": "pnpm --filter playground dev",
+		"playground:blog": "pnpm --filter blog dev",
+		"playground:ssr": "pnpm --filter ssr dev",
+		"playground:vw": "pnpm --filter view-transitions dev",
 		"changeset": "changeset",
 		"release": "node scripts/release.mjs",
 		"lint": "biome check .",
