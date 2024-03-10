@@ -411,6 +411,7 @@ const findSelector = (
 			);
 		}
 		if (item.node) {
+			if (item.node.path === undefined) continue;
 			if (item.node.path.includes("ASTRO-DEV-TOOLBAR")) continue;
 			let scoreValue = score;
 			if (
