@@ -1,8 +1,0 @@
-{
-	"extends": "astro/tsconfigs/strictest",
-	"compilerOptions": {
-		"jsx": "preserve",
-		"types": ["astro/client"]
-	},
-	"exclude": ["dist"]
-}
