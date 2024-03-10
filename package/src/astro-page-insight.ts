@@ -100,7 +100,7 @@ export default defineIntegration({
 			"astro:server:setup": async ({ server, logger }) => {
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:init",
-					async ({ url }) => {
+					async ({ url }, client) => {
 						const lhReports = await getLHReport(
 							`${cacheDir}`,
 							url,
@@ -108,21 +108,18 @@ export default defineIntegration({
 							lh.pwa,
 						);
 
-						server.hot.send(
-							"astro-dev-toolbar:astro-page-insight-app:options",
-							{
-								breakPoint: lh.breakPoint,
-								categories: CATEGORIES,
-								firstFetch,
-								lhReports,
-							},
-						);
+						client.send("astro-dev-toolbar:astro-page-insight-app:options", {
+							breakPoint: lh.breakPoint,
+							categories: CATEGORIES,
+							firstFetch,
+							lhReports,
+						});
 					},
 				);
 
 				server.hot.on(
 					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-					async ({ width, height, url }) => {
+					async ({ width, height, url }, client) => {
 						try {
 							const lhData = await startLH({
 								url,
@@ -146,7 +143,7 @@ export default defineIntegration({
 									lh.pwa,
 								);
 
-								server.hot.send(
+								client.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-success",
 									{
 										...result,
@@ -158,7 +155,7 @@ export default defineIntegration({
 						} catch (error) {
 							logger.error("Something went wrong.");
 							console.error(error);
-							server.hot.send(
+							client.send(
 								"astro-dev-toolbar:astro-page-insight-app:on-error",
 								"Something went wrong.\nPlease try again.",
 							);
