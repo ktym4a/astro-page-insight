@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.3.1
+
+### Patch Changes
+
+- 934f6ca: Fix bug that sometimes node obj doesn't have path.
+
 ## 0.3.0
 
 ### Minor Changes

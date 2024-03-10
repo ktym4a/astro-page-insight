@@ -1,6 +1,6 @@
 {
 	"name": "astro-page-insight",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Shows everything to improve from Lighthouse results directly on the page.",
 	"author": {
 		"email": "shoma@ktym4a.me",
