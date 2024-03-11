@@ -60,151 +60,155 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		initCanvas();
 		document.addEventListener("astro:page-load", initCanvas);
 
-		import.meta.hot?.on(
-			"astro-dev-toolbar:astro-page-insight-app:options",
-			({
-				breakPoint: bp,
-				categories,
-				firstFetch: ff,
-				lhReports,
-			}: LoadOptionsType) => {
-				eventTarget.dispatchEvent(
-					new CustomEvent("toggle-notification", {
-						detail: {
-							state: false,
-						},
-					}),
-				);
-				isFirstFetch = false;
-				breakPoint = bp;
-				firstFetch = ff;
-
-				const toolbarWrap = createToolbar(canvas);
-				createToastArea(canvas);
-
-				consoleAlertButton = createConsoleAlertButton(
-					canvas,
-					toolbarWrap,
-					isFetching,
-				);
-
-				hideButton = createHideButton(canvas, toolbarWrap, isFetching);
-
-				scoreButton = createScoreButton(canvas, toolbarWrap, isFetching);
-
-				filterButton = createFilterButton(canvas, toolbarWrap, isFetching);
-
-				fetchButton = createFetchButton(toolbarWrap, fetchStart, isFetching);
-				if (isFetching) fetchButton.classList.add("animate");
-
-				formFactor = getFormFactor(breakPoint);
-
-				const icon = getIcon(formFactor);
-				createIndicatorButton(toolbarWrap, icon);
-
-				const style = document.createElement("style");
-				style.textContent = `
-					@media (max-width: ${breakPoint}px) {
-						*[data-form-factor="desktop"] {
-							display: none !important;
-						}
-					}
-					@media (min-width: ${breakPoint + 1}px) {
-						*[data-form-factor="mobile"] {
-							display: none !important;
-						}
-					}
-				`;
-				canvas.appendChild(style);
-
-				const scoreList: ScoreListType = categories.reduce((acc, cur) => {
-					// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-					return { ...acc, [cur]: null };
-				}, {});
-				scoreListByFormFactor = {
-					mobile: lhReports?.mobile?.scoreList || scoreList,
-					desktop: lhReports?.desktop?.scoreList || scoreList,
-				};
-				filterCategories = categories.reduce((acc, cur) => {
-					return {
-						// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-						...acc,
-						[cur]: false,
-					};
-				}, {});
-				categoryCountByFormFactor = {
-					mobile: lhReports?.mobile?.categoryCount || {},
-					desktop: lhReports?.desktop?.categoryCount || {},
-				};
-				lhResultByFormFactor = {
-					mobile: {
-						elements: lhReports?.mobile?.elements || {},
-						metaErrors: lhReports?.mobile?.metaErrors || [],
-						consoleErrors: lhReports?.mobile?.consoleErrors || [],
-						pwaErrors: lhReports?.mobile?.pwaErrors || undefined,
-					},
-					desktop: {
-						elements: lhReports?.desktop?.elements || {},
-						metaErrors: lhReports?.desktop?.metaErrors || [],
-						consoleErrors: lhReports?.desktop?.consoleErrors || [],
-						pwaErrors: lhReports?.desktop?.pwaErrors || undefined,
-					},
-				};
-				hideHighlights = {
-					mobile: [],
-					desktop: [],
-				};
-
-				updateCanvas({
-					canvas,
-					result: lhResultByFormFactor[formFactor],
-					filter: {
-						categories: filterCategories,
-						hideList: hideHighlights[formFactor],
-					},
-					formFactor,
-					scoreList: scoreListByFormFactor[formFactor],
-					categoryCount: categoryCountByFormFactor[formFactor],
-				});
-
-				if (isFirstLoad) {
-					const mediaQuery = window.matchMedia(`(max-width: ${breakPoint}px)`);
-
-					const handleMediaQuery = (mql: MediaQueryListEvent) => {
-						const indicatorButton = canvas.querySelector<HTMLButtonElement>(
-							'button[data-button-type="indicator"]',
-						);
-						if (mql.matches) {
-							formFactor = "mobile";
-							if (indicatorButton) indicatorButton.innerHTML = mobileIcon;
-						} else {
-							formFactor = "desktop";
-							if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
-						}
-						updateCanvas({
-							canvas,
-							result: lhResultByFormFactor[formFactor],
-							filter: {
-								categories: filterCategories,
-								hideList: hideHighlights[formFactor],
+		if (import.meta.hot) {
+			import.meta.hot?.on(
+				"astro-dev-toolbar:astro-page-insight-app:options",
+				({
+					breakPoint: bp,
+					categories,
+					firstFetch: ff,
+					lhReports,
+				}: LoadOptionsType) => {
+					eventTarget.dispatchEvent(
+						new CustomEvent("toggle-notification", {
+							detail: {
+								state: false,
 							},
-							formFactor,
-							scoreList: scoreListByFormFactor[formFactor],
-							categoryCount: categoryCountByFormFactor[formFactor],
-						});
-					};
-					mediaQuery.addEventListener("change", handleMediaQuery);
-					isFirstLoad = false;
-				}
+						}),
+					);
+					isFirstFetch = false;
+					breakPoint = bp;
+					firstFetch = ff;
 
-				if (firstFetch === "load" && !isFirstFetch) {
-					fetchStart();
-				}
-				if (firstFetch === "open" && appOpen && !isFirstFetch) {
-					fetchStart();
-				}
-			},
-		);
+					const toolbarWrap = createToolbar(canvas);
+					createToastArea(canvas);
+
+					consoleAlertButton = createConsoleAlertButton(
+						canvas,
+						toolbarWrap,
+						isFetching,
+					);
+
+					hideButton = createHideButton(canvas, toolbarWrap, isFetching);
+
+					scoreButton = createScoreButton(canvas, toolbarWrap, isFetching);
+
+					filterButton = createFilterButton(canvas, toolbarWrap, isFetching);
+
+					fetchButton = createFetchButton(toolbarWrap, fetchStart, isFetching);
+					if (isFetching) fetchButton.classList.add("animate");
+
+					formFactor = getFormFactor(breakPoint);
+
+					const icon = getIcon(formFactor);
+					createIndicatorButton(toolbarWrap, icon);
+
+					const style = document.createElement("style");
+					style.textContent = `
+						@media (max-width: ${breakPoint}px) {
+							*[data-form-factor="desktop"] {
+								display: none !important;
+							}
+						}
+						@media (min-width: ${breakPoint + 1}px) {
+							*[data-form-factor="mobile"] {
+								display: none !important;
+							}
+						}
+					`;
+					canvas.appendChild(style);
+
+					const scoreList: ScoreListType = categories.reduce((acc, cur) => {
+						// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+						return { ...acc, [cur]: null };
+					}, {});
+					scoreListByFormFactor = {
+						mobile: lhReports?.mobile?.scoreList || scoreList,
+						desktop: lhReports?.desktop?.scoreList || scoreList,
+					};
+					filterCategories = categories.reduce((acc, cur) => {
+						return {
+							// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+							...acc,
+							[cur]: false,
+						};
+					}, {});
+					categoryCountByFormFactor = {
+						mobile: lhReports?.mobile?.categoryCount || {},
+						desktop: lhReports?.desktop?.categoryCount || {},
+					};
+					lhResultByFormFactor = {
+						mobile: {
+							elements: lhReports?.mobile?.elements || {},
+							metaErrors: lhReports?.mobile?.metaErrors || [],
+							consoleErrors: lhReports?.mobile?.consoleErrors || [],
+							pwaErrors: lhReports?.mobile?.pwaErrors || undefined,
+						},
+						desktop: {
+							elements: lhReports?.desktop?.elements || {},
+							metaErrors: lhReports?.desktop?.metaErrors || [],
+							consoleErrors: lhReports?.desktop?.consoleErrors || [],
+							pwaErrors: lhReports?.desktop?.pwaErrors || undefined,
+						},
+					};
+					hideHighlights = {
+						mobile: [],
+						desktop: [],
+					};
+
+					updateCanvas({
+						canvas,
+						result: lhResultByFormFactor[formFactor],
+						filter: {
+							categories: filterCategories,
+							hideList: hideHighlights[formFactor],
+						},
+						formFactor,
+						scoreList: scoreListByFormFactor[formFactor],
+						categoryCount: categoryCountByFormFactor[formFactor],
+					});
+
+					if (isFirstLoad) {
+						const mediaQuery = window.matchMedia(
+							`(max-width: ${breakPoint}px)`,
+						);
+
+						const handleMediaQuery = (mql: MediaQueryListEvent) => {
+							const indicatorButton = canvas.querySelector<HTMLButtonElement>(
+								'button[data-button-type="indicator"]',
+							);
+							if (mql.matches) {
+								formFactor = "mobile";
+								if (indicatorButton) indicatorButton.innerHTML = mobileIcon;
+							} else {
+								formFactor = "desktop";
+								if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
+							}
+							updateCanvas({
+								canvas,
+								result: lhResultByFormFactor[formFactor],
+								filter: {
+									categories: filterCategories,
+									hideList: hideHighlights[formFactor],
+								},
+								formFactor,
+								scoreList: scoreListByFormFactor[formFactor],
+								categoryCount: categoryCountByFormFactor[formFactor],
+							});
+						};
+						mediaQuery.addEventListener("change", handleMediaQuery);
+						isFirstLoad = false;
+					}
+
+					if (firstFetch === "load" && !isFirstFetch) {
+						fetchStart();
+					}
+					if (firstFetch === "open" && appOpen && !isFirstFetch) {
+						fetchStart();
+					}
+				},
+			);
+		}
 
 		eventTarget.addEventListener("app-toggled", (event) => {
 			if (event instanceof CustomEvent) appOpen = event.detail.state;
@@ -213,68 +217,72 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			}
 		});
 
-		import.meta.hot?.on(
-			"astro-dev-toolbar:astro-page-insight-app:on-success",
-			(result: LHResult) => {
-				if (result.url !== window.location.href) {
-					errorToggle();
+		if (import.meta.hot) {
+			import.meta.hot?.on(
+				"astro-dev-toolbar:astro-page-insight-app:on-success",
+				(result: LHResult) => {
+					if (result.url !== window.location.href) {
+						errorToggle();
+
+						showToast(
+							canvas,
+							"The result is not for this page.\n Please try again.",
+							"error",
+						);
+						return;
+					}
+
+					eventTarget.dispatchEvent(
+						new CustomEvent("toggle-notification", {
+							detail: {
+								state: true,
+							},
+						}),
+					);
+
+					lhResultByFormFactor[result.formFactor] = {
+						elements: result.elements,
+						metaErrors: result.metaErrors,
+						consoleErrors: result.consoleErrors,
+						pwaErrors: result.pwaErrors,
+					};
+					scoreListByFormFactor[result.formFactor] = result.scoreList;
+					categoryCountByFormFactor[result.formFactor] = result.categoryCount;
+					hideHighlights[result.formFactor] = [];
+
+					updateCanvas({
+						canvas,
+						result: lhResultByFormFactor[formFactor],
+						filter: {
+							categories: filterCategories,
+							hideList: hideHighlights[formFactor],
+						},
+						formFactor,
+						scoreList: scoreListByFormFactor[formFactor],
+						categoryCount: categoryCountByFormFactor[formFactor],
+					});
+
+					fetchSuccess();
 
 					showToast(
 						canvas,
-						"The result is not for this page.\n Please try again.",
-						"error",
+						"Analysis of lighthouse results is complete.",
+						"success",
 					);
-					return;
-				}
+				},
+			);
+		}
 
-				eventTarget.dispatchEvent(
-					new CustomEvent("toggle-notification", {
-						detail: {
-							state: true,
-						},
-					}),
-				);
+		if (import.meta.hot) {
+			import.meta.hot?.on(
+				"astro-dev-toolbar:astro-page-insight-app:on-error",
+				(message: string) => {
+					errorToggle();
 
-				lhResultByFormFactor[result.formFactor] = {
-					elements: result.elements,
-					metaErrors: result.metaErrors,
-					consoleErrors: result.consoleErrors,
-					pwaErrors: result.pwaErrors,
-				};
-				scoreListByFormFactor[result.formFactor] = result.scoreList;
-				categoryCountByFormFactor[result.formFactor] = result.categoryCount;
-				hideHighlights[result.formFactor] = [];
-
-				updateCanvas({
-					canvas,
-					result: lhResultByFormFactor[formFactor],
-					filter: {
-						categories: filterCategories,
-						hideList: hideHighlights[formFactor],
-					},
-					formFactor,
-					scoreList: scoreListByFormFactor[formFactor],
-					categoryCount: categoryCountByFormFactor[formFactor],
-				});
-
-				fetchSuccess();
-
-				showToast(
-					canvas,
-					"Analysis of lighthouse results is complete.",
-					"success",
-				);
-			},
-		);
-
-		import.meta.hot?.on(
-			"astro-dev-toolbar:astro-page-insight-app:on-error",
-			(message: string) => {
-				errorToggle();
-
-				showToast(canvas, message, "error");
-			},
-		);
+					showToast(canvas, message, "error");
+				},
+			);
+		}
 
 		function initCanvas() {
 			canvas.innerHTML += `
@@ -354,9 +362,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					});
 				}
 			}
-			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
-				url: window.location.href,
-			});
+			if (import.meta.hot) {
+				import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
+					url: window.location.href,
+				});
+			}
 		}
 
 		function fetchStart() {
