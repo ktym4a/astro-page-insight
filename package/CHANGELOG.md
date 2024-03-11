@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.3.2
+
+### Patch Changes
+
+- 527b250: Change `server.hot.send` to `client.send`.
+- 641871d: Fix Tree Shaking
+
 ## 0.3.1
 
 ### Patch Changes
