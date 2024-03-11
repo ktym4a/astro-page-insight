@@ -57,14 +57,16 @@ export const createFetchButton = (
 };
 
 export const fetchLighthouse = (width: number, height: number, url: string) => {
-	import.meta.hot?.send(
-		"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-		{
-			width,
-			height,
-			url,
-		},
-	);
+	if (import.meta.hot) {
+		import.meta.hot?.send(
+			"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
+			{
+				width,
+				height,
+				url,
+			},
+		);
+	}
 };
 
 export const mappingData = (
