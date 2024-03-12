@@ -121,6 +121,7 @@ export type HideHighlightsByFormFactor = {
 export type CacheLHResultByFormFactor = {
 	mobile: Omit<LHResult, "url" | "formFactor">;
 	desktop: Omit<LHResult, "url" | "formFactor">;
+	cache: boolean;
 };
 
 export type FilterTypes = {

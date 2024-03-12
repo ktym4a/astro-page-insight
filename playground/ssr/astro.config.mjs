@@ -15,7 +15,7 @@ export default defineConfig({
 			lh: {
 				pwa: true,
 			},
-			// firstFetch: "open",
+			// firstFetch: "load",
 			experimentalCache: true,
 		}),
 	],

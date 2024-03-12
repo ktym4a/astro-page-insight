@@ -69,13 +69,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					firstFetch: ff,
 					lhReports,
 				}: LoadOptionsType) => {
-					eventTarget.dispatchEvent(
-						new CustomEvent("toggle-notification", {
-							detail: {
-								state: false,
-							},
-						}),
-					);
 					isFirstFetch = false;
 					breakPoint = bp;
 					firstFetch = ff;
@@ -200,6 +193,25 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						isFirstLoad = false;
 					}
 
+					if (lhReports.cache) {
+						eventTarget.dispatchEvent(
+							new CustomEvent("toggle-notification", {
+								detail: {
+									state: true,
+									level: "warning",
+								},
+							}),
+						);
+					} else {
+						eventTarget.dispatchEvent(
+							new CustomEvent("toggle-notification", {
+								detail: {
+									state: false,
+								},
+							}),
+						);
+					}
+
 					if (firstFetch === "load" && !isFirstFetch) {
 						fetchStart();
 					}
@@ -229,6 +241,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							"The result is not for this page.\n Please try again.",
 							"error",
 						);
+						eventTarget.dispatchEvent(
+							new CustomEvent("toggle-notification", {
+								detail: {
+									state: true,
+									level: "error",
+								},
+							}),
+						);
 						return;
 					}
 
@@ -236,6 +256,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						new CustomEvent("toggle-notification", {
 							detail: {
 								state: true,
+								level: "info",
 							},
 						}),
 					);
@@ -280,6 +301,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					errorToggle();
 
 					showToast(canvas, message, "error");
+					eventTarget.dispatchEvent(
+						new CustomEvent("toggle-notification", {
+							detail: {
+								state: true,
+								level: "error",
+							},
+						}),
+					);
 				},
 			);
 		}
@@ -375,7 +404,8 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			eventTarget.dispatchEvent(
 				new CustomEvent("toggle-notification", {
 					detail: {
-						state: false,
+						state: true,
+						level: "warning",
 					},
 				}),
 			);
