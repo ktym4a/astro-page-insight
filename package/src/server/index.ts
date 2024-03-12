@@ -88,6 +88,7 @@ export const getLHReport = async (
 			metaErrors: [],
 			categoryCount: {},
 		},
+		cache: false,
 	};
 	if (pwa) {
 		lhResult.desktop.elements.pwa = [];
@@ -101,6 +102,7 @@ export const getLHReport = async (
 		if (file) {
 			const result = organizeLHResult(JSON.parse(file), weight, pwa);
 			lhResult.desktop = result;
+			lhResult.cache = true;
 		}
 	}
 
@@ -111,6 +113,7 @@ export const getLHReport = async (
 		if (file) {
 			const result = organizeLHResult(JSON.parse(file), weight, pwa);
 			lhResult.mobile = result;
+			lhResult.cache = true;
 		}
 	}
 

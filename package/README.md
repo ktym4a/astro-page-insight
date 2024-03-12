@@ -59,7 +59,6 @@ export default defineConfig({
 
 ### Configuration
 
-
 Here is the options:
 
 | Property | Type | Default | Description |
@@ -97,6 +96,18 @@ If you want to ignore the cache, add the following to your `.gitignore`:
 ```.gitignore
 .pageinsight
 ```
+
+### Notification
+
+You can see that the notification is displayed in the app.
+
+There are three types of notifications:
+
+| Color | Description |
+| --- | --- |
+| blue | `blue` means that results are fresh. |
+| yellow | `yellow` has two meanings.<br />One is that the results are from the cache.<br />The other is that fetching is in progress. |
+| red | `red` means that fetching failed. |
 
 ## Contributing
 
