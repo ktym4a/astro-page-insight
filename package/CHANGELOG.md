@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- d511cda: Add app notification to improve understanding of current status.
+- d511cda: Add app notification to improve understanding of current status. (Astro 4.5 or later)
 
   So You can see that the notification is displayed in the app.
 
