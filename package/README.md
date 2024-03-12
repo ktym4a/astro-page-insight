@@ -99,15 +99,15 @@ If you want to ignore the cache, add the following to your `.gitignore`:
 
 ### Notification
 
-You can see that the notification is displayed in the app.
+You can sometimes see that the notification is displayed in the app.
 
 There are three types of notifications:
 
 | Color | Description |
 | --- | --- |
-| blue | `blue` means that results are fresh. |
-| yellow | `yellow` has two meanings.<br />One is that the results are from the cache.<br />The other is that fetching is in progress. |
-| red | `red` means that fetching failed. |
+| `Blue` | `blue` means that results are fresh. |
+| `Yellow` | `yellow` has two meanings.<br />One is that the results are from the cache.<br />The other is that fetching is in progress. |
+| `Red` | `red` means that fetching failed. |
 
 ## Contributing
 
