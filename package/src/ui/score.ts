@@ -46,6 +46,7 @@ export const createScore = (
 	const titleElement = createToolbarTitle(
 		`Score - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(1)})`,
 		analyticsIcon,
+		"This result is by dev mode, so it may not be accurate.",
 	);
 	scoreWrapper.appendChild(titleElement);
 

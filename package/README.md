@@ -4,15 +4,18 @@
 
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that shows everything to improve from Lighthouse results directly on the page.
 
-> [!WARNING]
+> [!IMPORTANT]
 > Astro 4.0 or later is required.
+
+> [!IMPORTANT]
+> This result is by dev mode, so it may not be accurate.  
+> Especially, the Score is not accurate.
 
 ## Usage
 
 ### Prerequisites
 
-You need to have Chrome.
-
+You need to have Chrome.  
 if you see errors like `ERR_LAUNCHER_NOT_INSTALLED`, you may need to install Chrome.
 
 
@@ -32,8 +35,7 @@ npx astro add astro-page-insight
 yarn astro add astro-page-insight
 ```
 
-Or install it **manually**:
-
+Or install it **manually**:  
 1. Install the required dependencies
 
 ```bash
@@ -102,8 +104,7 @@ If you want to ignore the cache, add the following to your `.gitignore`:
 
 ### Notification
 
-You can sometimes see that the notification is displayed in the app.
-
+You can sometimes see that the notification is displayed in the app.  
 There are three types of notifications:
 
 | Color | Description |
