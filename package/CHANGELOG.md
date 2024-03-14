@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.4.1
+
+### Patch Changes
+
+- cc8986e: Add dev mode disclaimer to score toolbar title.
+
 ## 0.4.0
 
 ### Minor Changes
