@@ -12,11 +12,11 @@
 	"devDependencies": {
 		"@astrojs/node": "^8.2.3",
 		"@astrojs/tailwind": "^5.1.0",
-		"astro": "^4.5.1",
+		"astro": "^4.5.3",
 		"astro-page-insight": "workspace:*"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.5.7",
+		"@astrojs/check": "^0.5.9",
 		"typescript": "^5.4.2"
 	}
 }
