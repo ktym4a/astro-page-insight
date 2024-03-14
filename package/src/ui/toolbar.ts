@@ -187,7 +187,11 @@ export const createToolbarWrapper = (type: string) => {
 	return toolbarWrapper;
 };
 
-export const createToolbarTitle = (title: string, icon: string) => {
+export const createToolbarTitle = (
+	title: string,
+	icon: string,
+	subText?: string,
+) => {
 	const titleWrap = document.createElement("h2");
 
 	titleWrap.innerHTML = `<div style="color: ${COLORS.blue}; min-width: 24px; max-width: 24px;">${icon}</div>`;
@@ -204,11 +208,23 @@ export const createToolbarTitle = (title: string, icon: string) => {
 	titleWrap.style.alignItems = "center";
 	titleWrap.style.marginTop = "0";
 	titleWrap.style.marginBottom = "15px";
+	titleWrap.style.flexWrap = "wrap";
 	titleWrap.style.fontWeight = "normal";
 	titleWrap.style.gap = "10px";
 	titleWrap.style.fontSize = "16px";
 	titleWrap.style.borderBottom = "1px solid #cdd6f4";
 	titleWrap.style.paddingBottom = "15px";
+
+	if (subText) {
+		const subTextElement = document.createElement("p");
+		subTextElement.textContent = subText;
+		subTextElement.style.margin = "0";
+		subTextElement.style.fontSize = "14px";
+		subTextElement.style.fontWeight = "normal";
+		subTextElement.style.color = "#cdd6f4";
+		subTextElement.style.width = "100%";
+		titleWrap.appendChild(subTextElement);
+	}
 
 	return titleWrap;
 };
