@@ -58,9 +58,30 @@ export const startLH = async (options: LHOptions) => {
 	};
 };
 
+/**
+ * Generate a file name for the LH report
+ * @param url - The URL of the page
+ * @returns The file name
+ * @description
+ * `""`and `"/"` to `index.json`, `"/about/"`and `"/about"` to `about.json`, `"/what/about"` and `"/what/about/"` to `what-about.json`,
+ * `"/?query=string"` to `index-query=string.json`, `"/?query=string/"` to `index-query=string.json`,
+ * `"/about?query=string"` to `about-query=string.json`, `"/about/?query=string"` to `about-query=string.json`
+ */
 const generateLHReportFileName = (url: string) => {
-	const fileName = url.replace(/[^a-zA-Z0-9]/g, "-");
-	return `${fileName}.json`;
+	const urlObj = new URL(url);
+
+	let fileName: string;
+	if (urlObj.pathname === "/") {
+		fileName = "index";
+	} else {
+		fileName = urlObj.pathname.replace(/\//g, "-").replace(/^-|-$/g, "");
+	}
+
+	if (urlObj.search) {
+		fileName += urlObj.search.replace(/\//g, "").replace(/\?/g, "-");
+	}
+
+	return `${decodeURI(fileName)}.json`;
 };
 
 export const getLHReport = async (
