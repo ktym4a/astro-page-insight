@@ -15,7 +15,7 @@
 		"@astrojs/check": "^0.5.9",
 		"@astrojs/node": "^8.2.3",
 		"@astrojs/svelte": "^5.2.0",
-		"astro": "^4.5.3",
+		"astro": "^4.5.5",
 		"astro-page-insight": "workspace:*",
 		"svelte": "^4.2.12",
 		"typescript": "^5.4.2"

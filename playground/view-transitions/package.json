@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@astrojs/node": "^8.2.3",
 		"@astrojs/tailwind": "^5.1.0",
-		"astro": "^4.5.3",
+		"astro": "^4.5.5",
 		"astro-page-insight": "workspace:*"
 	},
 	"dependencies": {
