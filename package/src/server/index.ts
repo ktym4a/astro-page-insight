@@ -197,6 +197,7 @@ export const organizeLHResult = (
 	const categoryCount = {} as CategoryCountType;
 
 	for (const value of Object.values(lhr.categories)) {
+		if (!pwa && value.id === "pwa") continue;
 		scoreList[value.title] = value.score;
 		categoryCount[value.title] = 0;
 		for (const audit of value.auditRefs) {
