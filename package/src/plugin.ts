@@ -96,21 +96,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					const icon = getIcon(formFactor);
 					createIndicatorButton(toolbarWrap, icon);
 
-					const style = document.createElement("style");
-					style.textContent = `
-						@media (max-width: ${breakPoint}px) {
-							*[data-form-factor="desktop"] {
-								display: none !important;
-							}
-						}
-						@media (min-width: ${breakPoint + 1}px) {
-							*[data-form-factor="mobile"] {
-								display: none !important;
-							}
-						}
-					`;
-					canvas.appendChild(style);
-
 					const scoreList: ScoreListType = categories.reduce((acc, cur) => {
 						// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
 						return { ...acc, [cur]: null };
