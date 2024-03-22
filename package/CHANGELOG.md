@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.5.2
+
+### Patch Changes
+
+- 6d1fbbf: Fixed a bug that caused an error when no options were available
+
 ## 0.5.1
 
 ### Patch Changes
