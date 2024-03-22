@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.5.1
+
+### Patch Changes
+
+- 4b3d86a: Update Dependencies
+
 ## 0.5.0
 
 ### Minor Changes
