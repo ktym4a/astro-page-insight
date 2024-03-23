@@ -79,3 +79,5 @@ export const integrationOptionsSchema = z
 		firstFetch: "none",
 		experimentalCache: false,
 	});
+
+export type IntegrationOptions = z.infer<typeof integrationOptionsSchema>;
