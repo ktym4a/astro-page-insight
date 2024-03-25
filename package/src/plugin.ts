@@ -7,7 +7,6 @@ import type {
 	LHResultByFormFactor,
 	LoadOptionsType,
 	ScoreListByFormFactor,
-	ScoreListType,
 } from "./types/index.js";
 import { createConsoleAlertButton } from "./ui/consoleAlert.js";
 import { createFilterButton } from "./ui/filter.js";
@@ -96,13 +95,9 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					const icon = getIcon(formFactor);
 					createIndicatorButton(toolbarWrap, icon);
 
-					const scoreList: ScoreListType = categories.reduce((acc, cur) => {
-						// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-						return { ...acc, [cur]: null };
-					}, {});
 					scoreListByFormFactor = {
-						mobile: lhReports?.mobile?.scoreList || scoreList,
-						desktop: lhReports?.desktop?.scoreList || scoreList,
+						mobile: lhReports.mobile.scoreList,
+						desktop: lhReports.desktop.scoreList,
 					};
 					filterCategories = categories.reduce((acc, cur) => {
 						return {
@@ -112,21 +107,21 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						};
 					}, {});
 					categoryCountByFormFactor = {
-						mobile: lhReports?.mobile?.categoryCount || {},
-						desktop: lhReports?.desktop?.categoryCount || {},
+						mobile: lhReports.mobile.categoryCount,
+						desktop: lhReports.desktop.categoryCount,
 					};
 					lhResultByFormFactor = {
 						mobile: {
-							elements: lhReports?.mobile?.elements || {},
-							metaErrors: lhReports?.mobile?.metaErrors || [],
-							consoleErrors: lhReports?.mobile?.consoleErrors || [],
-							pwaErrors: lhReports?.mobile?.pwaErrors || undefined,
+							elements: lhReports.mobile.elements,
+							metaErrors: lhReports.mobile.metaErrors,
+							consoleErrors: lhReports.mobile.consoleErrors,
+							pwaErrors: lhReports.mobile.pwaErrors,
 						},
 						desktop: {
-							elements: lhReports?.desktop?.elements || {},
-							metaErrors: lhReports?.desktop?.metaErrors || [],
-							consoleErrors: lhReports?.desktop?.consoleErrors || [],
-							pwaErrors: lhReports?.desktop?.pwaErrors || undefined,
+							elements: lhReports.desktop.elements,
+							metaErrors: lhReports.desktop.metaErrors,
+							consoleErrors: lhReports.desktop.consoleErrors,
+							pwaErrors: lhReports.desktop.pwaErrors,
 						},
 					};
 					hideHighlights = {

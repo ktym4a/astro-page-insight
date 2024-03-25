@@ -54,6 +54,11 @@ export const createScore = (
 	contentWrapper.style.marginTop = "10px";
 
 	const scoreListKeys = Object.keys(scoreList).sort();
+	if (scoreListKeys.length === 0) {
+		const textElement = createToolbarSubTitle("No data.");
+		contentWrapper.appendChild(textElement);
+	}
+
 	for (let i = 0; i < scoreListKeys.length; i++) {
 		const category = scoreListKeys[i];
 		if (category) {
