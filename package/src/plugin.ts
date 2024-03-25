@@ -7,7 +7,6 @@ import type {
 	LHResultByFormFactor,
 	LoadOptionsType,
 	ScoreListByFormFactor,
-	ScoreListType,
 } from "./types/index.js";
 import { createConsoleAlertButton } from "./ui/consoleAlert.js";
 import { createFilterButton } from "./ui/filter.js";

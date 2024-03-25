@@ -1,5 +1,8 @@
-import { createResolver, defineIntegration } from "astro-integration-kit";
-import { corePlugins } from "astro-integration-kit/plugins";
+import {
+	createResolver,
+	defineIntegration,
+	watchIntegration,
+} from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
 import { integrationOptionsSchema } from "./schema/index.js";
 import {
@@ -11,7 +14,7 @@ import {
 
 export default defineIntegration({
 	name: "astro-page-insight",
-	plugins: [...corePlugins],
+	plugins: [],
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
 		const { lh, firstFetch, experimentalCache } = options;
@@ -19,12 +22,10 @@ export default defineIntegration({
 		const cacheDir = ".pageinsight";
 
 		return {
-			"astro:config:setup": ({
-				addDevToolbarApp,
-				command,
-				watchIntegration,
-			}) => {
-				watchIntegration(resolve());
+			"astro:config:setup": (params) => {
+				const { addDevToolbarApp, command } = params;
+
+				watchIntegration(params, resolve());
 
 				if (command === "dev") {
 					addDevToolbarApp(resolve("./plugin.ts"));
