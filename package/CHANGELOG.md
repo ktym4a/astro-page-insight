@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.5.3
+
+### Patch Changes
+
+- c7f85c1: update packages
+- 16d433c: [internal] update type
+
 ## 0.5.2
 
 ### Patch Changes
