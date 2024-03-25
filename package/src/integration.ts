@@ -14,7 +14,6 @@ import {
 
 export default defineIntegration({
 	name: "astro-page-insight",
-	plugins: [],
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
 		const { lh, firstFetch, experimentalCache } = options;
