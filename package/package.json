@@ -20,7 +20,7 @@
 		"devtools"
 	],
 	"homepage": "https://github.com/ktym4a/astro-page-insight",
-	"repository": "https://github.com/ktym4a/astro-page-insight",
+	"repository": "https://github.com/ktym4a/astro-page-insight.git",
 	"publishConfig": {
 		"access": "public"
 	},
