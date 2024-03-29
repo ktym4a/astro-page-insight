@@ -8,14 +8,14 @@
 	"scripts": {
 		"playground:blog": "pnpm --filter blog dev",
 		"playground:ssr": "pnpm --filter ssr dev",
-		"playground:vw": "pnpm --filter view-transitions dev",
+		"playground:starlog": "pnpm --filter starlog dev",
 		"changeset": "changeset",
 		"release": "node scripts/release.mjs",
 		"lint": "biome check .",
 		"lint:fix": "biome check --apply ."
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.6.2",
+		"@biomejs/biome": "1.6.3",
 		"@changesets/cli": "^2.27.1"
 	}
 }
