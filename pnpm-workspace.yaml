@@ -3,4 +3,4 @@ packages:
   - "packages/*"
   - "playground/blog"
   - "playground/ssr"
-  - "playground/view-transitions"
+  - "playground/starlog"

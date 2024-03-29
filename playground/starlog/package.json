@@ -1,0 +1,21 @@
+{
+	"name": "starlog",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro check && astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"astro": "^4.5.12",
+		"sass": "^1.69.5",
+		"sharp": "^0.32.6",
+		"@astrojs/check": "^0.5.10",
+		"typescript": "^5.4.3",
+		"astro-page-insight": "workspace:*"
+	}
+}
