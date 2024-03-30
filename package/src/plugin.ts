@@ -57,6 +57,17 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		if (isLightHouse) return;
 
 		initCanvas();
+
+		document.addEventListener("astro:before-preparation", () => {
+			eventTarget.dispatchEvent(
+				new CustomEvent("toggle-app", {
+					detail: {
+						state: false,
+					},
+				}),
+			);
+		});
+
 		document.addEventListener("astro:page-load", initCanvas);
 
 		if (import.meta.hot) {
