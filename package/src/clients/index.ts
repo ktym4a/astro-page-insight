@@ -1,8 +1,9 @@
-import type { LoadOptionsType } from "../types";
+import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
 import { createConsoleAlertButton } from "../ui/consoleAlert";
 import { initEvent } from "../ui/event";
 import { createFilterButton } from "../ui/filter";
 import { createHideButton } from "../ui/hide";
+import { desktopIcon, mobileIcon } from "../ui/icons";
 import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
 import { createScoreButton } from "../ui/score";
 import { initStyle } from "../ui/style";
@@ -18,25 +19,24 @@ export const initPageInsight = (
 	root: ShadowRoot,
 	isFetching: boolean,
 	options: LoadOptionsType,
-) => {
+): {
+	buttons: Omit<Buttons, "fetchButton">;
+	toolbarWrap: HTMLDivElement;
+	breakPoint: number;
+	pageInsightData: PageInsightData;
+} => {
 	const toolbarWrap = createToolbar(root);
 
-	const consoleAlertButton = createConsoleAlertButton(
-		root,
-		toolbarWrap,
-		isFetching,
-	);
-
-	const hideButton = createHideButton(root, toolbarWrap, isFetching);
-
-	const scoreButton = createScoreButton(root, toolbarWrap, isFetching);
-
-	const filterButton = createFilterButton(root, toolbarWrap, isFetching);
-
 	const formFactor = getFormFactor(options.breakPoint);
-
 	const icon = getIcon(formFactor);
 	createIndicatorButton(toolbarWrap, icon);
+
+	const buttons = {
+		consoleAlertButton: createConsoleAlertButton(root, toolbarWrap, isFetching),
+		hideButton: createHideButton(root, toolbarWrap, isFetching),
+		scoreButton: createScoreButton(root, toolbarWrap, isFetching),
+		filterButton: createFilterButton(root, toolbarWrap, isFetching),
+	};
 
 	const scoreListByFormFactor = {
 		mobile: options.lhReports.mobile.scoreList,
@@ -87,4 +87,51 @@ export const initPageInsight = (
 		scoreList: scoreListByFormFactor[formFactor],
 		categoryCount: categoryCountByFormFactor[formFactor],
 	});
+
+	const mediaQuery = window.matchMedia(`(max-width: ${options.breakPoint}px)`);
+
+	const handleMediaQuery = (mql: MediaQueryListEvent) => {
+		const indicatorButton = root.querySelector<HTMLButtonElement>(
+			'button[data-button-type="indicator"]',
+		);
+
+		let formFactor: "mobile" | "desktop";
+		if (mql.matches) {
+			formFactor = "mobile";
+			if (indicatorButton) indicatorButton.innerHTML = mobileIcon;
+		} else {
+			formFactor = "desktop";
+			if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
+		}
+		updateCanvas({
+			canvas: root,
+			result: lhResultByFormFactor[formFactor],
+			filter: {
+				categories: filterCategories,
+				hideList: hideHighlights[formFactor],
+			},
+			formFactor,
+			scoreList: scoreListByFormFactor[formFactor],
+			categoryCount: categoryCountByFormFactor[formFactor],
+		});
+	};
+
+	mediaQuery.addEventListener("change", handleMediaQuery);
+
+	document.addEventListener("astro:before-preparation", () => {
+		mediaQuery.removeEventListener("change", handleMediaQuery);
+	});
+
+	return {
+		buttons,
+		toolbarWrap,
+		breakPoint: options.breakPoint,
+		pageInsightData: {
+			scoreListByFormFactor,
+			categoryCountByFormFactor,
+			lhResultByFormFactor,
+			hideHighlights,
+			filterCategories,
+		},
+	};
 };

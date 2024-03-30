@@ -86,12 +86,12 @@ export type ErrorTooltips = {
 	}>;
 };
 
-export type ScoreListByFormFactor = {
+type ScoreListByFormFactor = {
 	mobile: ScoreListType;
 	desktop: ScoreListType;
 };
 
-export type CategoryCountByFormFactor = {
+type CategoryCountByFormFactor = {
 	mobile: CategoryCountType;
 	desktop: CategoryCountType;
 };
@@ -108,12 +108,12 @@ export type HideElement = {
 	detailSelector?: string;
 };
 
-export type LHResultByFormFactor = {
+type LHResultByFormFactor = {
 	mobile: LHResultForTooltip;
 	desktop: LHResultForTooltip;
 };
 
-export type HideHighlightsByFormFactor = {
+type HideHighlightsByFormFactor = {
 	mobile: HideElement[];
 	desktop: HideElement[];
 };
@@ -142,4 +142,26 @@ export type UpdateMappingType = {
 	formFactor: LHResult["formFactor"];
 	scoreList: ScoreListType;
 	categoryCount: CategoryCountType;
+};
+
+export type Buttons = {
+	fetchButton?: HTMLButtonElement | undefined;
+	filterButton: HTMLButtonElement | undefined;
+	scoreButton: HTMLButtonElement | undefined;
+	hideButton: HTMLButtonElement | undefined;
+	consoleAlertButton: HTMLButtonElement | undefined;
+};
+
+export type PageInsightData = {
+	filterCategories: FilterCategoryType;
+	scoreListByFormFactor: ScoreListByFormFactor;
+	categoryCountByFormFactor: CategoryCountByFormFactor;
+	lhResultByFormFactor: LHResultByFormFactor;
+	hideHighlights: HideHighlightsByFormFactor;
+};
+
+export type PageInsightStatus = {
+	firstFetch: LoadOptionsType["firstFetch"];
+	isFetching: boolean;
+	isFirstFetch: boolean;
 };
