@@ -1,7 +1,9 @@
 import { desktopIcon, mobileIcon } from "./icons.js";
 import { createToolbarButton } from "./toolbar.js";
 
-export const getFormFactor = (breakPoint: number) => {
+export const getFormFactor: (breakPoint: number) => "mobile" | "desktop" = (
+	breakPoint,
+) => {
 	return document.documentElement.clientWidth <= breakPoint
 		? "mobile"
 		: "desktop";

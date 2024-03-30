@@ -56,19 +56,6 @@ export const createFetchButton = (
 	return fetchButton;
 };
 
-export const fetchLighthouse = (width: number, height: number, url: string) => {
-	if (import.meta.hot) {
-		import.meta.hot?.send(
-			"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-			{
-				width,
-				height,
-				url,
-			},
-		);
-	}
-};
-
 export const mappingData = (
 	formFactor: LHResult["formFactor"],
 	canvas: ShadowRoot,
