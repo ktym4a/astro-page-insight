@@ -1,4 +1,5 @@
 import type { DevToolbarApp } from "astro";
+import { initCanvas } from "./clients/index.js";
 import type {
 	CategoryCountByFormFactor,
 	FilterCategoryType,
@@ -9,6 +10,7 @@ import type {
 	ScoreListByFormFactor,
 } from "./types/index.js";
 import { createConsoleAlertButton } from "./ui/consoleAlert.js";
+import { initEvent } from "./ui/event.js";
 import { createFilterButton } from "./ui/filter.js";
 import { createHideButton } from "./ui/hide.js";
 import { refreshHighlightPositions } from "./ui/highlight.js";
@@ -19,6 +21,7 @@ import {
 	getIcon,
 } from "./ui/indicator.js";
 import { createScoreButton } from "./ui/score.js";
+import { initStyle } from "./ui/style.js";
 import { createToastArea, showToast } from "./ui/toast.js";
 import { createToolbar } from "./ui/toolbar.js";
 import {
@@ -56,7 +59,12 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 		if (isLightHouse) return;
 
-		initCanvas();
+		initCanvas(canvas);
+		if (import.meta.hot) {
+			import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
+				url: window.location.href,
+			});
+		}
 
 		document.addEventListener("astro:before-preparation", () => {
 			eventTarget.dispatchEvent(
@@ -68,7 +76,14 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			);
 		});
 
-		document.addEventListener("astro:page-load", initCanvas);
+		document.addEventListener("astro:page-load", () => {
+			initCanvas(canvas);
+			if (import.meta.hot) {
+				import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
+					url: window.location.href,
+				});
+			}
+		});
 
 		if (import.meta.hot) {
 			import.meta.hot?.on(
@@ -135,6 +150,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							pwaErrors: lhReports.desktop.pwaErrors,
 						},
 					};
+
 					hideHighlights = {
 						mobile: [],
 						desktop: [],
@@ -302,91 +318,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					);
 				},
 			);
-		}
-
-		function initCanvas() {
-			canvas.innerHTML += `
-      <style>
-        :host {
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-          color: #cdd6f4;
-        }
-
-		a {
-			color: #89b4fa;
-		}
-
-		a:visted {
-			color: #89b4fa;
-		}
-
-		svg {
-			width: 100%;
-			height: auto;
-		}
-
-        .toast {
-          position: fixed;
-          top: 20px;
-          right: 10px;
-          padding: 10px 20px;
-          border-radius: 10px;
-          background: #f38ba8;
-          color: #11111b;
-          border: 1px solid #a6adc8;
-          z-index: 1000;
-          font-size: 16px;
-        }
-
-		.astro-page-insight-highlight button {
-            display: inline-flex;
-            position: absolute;
-			top: 0;
-			right: 0;
-			z-index: 200006;
-            padding: 2px;
-			border-radius: 3px;
-            align-items: center;
-			justify-content: center;
-            border: 1px solid #cdd6f4;
-            color: #cdd6f4;
-            background-color: #181825;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-		.astro-page-insight-highlight button:hover {
-            background-color: #45475a;
-        }
-
-		.astro-page-insight-highlight button:focus-visible {
-            outline-offset: -2px;
-            background-color: #45475a;
-        }
-
-		.astro-page-insight-highlight button:disabled {
-            cursor: not-allowed;
-            background-color: #6c7086 !important;
-        }
-
-		.astro-page-insight-highlight button > svg {
-            width: 20px;
-            height: 20px;
-        }
-      </style>
-      `;
-			if (isFirstLoad) {
-				for (const event of ["scroll", "resize"]) {
-					window.addEventListener(event, () => {
-						refreshHighlightPositions(canvas);
-					});
-				}
-			}
-			if (import.meta.hot) {
-				import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
-					url: window.location.href,
-				});
-			}
 		}
 
 		function fetchStart() {
