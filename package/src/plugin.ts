@@ -1,10 +1,10 @@
 import type { DevToolbarApp } from "astro";
 import {
-	activeButtons,
 	fetchLighthouse,
 	getLHData,
 	showError,
 	showInitialIcon,
+	showSuccess,
 } from "./clients/devTool.js";
 import { initCanvas, initPageInsight } from "./clients/index.js";
 import type {
@@ -15,7 +15,7 @@ import type {
 	PageInsightStatus,
 } from "./types/index.js";
 import { getFormFactor } from "./ui/indicator.js";
-import { createToastArea, showToast } from "./ui/toast.js";
+import { createToastArea } from "./ui/toast.js";
 import { createFetchButton, updateCanvas } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
@@ -111,19 +111,15 @@ const astroPageInsightToolbar: DevToolbarApp = {
 				"astro-dev-toolbar:astro-page-insight-app:on-success",
 				(result: LHResult) => {
 					if (result.url !== window.location.href) {
-						showError(canvas, eventTarget, buttons);
+						showError(
+							canvas,
+							eventTarget,
+							buttons,
+							"The result is not for this page.\n Please try again.",
+						);
 						fetchStatus.isFetching = false;
 						return;
 					}
-
-					eventTarget.dispatchEvent(
-						new CustomEvent("toggle-notification", {
-							detail: {
-								state: true,
-								level: "info",
-							},
-						}),
-					);
 
 					pageInsightData.lhResultByFormFactor[result.formFactor] = {
 						elements: result.elements,
@@ -151,33 +147,16 @@ const astroPageInsightToolbar: DevToolbarApp = {
 							pageInsightData.categoryCountByFormFactor[formFactor],
 					});
 
-					activeButtons(buttons);
+					showSuccess(canvas, eventTarget, buttons);
 					fetchStatus.isFetching = false;
-
-					showToast(
-						canvas,
-						"Analysis of lighthouse results is complete.",
-						"success",
-					);
 				},
 			);
 
 			import.meta.hot?.on(
 				"astro-dev-toolbar:astro-page-insight-app:on-error",
 				(message: string) => {
-					activeButtons(buttons);
-
+					showError(canvas, eventTarget, buttons, message);
 					fetchStatus.isFetching = false;
-
-					showToast(canvas, message, "error");
-					eventTarget.dispatchEvent(
-						new CustomEvent("toggle-notification", {
-							detail: {
-								state: true,
-								level: "error",
-							},
-						}),
-					);
 				},
 			);
 		}
