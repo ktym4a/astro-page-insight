@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.5.4
+
+### Patch Changes
+
+- 187c785: [internal] update versions
+- cb832b3: Fix the bug that when you use `ViewTransition`, and `Responsive Mode` is enabled, Throw an error when you switch between pages.
+
 ## 0.5.3
 
 ### Patch Changes
