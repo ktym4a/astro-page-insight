@@ -20,14 +20,14 @@ export default defineIntegration({
 
 		return {
 			"astro:config:setup": (params) => {
-				const { addDevToolbarApp, command, injectScript } = params;
+				const { addDevToolbarApp, command, injectScript, config } = params;
 
 				if (command === "dev") {
 					watchIntegration(params, resolve());
 					addDevToolbarApp(resolve("./plugin.ts"));
 				}
 
-				if (command === "build") {
+				if (command === "build" && config.output === "static") {
 					const bundleId: string = resolve("./clients/index.ts");
 					injectScript(
 						"page",
