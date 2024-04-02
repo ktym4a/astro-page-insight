@@ -63,8 +63,13 @@ export const initPageInsightForClient = async (
 		lhReports: lhResult,
 	};
 
-	const initObj = initToolbar(pageInsightRoot.shadowRoot, false, options);
-	createPowerButton(pageInsightRoot.shadowRoot, initObj.toolbarWrap, false);
+	const initObj = initToolbar(pageInsightRoot.shadowRoot, true, options);
+	createPowerButton(
+		pageInsightRoot.shadowRoot,
+		initObj.toolbarWrap,
+		false,
+		initObj.buttons,
+	);
 
 	const elements = pageInsightRoot.shadowRoot.querySelectorAll(
 		".astro-page-insight-highlight",

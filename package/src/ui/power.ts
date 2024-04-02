@@ -1,10 +1,12 @@
+import type { Buttons } from "../types/index.js";
 import { powerIcon } from "./icons.js";
-import { createToolbarButton, toggleToolbarWrapper } from "./toolbar.js";
+import { createToolbarButton } from "./toolbar.js";
 
 export const createPowerButton = (
 	canvas: ShadowRoot,
 	toolbarWrap: HTMLDivElement,
 	isFetching: boolean,
+	buttons: Omit<Buttons, "fetchButton">,
 ) => {
 	const powerButton = createToolbarButton(
 		powerIcon,
@@ -12,7 +14,7 @@ export const createPowerButton = (
 		isFetching,
 		"power",
 		() => {
-			toggleToolbarWrapper(canvas, "power");
+			const buttonList = Object.values(buttons);
 			const elements = canvas.querySelectorAll(".astro-page-insight-highlight");
 			for (const element of elements) {
 				if (element instanceof HTMLElement) {
@@ -27,8 +29,18 @@ export const createPowerButton = (
 				)
 			) {
 				powerButton.classList.remove("astro-page-insight-toolbar-button-alert");
+				for (const button of buttonList) {
+					if (button) {
+						button.disabled = false;
+					}
+				}
 			} else {
 				powerButton.classList.add("astro-page-insight-toolbar-button-alert");
+				for (const button of buttonList) {
+					if (button) {
+						button.disabled = true;
+					}
+				}
 			}
 		},
 		"Toggle the highlighted elements.",
