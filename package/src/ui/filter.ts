@@ -69,11 +69,16 @@ export const createFilter = (
 
 	const categoryArray = Object.entries(filter.categories).sort();
 
+	const button = canvas.querySelector(
+		"[data-button-type='filter']",
+	) as HTMLButtonElement;
+
 	for (const [index, category] of categoryArray.entries()) {
 		const count = categoryCount[category[0]] ?? 0;
 		const text = `${category[0]} (${count})`;
 
 		const content = createContent(
+			button,
 			formFactor,
 			text,
 			index === categoryArray.length - 1,
@@ -96,6 +101,7 @@ export const createFilter = (
 };
 
 const createContent = (
+	toolbarButton: HTMLButtonElement,
 	formFactor: LHResult["formFactor"],
 	content: string,
 	isLast: boolean,
@@ -124,6 +130,12 @@ const createContent = (
 			contentWrapper.style.background = "#6c7086";
 		}
 		mappingData(formFactor, render.canvas, render.lhResult, filter);
+
+		if (Object.values(filter.categories).some((val) => val === true)) {
+			toolbarButton.classList.add("astro-page-insight-toolbar-button-alert");
+		} else {
+			toolbarButton.classList.remove("astro-page-insight-toolbar-button-alert");
+		}
 	};
 
 	const button = filter.categories[category]

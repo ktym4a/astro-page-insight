@@ -31,10 +31,20 @@ export default defineIntegration({
 					const bundleId: string = resolve("./clients/index.ts");
 					injectScript(
 						"page",
-						`import { initPageInsightForClient } from "${bundleId}";
+						`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";
+						class PageInsightRoot extends HTMLElement {
+							constructor() {
+								super();
+								this.attachShadow({ mode: "open" });
+							}
+						}
+						customElements.define("page-insight-root", PageInsightRoot);
 						initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						document.addEventListener("astro:page-load", () => {
 							initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						});
+						document.addEventListener("astro:before-preparation", () => {
+							removePageInsightRoot();
 						});`,
 					);
 

@@ -6,6 +6,7 @@ import { createFilterButton } from "../ui/filter";
 import { createHideButton } from "../ui/hide";
 import { desktopIcon, mobileIcon } from "../ui/icons";
 import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
+import { createPowerButton } from "../ui/power";
 import { createScoreButton } from "../ui/score";
 import { initStyle } from "../ui/style";
 import { createToolbar } from "../ui/toolbar";
@@ -49,14 +50,6 @@ export const initPageInsightForClient = async (
 
 	if (!hasCache) return;
 
-	class PageInsightRoot extends HTMLElement {
-		constructor() {
-			super();
-			this.attachShadow({ mode: "open" });
-		}
-	}
-
-	customElements.define("page-insight-root", PageInsightRoot);
 	const pageInsightRoot = document.createElement("page-insight-root");
 	document.body.appendChild(pageInsightRoot);
 
@@ -70,7 +63,24 @@ export const initPageInsightForClient = async (
 		lhReports: lhResult,
 	};
 
-	initToolbar(pageInsightRoot.shadowRoot, false, options);
+	const initObj = initToolbar(pageInsightRoot.shadowRoot, false, options);
+	createPowerButton(pageInsightRoot.shadowRoot, initObj.toolbarWrap, false);
+
+	const elements = pageInsightRoot.shadowRoot.querySelectorAll(
+		".astro-page-insight-highlight",
+	);
+	for (const element of elements) {
+		if (element instanceof HTMLElement) {
+			element.style.display = "none";
+		}
+	}
+};
+
+export const removePageInsightRoot = () => {
+	const pageInsightRoot = document.querySelector("page-insight-root");
+	if (pageInsightRoot) {
+		document.body.removeChild(pageInsightRoot);
+	}
 };
 
 export const initPageInsight = (root: ShadowRoot) => {
