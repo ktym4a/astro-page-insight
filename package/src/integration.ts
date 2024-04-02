@@ -1,16 +1,14 @@
 import {
+	addVitePlugin,
 	createResolver,
 	defineIntegration,
 	watchIntegration,
 } from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
+import { astroScriptsPlugin } from "./plugins/vite-plugin-page-insight.js";
 import { integrationOptionsSchema } from "./schema/index.js";
-import {
-	getLHReport,
-	organizeLHResult,
-	saveLHReport,
-	startLH,
-} from "./server/index.js";
+import { getLHReport, saveLHReport, startLH } from "./server/index.js";
+import { organizeLHResult } from "./utils/lh.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
@@ -22,12 +20,28 @@ export default defineIntegration({
 
 		return {
 			"astro:config:setup": (params) => {
-				const { addDevToolbarApp, command } = params;
+				const { addDevToolbarApp, command, injectScript } = params;
 
 				watchIntegration(params, resolve());
 
 				if (command === "dev") {
 					addDevToolbarApp(resolve("./plugin.ts"));
+				}
+
+				if (command === "build") {
+					const bundleId: string = resolve("./clients/index.ts");
+					injectScript(
+						"page",
+						`import { initPageInsightForClient } from "${bundleId}";
+						initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						document.addEventListener("astro:page-load", () => {
+							initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						});`,
+					);
+
+					addVitePlugin(params, {
+						plugin: astroScriptsPlugin(cacheDir),
+					});
 				}
 			},
 			"astro:server:setup": async ({ server, logger }) => {
@@ -35,7 +49,7 @@ export default defineIntegration({
 					"astro-dev-toolbar:astro-page-insight-app:init",
 					async ({ url }, client) => {
 						const lhReports = await getLHReport(
-							`${cacheDir}`,
+							cacheDir,
 							url,
 							lh.weight,
 							lh.pwa,
@@ -63,12 +77,13 @@ export default defineIntegration({
 								pwa: lh.pwa,
 							});
 							if (lhData.result) {
-								if (experimentalCache)
+								if (experimentalCache) {
 									await saveLHReport(
 										`${cacheDir}/${lhData.formFactor}`,
 										url,
 										lhData.result,
 									);
+								}
 
 								const result = organizeLHResult(
 									lhData.result,

@@ -1,3 +1,4 @@
+import { CATEGORIES } from "../constants";
 import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
 import { createConsoleAlertButton } from "../ui/consoleAlert";
 import { initEvent } from "../ui/event";
@@ -8,17 +9,79 @@ import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
 import { createScoreButton } from "../ui/score";
 import { initStyle } from "../ui/style";
 import { createToolbar } from "../ui/toolbar";
-import { updateCanvas } from "../utils/lh";
+import {
+	generateDefaultLHData,
+	generateLHReportFileName,
+	organizeLHResult,
+	updateCanvas,
+} from "../utils/lh";
 
-export const initCanvas = (root: ShadowRoot) => {
+export const initPageInsightForClient = async (
+	cacheDir: string,
+	weight: number,
+	pwa: boolean,
+	breakPoint: number,
+) => {
+	const lhResult = generateDefaultLHData(pwa);
+	let hasCache = false;
+
+	const fileName = generateLHReportFileName(window.location.href);
+
+	const filePathDesktop = `/${cacheDir}/desktop/${fileName}`;
+	const responseDesktop = await fetch(filePathDesktop);
+	if (responseDesktop.ok) {
+		const data = await responseDesktop.json();
+		const result = organizeLHResult(data, weight, pwa);
+
+		lhResult.desktop = result;
+		hasCache = true;
+	}
+
+	const filePathMobile = `/${cacheDir}/mobile/${fileName}`;
+	const responseMobile = await fetch(filePathMobile);
+	if (responseMobile.ok) {
+		const data = await responseMobile.json();
+		const result = organizeLHResult(data, weight, pwa);
+
+		lhResult.mobile = result;
+		hasCache = true;
+	}
+
+	if (!hasCache) return;
+
+	class PageInsightRoot extends HTMLElement {
+		constructor() {
+			super();
+			this.attachShadow({ mode: "open" });
+		}
+	}
+
+	customElements.define("page-insight-root", PageInsightRoot);
+	const pageInsightRoot = document.createElement("page-insight-root");
+	document.body.appendChild(pageInsightRoot);
+
+	if (!pageInsightRoot.shadowRoot) return;
+
+	initPageInsight(pageInsightRoot.shadowRoot);
+
+	const options: Omit<LoadOptionsType, "firstFetch"> = {
+		breakPoint: breakPoint,
+		categories: CATEGORIES,
+		lhReports: lhResult,
+	};
+
+	initToolbar(pageInsightRoot.shadowRoot, false, options);
+};
+
+export const initPageInsight = (root: ShadowRoot) => {
 	initStyle(root);
 	initEvent(root);
 };
 
-export const initPageInsight = (
+export const initToolbar = (
 	root: ShadowRoot,
 	isFetching: boolean,
-	options: LoadOptionsType,
+	options: Omit<LoadOptionsType, "firstFetch">,
 ): {
 	buttons: Omit<Buttons, "fetchButton">;
 	toolbarWrap: HTMLDivElement;

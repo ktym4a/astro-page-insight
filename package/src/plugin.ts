@@ -6,7 +6,7 @@ import {
 	showInitialIcon,
 	showSuccess,
 } from "./clients/devTool.js";
-import { initCanvas, initPageInsight } from "./clients/index.js";
+import { initPageInsight, initToolbar } from "./clients/index.js";
 import type {
 	Buttons,
 	LHResult,
@@ -51,11 +51,11 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		let pageInsightData: PageInsightData;
 		let breakPoint = 768;
 
-		initCanvas(canvas);
+		initPageInsight(canvas);
 		getLHData();
 
 		document.addEventListener("astro:page-load", () => {
-			initCanvas(canvas);
+			initPageInsight(canvas);
 			getLHData();
 		});
 
@@ -78,11 +78,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 					fetchStatus.isFirstFetch = false;
 					fetchStatus.firstFetch = options.firstFetch;
 
-					const initObj = initPageInsight(
-						canvas,
-						fetchStatus.isFetching,
-						options,
-					);
+					const initObj = initToolbar(canvas, fetchStatus.isFetching, options);
 					createToastArea(canvas);
 
 					breakPoint = initObj.breakPoint;

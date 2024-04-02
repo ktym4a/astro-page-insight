@@ -1,56 +1,31 @@
 import fs from "node:fs";
 import { type Plugin as VitePlugin, normalizePath } from "vite";
-import { getColorKey } from "../utils/color.ts";
 
-export const astroScriptsPlugin = (
-	resolve: (...path: string[]) => string,
-): VitePlugin => {
-	let ref1: string;
+export const astroScriptsPlugin = (cacheDir: string): VitePlugin => {
 	return {
-		name: "virtual:test",
+		name: "vite-plugin-page-insight",
 		apply: "build",
-		async resolveId(id) {
-			if (id === "virtual:test") {
-				return id;
-			}
-			return undefined;
-		},
+		buildStart() {
+			const normalizeCachePath = normalizePath(cacheDir);
+			const files = fs
+				.readdirSync(normalizeCachePath, {
+					recursive: true,
+					withFileTypes: true,
+				})
+				.filter((dirent) => dirent.isFile())
+				.map((dirent) => `${dirent.path}/${dirent.name}`);
 
-		async load(id) {
-			if (id === "virtual:test") {
-				return `const test = 'test'; console.log(test);`;
-			}
-			return null;
-		},
-
-		buildStart(option) {
-			// console.log(option);
-			const tset: string = resolve("./ui/hide.ts");
-
-			ref1 = this.emitFile({
-				type: "chunk",
-				preserveSignature: "strict",
-				fileName: "test.js",
-				id: tset,
-			});
-		},
-
-		// generateBundle(options, bundle) {
-		// 	console.log(bundle);
-		// },
-
-		writeBundle(_, bundle) {
-			console.log(_);
-
-			for (const [_, chunk] of Object.entries(bundle)) {
-				if (chunk.type !== "asset" && chunk.fileName === "test.js") {
-					const chunkCode = chunk.code;
-					this.emitFile({
-						type: "asset",
-						fileName: "aaa.js",
-						source: chunkCode,
-					});
+			for (const filePath of files) {
+				const normalizeFilePath = normalizePath(filePath);
+				if (!normalizeFilePath.endsWith(".json")) {
+					continue;
 				}
+				const content = fs.readFileSync(normalizeFilePath, "utf-8");
+				this.emitFile({
+					type: "asset",
+					fileName: normalizeFilePath,
+					source: JSON.stringify(JSON.parse(content)),
+				});
 			}
 		},
 	};
