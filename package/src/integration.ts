@@ -22,9 +22,8 @@ export default defineIntegration({
 			"astro:config:setup": (params) => {
 				const { addDevToolbarApp, command, injectScript } = params;
 
-				watchIntegration(params, resolve());
-
 				if (command === "dev") {
+					watchIntegration(params, resolve());
 					addDevToolbarApp(resolve("./plugin.ts"));
 				}
 
