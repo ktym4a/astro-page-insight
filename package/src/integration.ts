@@ -14,20 +14,21 @@ export default defineIntegration({
 	name: "astro-page-insight",
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
-		const { lh, firstFetch, experimentalCache } = options;
+		const { lh, firstFetch, experimentalCache, bundle } = options;
 		const { resolve } = createResolver(import.meta.url);
 		const cacheDir = ".pageinsight";
 
 		return {
 			"astro:config:setup": (params) => {
-				const { addDevToolbarApp, command, injectScript, config } = params;
+				const { addDevToolbarApp, command, injectScript, config, logger } =
+					params;
 
 				if (command === "dev") {
 					watchIntegration(params, resolve());
 					addDevToolbarApp(resolve("./plugin.ts"));
 				}
 
-				if (command === "build" && config.output === "static") {
+				if (bundle && command === "build" && config.output === "static") {
 					const bundleId: string = resolve("./clients/index.ts");
 					injectScript(
 						"page",
@@ -49,7 +50,7 @@ export default defineIntegration({
 					);
 
 					addVitePlugin(params, {
-						plugin: astroScriptsPlugin(cacheDir),
+						plugin: astroScriptsPlugin(cacheDir, logger),
 					});
 				}
 			},

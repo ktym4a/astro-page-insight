@@ -69,6 +69,16 @@ export const integrationOptionsSchema = z
 		 * if `experimentalCache` is `true`, will enable to cache the lighthouse report.
 		 */
 		experimentalCache: z.boolean().optional().default(false),
+
+		/**
+		 * @name bundle
+		 * @default `false`
+		 * @type `boolean`
+		 * @description
+		 * `bundle` is used to determine whether to bundle the lighthouse report.
+		 * if `bundle` is `true`, will bundle the lighthouse report. so you can see the report after build.
+		 */
+		bundle: z.boolean().optional().default(false),
 	})
 	.optional()
 	.default({
@@ -78,6 +88,7 @@ export const integrationOptionsSchema = z
 		},
 		firstFetch: "none",
 		experimentalCache: false,
+		bundle: false,
 	});
 
 export type IntegrationOptions = z.infer<typeof integrationOptionsSchema>;
