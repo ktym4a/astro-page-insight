@@ -119,6 +119,10 @@ There are three types of notifications:
 | `Yellow` | `yellow` has two meanings.<br />One is that the results are from the cache.<br />The other is that fetching is in progress. |
 | `Red` | `red` means that fetching failed. |
 
+### build.bundle
+
+If you set `build.bundle` to `true`, **It will bundle results from local cache, So you need to have `lighthouse results(cache)` on build time.**
+
 ## Contributing
 
 This package is structured as a monorepo:
