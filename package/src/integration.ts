@@ -23,12 +23,14 @@ export default defineIntegration({
 				const { addDevToolbarApp, command, injectScript, config, logger } =
 					params;
 
+				const assetsDir = config.build.assets;
+
 				if (command === "dev") {
 					watchIntegration(params, resolve());
 					addDevToolbarApp(resolve("./plugin.ts"));
 				}
 
-				if (bundle && command === "build" && config.output === "static") {
+				if (bundle && command === "build") {
 					const bundleId: string = resolve("./clients/index.ts");
 					injectScript(
 						"page",
@@ -40,9 +42,9 @@ export default defineIntegration({
 							}
 						}
 						customElements.define("page-insight-root", PageInsightRoot);
-						initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						initPageInsightForClient("${assetsDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						document.addEventListener("astro:page-load", () => {
-							initPageInsightForClient("${cacheDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+							initPageInsightForClient("${assetsDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						});
 						document.addEventListener("astro:before-preparation", () => {
 							removePageInsightRoot();
@@ -50,7 +52,7 @@ export default defineIntegration({
 					);
 
 					addVitePlugin(params, {
-						plugin: astroScriptsPlugin(cacheDir, logger),
+						plugin: astroScriptsPlugin(cacheDir, assetsDir, logger),
 					});
 				}
 			},

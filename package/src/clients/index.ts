@@ -18,7 +18,7 @@ import {
 } from "../utils/lh";
 
 export const initPageInsightForClient = async (
-	cacheDir: string,
+	assetsDir: string,
 	weight: number,
 	pwa: boolean,
 	breakPoint: number,
@@ -28,8 +28,10 @@ export const initPageInsightForClient = async (
 
 	const fileName = generateLHReportFileName(window.location.href);
 
-	const filePathDesktop = `/${cacheDir}/desktop/${fileName}`;
-	const responseDesktop = await fetch(filePathDesktop);
+	const filePathDesktop = `/${assetsDir}/desktop/${fileName}`;
+	const responseDesktop = await fetch(filePathDesktop, {
+		cache: "no-store",
+	});
 	if (responseDesktop.ok) {
 		const data = await responseDesktop.json();
 		const result = organizeLHResult(data, weight, pwa);
@@ -38,8 +40,10 @@ export const initPageInsightForClient = async (
 		hasCache = true;
 	}
 
-	const filePathMobile = `/${cacheDir}/mobile/${fileName}`;
-	const responseMobile = await fetch(filePathMobile);
+	const filePathMobile = `/${assetsDir}/mobile/${fileName}`;
+	const responseMobile = await fetch(filePathMobile, {
+		cache: "no-store",
+	});
 	if (responseMobile.ok) {
 		const data = await responseMobile.json();
 		const result = organizeLHResult(data, weight, pwa);

@@ -4,6 +4,7 @@ import { type ConfigEnv, type Plugin as VitePlugin, normalizePath } from "vite";
 
 export const astroScriptsPlugin = (
 	cacheDir: string,
+	assetsDir: string,
 	logger: AstroIntegrationLogger,
 ): VitePlugin => {
 	let env: ConfigEnv | undefined = undefined;
@@ -32,9 +33,10 @@ export const astroScriptsPlugin = (
 							continue;
 						}
 						const content = fs.readFileSync(normalizeFilePath, "utf-8");
+
 						this.emitFile({
 							type: "asset",
-							fileName: normalizeFilePath,
+							fileName: normalizeFilePath.replace(cacheDir, assetsDir),
 							source: JSON.stringify(JSON.parse(content)),
 						});
 					}
