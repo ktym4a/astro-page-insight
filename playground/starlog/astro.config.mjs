@@ -10,7 +10,7 @@ export default defineConfig({
 				// pwa: true,
 			},
 			// firstFetch: "open",
-			experimentalCache: true,
+			cache: true,
 			build: {
 				bundle: true,
 				showOnLoad: true,

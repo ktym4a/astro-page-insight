@@ -60,15 +60,21 @@ export const integrationOptionsSchema = z
 		 */
 		firstFetch: z.enum(["load", "open", "none"]).optional().default("none"),
 
+		// TODO: remove experimentalCache in the next major release
 		/**
-		 * @name experimentalCache
+		 * @deprecated Use `cache` instead. it will be removed in the next major release.
+		 */
+		experimentalCache: z.boolean().optional().default(false),
+
+		/**
+		 * @name cache
 		 * @default `false`
 		 * @type `boolean`
 		 * @description
-		 * `experimentalCache` is used to enable the cache feature.
-		 * if `experimentalCache` is `true`, will enable to cache the lighthouse report.
+		 * `cache` is used to enable the cache feature.
+		 * if `cache` is `true`, will enable to cache the lighthouse report.
 		 */
-		experimentalCache: z.boolean().optional().default(false),
+		cache: z.boolean().optional().default(false),
 
 		build: z
 			.object({
@@ -105,7 +111,9 @@ export const integrationOptionsSchema = z
 			breakPoint: 767,
 		},
 		firstFetch: "none",
+		// TODO: remove experimentalCache in the next major release
 		experimentalCache: false,
+		cache: false,
 		build: {
 			bundle: false,
 			showOnLoad: false,
