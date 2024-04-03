@@ -14,7 +14,8 @@ export default defineIntegration({
 	name: "astro-page-insight",
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
-		const { lh, firstFetch, experimentalCache, build } = options;
+		// TODO: remove experimentalCache in the next major release
+		const { lh, firstFetch, experimentalCache, cache, build } = options;
 		const { resolve } = createResolver(import.meta.url);
 		const cacheDir = ".pageinsight";
 
@@ -89,7 +90,8 @@ export default defineIntegration({
 								pwa: lh.pwa,
 							});
 							if (lhData.result) {
-								if (experimentalCache) {
+								// TODO: remove experimentalCache in the next major release
+								if (experimentalCache || cache) {
 									await saveLHReport(
 										`${cacheDir}/${lhData.formFactor}`,
 										url,
