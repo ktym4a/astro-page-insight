@@ -1,3 +1,4 @@
+import { CATEGORIES } from "../constants";
 import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
 import { createConsoleAlertButton } from "../ui/consoleAlert";
 import { initEvent } from "../ui/event";
@@ -5,20 +6,106 @@ import { createFilterButton } from "../ui/filter";
 import { createHideButton } from "../ui/hide";
 import { desktopIcon, mobileIcon } from "../ui/icons";
 import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
+import { createPowerButton } from "../ui/power";
 import { createScoreButton } from "../ui/score";
 import { initStyle } from "../ui/style";
 import { createToolbar } from "../ui/toolbar";
-import { updateCanvas } from "../utils/lh";
+import {
+	generateDefaultLHData,
+	generateLHReportFileName,
+	organizeLHResult,
+	updateCanvas,
+} from "../utils/lh";
 
-export const initCanvas = (root: ShadowRoot) => {
+export const initPageInsightForClient = async (
+	assetsDir: string,
+	showOnLoad: boolean,
+	weight: number,
+	pwa: boolean,
+	breakPoint: number,
+) => {
+	const lhResult = generateDefaultLHData(pwa);
+	let hasCache = false;
+
+	const fileName = generateLHReportFileName(window.location.href);
+
+	const filePathDesktop = `/${assetsDir}/pageinsight/desktop/${fileName}`;
+	const responseDesktop = await fetch(filePathDesktop, {
+		cache: "no-store",
+	});
+	if (responseDesktop.ok) {
+		const data = await responseDesktop.json();
+		const result = organizeLHResult(data, weight, pwa);
+
+		lhResult.desktop = result;
+		hasCache = true;
+	}
+
+	const filePathMobile = `/${assetsDir}/pageinsight/mobile/${fileName}`;
+	const responseMobile = await fetch(filePathMobile, {
+		cache: "no-store",
+	});
+	if (responseMobile.ok) {
+		const data = await responseMobile.json();
+		const result = organizeLHResult(data, weight, pwa);
+
+		lhResult.mobile = result;
+		hasCache = true;
+	}
+
+	if (!hasCache) return;
+
+	const pageInsightRoot = document.createElement("page-insight-root");
+	document.body.appendChild(pageInsightRoot);
+
+	if (!pageInsightRoot.shadowRoot) return;
+
+	initPageInsight(pageInsightRoot.shadowRoot);
+
+	const options: Omit<LoadOptionsType, "firstFetch"> = {
+		breakPoint: breakPoint,
+		categories: CATEGORIES,
+		lhReports: lhResult,
+	};
+
+	const initObj = initToolbar(pageInsightRoot.shadowRoot, !showOnLoad, options);
+	createPowerButton(
+		pageInsightRoot.shadowRoot,
+		showOnLoad,
+		initObj.toolbarWrap,
+		false,
+		initObj.buttons,
+	);
+
+	const elements = pageInsightRoot.shadowRoot.querySelectorAll(
+		".astro-page-insight-highlight",
+	);
+
+	if (!showOnLoad) {
+		for (const element of elements) {
+			if (element instanceof HTMLElement) {
+				element.style.display = "none";
+			}
+		}
+	}
+};
+
+export const removePageInsightRoot = () => {
+	const pageInsightRoot = document.querySelector("page-insight-root");
+	if (pageInsightRoot) {
+		document.body.removeChild(pageInsightRoot);
+	}
+};
+
+export const initPageInsight = (root: ShadowRoot) => {
 	initStyle(root);
 	initEvent(root);
 };
 
-export const initPageInsight = (
+export const initToolbar = (
 	root: ShadowRoot,
 	isFetching: boolean,
-	options: LoadOptionsType,
+	options: Omit<LoadOptionsType, "firstFetch">,
 ): {
 	buttons: Omit<Buttons, "fetchButton">;
 	toolbarWrap: HTMLDivElement;

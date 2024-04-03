@@ -3,6 +3,8 @@ import type { Result } from "lighthouse/types/lhr/audit-result";
 export type PositionType = {
 	top: number;
 	left: number;
+	bottom?: number;
+	right?: number;
 	width: number;
 	height: number;
 };

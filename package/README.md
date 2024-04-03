@@ -73,6 +73,8 @@ Here is the options:
 | `lh.pwa` | `boolean` | `false` | `pwa` is used to enable the PWA audit. |
 | `firstFetch` | `load`, `open`, `none` | `none` | `firstFetch` is used for when to do the first fetch.<br />if `firstFetch` is `load`, will fetch on page load.<br />if `firstFetch` is `open`, will fetch on first app open.<br />if `firstFetch` is `none`, only fetch on user interaction. |
 | `experimentalCache` | `boolean` | `false` | `experimentalCache` is used to enable the experimental cache.<br />if `experimentalCache` is `true`, will enable to cache the lighthouse report. |
+| `build.bundle` | `boolean` | `false` | `bundle` is used to determine whether to bundle the page insight.<br />if `bundle` is `true`, will bundle the page insight. so you can see the insight after build. |
+| `build.showOnLoad` | `boolean` | `false` | `showOnLoad` is used to determine whether to show the page insight on page load.<br />if `showOnLoad` is `true`, will show the page insight on page load. |
 
 ### Example
 
@@ -89,6 +91,10 @@ export default defineConfig({
       },
       firstFetch: "open",
       experimentalCache: true,
+      build: {
+        bundle: true, // You should get value from the environment variable. (e.g. process.env.STAGING === "true")
+        showOnLoad: true, // This option is only available when `bundle` is `true`.
+      },
     }),
   ],
 });
@@ -112,6 +118,10 @@ There are three types of notifications:
 | `Blue` | `blue` means that results are fresh. |
 | `Yellow` | `yellow` has two meanings.<br />One is that the results are from the cache.<br />The other is that fetching is in progress. |
 | `Red` | `red` means that fetching failed. |
+
+### `build.bundle`
+
+If you set `build.bundle` to `true`, **It will bundle results from local cache, So you need to have `lighthouse results(cache)` on build time.**
 
 ## Contributing
 

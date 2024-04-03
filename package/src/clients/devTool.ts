@@ -43,7 +43,7 @@ export const fetchLighthouse = (width: number, height: number, url: string) => {
 	}
 };
 
-export function activeButtons(buttons: Buttons) {
+function activeButtons(buttons: Buttons) {
 	const buttonList = Object.values(buttons);
 	for (const button of buttonList) {
 		if (button) {
@@ -57,19 +57,34 @@ export function showError(
 	canvas: ShadowRoot,
 	eventTarget: EventTarget,
 	buttons: Buttons,
+	message: string,
 ) {
 	activeButtons(buttons);
 
-	showToast(
-		canvas,
-		"The result is not for this page.\n Please try again.",
-		"error",
-	);
+	showToast(canvas, message, "error");
 	eventTarget.dispatchEvent(
 		new CustomEvent("toggle-notification", {
 			detail: {
 				state: true,
 				level: "error",
+			},
+		}),
+	);
+}
+
+export function showSuccess(
+	canvas: ShadowRoot,
+	eventTarget: EventTarget,
+	buttons: Buttons,
+) {
+	activeButtons(buttons);
+
+	showToast(canvas, "Analysis of lighthouse results is complete.", "success");
+	eventTarget.dispatchEvent(
+		new CustomEvent("toggle-notification", {
+			detail: {
+				state: true,
+				level: "info",
 			},
 		}),
 	);

@@ -1,7 +1,9 @@
 export const initStyle = (canvas: ShadowRoot) => {
 	canvas.innerHTML += `
     <style>
-      :host {
+    :host {
+        all: initial;
+        display: contents;
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         color: #cdd6f4;
       }

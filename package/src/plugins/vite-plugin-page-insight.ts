@@ -1,55 +1,49 @@
 import fs from "node:fs";
-import { type Plugin as VitePlugin, normalizePath } from "vite";
-import { getColorKey } from "../utils/color.ts";
+import type { AstroIntegrationLogger } from "astro";
+import { type ConfigEnv, type Plugin as VitePlugin, normalizePath } from "vite";
 
 export const astroScriptsPlugin = (
-	resolve: (...path: string[]) => string,
+	cacheDir: string,
+	assetsDir: string,
+	logger: AstroIntegrationLogger,
 ): VitePlugin => {
-	let ref1: string;
+	let env: ConfigEnv | undefined = undefined;
 	return {
-		name: "virtual:test",
+		name: "vite-plugin-page-insight",
 		apply: "build",
-		async resolveId(id) {
-			if (id === "virtual:test") {
-				return id;
-			}
-			return undefined;
+		config(_config, _env) {
+			env = _env;
 		},
+		buildStart() {
+			const isSsrBuild = env?.isSsrBuild;
+			if (env?.command === "build" && !isSsrBuild) {
+				const normalizeCachePath = normalizePath(cacheDir);
+				try {
+					const files = fs
+						.readdirSync(normalizeCachePath, {
+							recursive: true,
+							withFileTypes: true,
+						})
+						.filter((dirent) => dirent.isFile())
+						.map((dirent) => `${dirent.path}/${dirent.name}`);
 
-		async load(id) {
-			if (id === "virtual:test") {
-				return `const test = 'test'; console.log(test);`;
-			}
-			return null;
-		},
+					for (const filePath of files) {
+						const normalizeFilePath = normalizePath(filePath);
+						if (!normalizeFilePath.endsWith(".json")) {
+							continue;
+						}
+						const content = fs.readFileSync(normalizeFilePath, "utf-8");
 
-		buildStart(option) {
-			// console.log(option);
-			const tset: string = resolve("./ui/hide.ts");
-
-			ref1 = this.emitFile({
-				type: "chunk",
-				preserveSignature: "strict",
-				fileName: "test.js",
-				id: tset,
-			});
-		},
-
-		// generateBundle(options, bundle) {
-		// 	console.log(bundle);
-		// },
-
-		writeBundle(_, bundle) {
-			console.log(_);
-
-			for (const [_, chunk] of Object.entries(bundle)) {
-				if (chunk.type !== "asset" && chunk.fileName === "test.js") {
-					const chunkCode = chunk.code;
-					this.emitFile({
-						type: "asset",
-						fileName: "aaa.js",
-						source: chunkCode,
-					});
+						this.emitFile({
+							type: "asset",
+							fileName: normalizePath(
+								normalizeFilePath.replace(cacheDir, `${assetsDir}/pageinsight`),
+							),
+							source: JSON.stringify(JSON.parse(content)),
+						});
+					}
+				} catch (error) {
+					logger.info("No cache files found.");
 				}
 			}
 		},

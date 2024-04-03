@@ -1,33 +1,59 @@
 import {
+	addVitePlugin,
 	createResolver,
 	defineIntegration,
 	watchIntegration,
 } from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
+import { astroScriptsPlugin } from "./plugins/vite-plugin-page-insight.js";
 import { integrationOptionsSchema } from "./schema/index.js";
-import {
-	getLHReport,
-	organizeLHResult,
-	saveLHReport,
-	startLH,
-} from "./server/index.js";
+import { getLHReport, saveLHReport, startLH } from "./server/index.js";
+import { organizeLHResult } from "./utils/lh.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
-		const { lh, firstFetch, experimentalCache } = options;
+		const { lh, firstFetch, experimentalCache, build } = options;
 		const { resolve } = createResolver(import.meta.url);
 		const cacheDir = ".pageinsight";
 
 		return {
 			"astro:config:setup": (params) => {
-				const { addDevToolbarApp, command } = params;
+				const { addDevToolbarApp, command, injectScript, config, logger } =
+					params;
 
-				watchIntegration(params, resolve());
+				const assetsDir = config.build.assets;
 
 				if (command === "dev") {
+					watchIntegration(params, resolve());
 					addDevToolbarApp(resolve("./plugin.ts"));
+				}
+
+				if (build.bundle && command === "build") {
+					const bundleId: string = resolve("./clients/index.ts");
+					injectScript(
+						"page",
+						`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";
+						class PageInsightRoot extends HTMLElement {
+							constructor() {
+								super();
+								this.attachShadow({ mode: "open" });
+							}
+						}
+						customElements.define("page-insight-root", PageInsightRoot);
+						initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						document.addEventListener("astro:page-load", () => {
+							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						});
+						document.addEventListener("astro:before-preparation", () => {
+							removePageInsightRoot();
+						});`,
+					);
+
+					addVitePlugin(params, {
+						plugin: astroScriptsPlugin(cacheDir, assetsDir, logger),
+					});
 				}
 			},
 			"astro:server:setup": async ({ server, logger }) => {
@@ -35,7 +61,7 @@ export default defineIntegration({
 					"astro-dev-toolbar:astro-page-insight-app:init",
 					async ({ url }, client) => {
 						const lhReports = await getLHReport(
-							`${cacheDir}`,
+							cacheDir,
 							url,
 							lh.weight,
 							lh.pwa,
@@ -63,12 +89,13 @@ export default defineIntegration({
 								pwa: lh.pwa,
 							});
 							if (lhData.result) {
-								if (experimentalCache)
+								if (experimentalCache) {
 									await saveLHReport(
 										`${cacheDir}/${lhData.formFactor}`,
 										url,
 										lhData.result,
 									);
+								}
 
 								const result = organizeLHResult(
 									lhData.result,
