@@ -148,10 +148,10 @@ Start the playground with ssr:
 pnpm playground:ssr
 ```
 
-Start the playground with view transitions:
+Start the playground with starlog:
 
 ```bash
-pnpm playground:vw
+pnpm playground:starlog
 ```
 
 You can now edit files in `package`. Please note that making changes to those files may require restarting the playground dev server.
