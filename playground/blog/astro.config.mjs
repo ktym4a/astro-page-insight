@@ -15,6 +15,10 @@ export default defineConfig({
 			},
 			// firstFetch: "open",
 			experimentalCache: true,
+			// build: {
+			// 	bundle: false,
+			// 	showOnLoad: true
+			// },
 		}),
 	],
 });

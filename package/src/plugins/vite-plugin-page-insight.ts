@@ -36,7 +36,9 @@ export const astroScriptsPlugin = (
 
 						this.emitFile({
 							type: "asset",
-							fileName: normalizeFilePath.replace(cacheDir, assetsDir),
+							fileName: normalizePath(
+								normalizeFilePath.replace(cacheDir, `${assetsDir}/pageinsight`),
+							),
 							source: JSON.stringify(JSON.parse(content)),
 						});
 					}

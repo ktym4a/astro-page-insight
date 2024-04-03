@@ -19,6 +19,7 @@ import {
 
 export const initPageInsightForClient = async (
 	assetsDir: string,
+	showOnLoad: boolean,
 	weight: number,
 	pwa: boolean,
 	breakPoint: number,
@@ -28,7 +29,7 @@ export const initPageInsightForClient = async (
 
 	const fileName = generateLHReportFileName(window.location.href);
 
-	const filePathDesktop = `/${assetsDir}/desktop/${fileName}`;
+	const filePathDesktop = `/${assetsDir}/pageinsight/desktop/${fileName}`;
 	const responseDesktop = await fetch(filePathDesktop, {
 		cache: "no-store",
 	});
@@ -40,7 +41,7 @@ export const initPageInsightForClient = async (
 		hasCache = true;
 	}
 
-	const filePathMobile = `/${assetsDir}/mobile/${fileName}`;
+	const filePathMobile = `/${assetsDir}/pageinsight/mobile/${fileName}`;
 	const responseMobile = await fetch(filePathMobile, {
 		cache: "no-store",
 	});
@@ -67,9 +68,10 @@ export const initPageInsightForClient = async (
 		lhReports: lhResult,
 	};
 
-	const initObj = initToolbar(pageInsightRoot.shadowRoot, true, options);
+	const initObj = initToolbar(pageInsightRoot.shadowRoot, !showOnLoad, options);
 	createPowerButton(
 		pageInsightRoot.shadowRoot,
+		showOnLoad,
 		initObj.toolbarWrap,
 		false,
 		initObj.buttons,
@@ -78,9 +80,12 @@ export const initPageInsightForClient = async (
 	const elements = pageInsightRoot.shadowRoot.querySelectorAll(
 		".astro-page-insight-highlight",
 	);
-	for (const element of elements) {
-		if (element instanceof HTMLElement) {
-			element.style.display = "none";
+
+	if (!showOnLoad) {
+		for (const element of elements) {
+			if (element instanceof HTMLElement) {
+				element.style.display = "none";
+			}
 		}
 	}
 };

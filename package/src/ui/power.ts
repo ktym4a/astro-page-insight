@@ -4,6 +4,7 @@ import { createToolbarButton } from "./toolbar.js";
 
 export const createPowerButton = (
 	canvas: ShadowRoot,
+	showOnLoad: boolean,
 	toolbarWrap: HTMLDivElement,
 	isFetching: boolean,
 	buttons: Omit<Buttons, "fetchButton">,
@@ -46,7 +47,8 @@ export const createPowerButton = (
 		"Toggle the highlighted elements.",
 	);
 
-	powerButton.classList.add("astro-page-insight-toolbar-button-alert");
+	if (!showOnLoad)
+		powerButton.classList.add("astro-page-insight-toolbar-button-alert");
 
 	return powerButton;
 };

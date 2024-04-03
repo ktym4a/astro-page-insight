@@ -11,7 +11,10 @@ export default defineConfig({
 			},
 			// firstFetch: "open",
 			experimentalCache: true,
-			bundle: true,
+			build: {
+				bundle: true,
+				showOnLoad: true,
+			},
 		}),
 	],
 	build: {

@@ -14,7 +14,7 @@ export default defineIntegration({
 	name: "astro-page-insight",
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
-		const { lh, firstFetch, experimentalCache, bundle } = options;
+		const { lh, firstFetch, experimentalCache, build } = options;
 		const { resolve } = createResolver(import.meta.url);
 		const cacheDir = ".pageinsight";
 
@@ -30,7 +30,7 @@ export default defineIntegration({
 					addDevToolbarApp(resolve("./plugin.ts"));
 				}
 
-				if (bundle && command === "build") {
+				if (build.bundle && command === "build") {
 					const bundleId: string = resolve("./clients/index.ts");
 					injectScript(
 						"page",
@@ -42,9 +42,9 @@ export default defineIntegration({
 							}
 						}
 						customElements.define("page-insight-root", PageInsightRoot);
-						initPageInsightForClient("${assetsDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+						initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						document.addEventListener("astro:page-load", () => {
-							initPageInsightForClient("${assetsDir}", ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						});
 						document.addEventListener("astro:before-preparation", () => {
 							removePageInsightRoot();

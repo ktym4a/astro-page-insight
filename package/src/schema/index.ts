@@ -70,15 +70,33 @@ export const integrationOptionsSchema = z
 		 */
 		experimentalCache: z.boolean().optional().default(false),
 
-		/**
-		 * @name bundle
-		 * @default `false`
-		 * @type `boolean`
-		 * @description
-		 * `bundle` is used to determine whether to bundle the lighthouse report.
-		 * if `bundle` is `true`, will bundle the lighthouse report. so you can see the report after build.
-		 */
-		bundle: z.boolean().optional().default(false),
+		build: z
+			.object({
+				/**
+				 * @name bundle
+				 * @default `false`
+				 * @type `boolean`
+				 * @description
+				 * `bundle` is used to determine whether to bundle the page insight.
+				 * if `bundle` is `true`, will bundle the page insight. so you can see the insight after build.
+				 */
+				bundle: z.boolean().optional().default(false),
+
+				/**
+				 * @name showOnLoad
+				 * @default `false`
+				 * @type `boolean`
+				 * @description
+				 * `showOnLoad` is used to determine whether to show the page insight on page load.
+				 * if `showOnLoad` is `true`, will show the page insight on page load.
+				 */
+				showOnLoad: z.boolean().optional().default(false),
+			})
+			.optional()
+			.default({
+				bundle: false,
+				showOnLoad: false,
+			}),
 	})
 	.optional()
 	.default({
@@ -88,7 +106,10 @@ export const integrationOptionsSchema = z
 		},
 		firstFetch: "none",
 		experimentalCache: false,
-		bundle: false,
+		build: {
+			bundle: false,
+			showOnLoad: false,
+		},
 	});
 
 export type IntegrationOptions = z.infer<typeof integrationOptionsSchema>;
