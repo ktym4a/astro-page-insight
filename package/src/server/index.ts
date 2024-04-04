@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import * as chromeLauncher from "chrome-launcher";
 import lighthouse, { type RunnerResult } from "lighthouse";
+import puppeteer from "puppeteer";
 import type { CacheLHResultByFormFactor, LHOptions } from "../types/index.js";
 import {
 	generateDefaultLHData,
@@ -9,7 +9,13 @@ import {
 } from "../utils/lh.js";
 
 export const startLH = async (options: LHOptions) => {
-	const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
+	const browser = await puppeteer.launch({
+		headless: true,
+		defaultViewport: null,
+		ignoreDefaultArgs: ["--enable-automation"],
+	});
+
+	const page = await browser.newPage();
 
 	const isMobile = options.width <= options.breakPoint;
 	const formFactor = isMobile ? "mobile" : ("desktop" as const);
@@ -21,28 +27,32 @@ export const startLH = async (options: LHOptions) => {
 		? ["accessibility", "best-practices", "performance", "seo", "pwa"]
 		: ["accessibility", "best-practices", "performance", "seo"];
 
-	const result = await lighthouse(url.toString(), {
-		port: chrome.port,
-		output: "json",
-		formFactor,
-		disableFullPageScreenshot: true,
-		onlyCategories: categories,
-		screenEmulation: {
-			mobile: isMobile,
-			width: options.width,
-			height: options.height,
-			deviceScaleFactor: 1,
+	const result = await lighthouse(
+		url.toString(),
+		{
+			output: "json",
+			formFactor,
+			disableFullPageScreenshot: true,
+			onlyCategories: categories,
+			screenEmulation: {
+				mobile: isMobile,
+				width: options.width,
+				height: options.height,
+				deviceScaleFactor: 1,
+			},
+			throttlingMethod: "simulate",
+			throttling: {
+				rttMs: 40,
+				throughputKbps: 10 * 1024,
+				cpuSlowdownMultiplier: 1,
+			},
+			emulatedUserAgent: false,
 		},
-		throttlingMethod: "simulate",
-		throttling: {
-			rttMs: 40,
-			throughputKbps: 10 * 1024,
-			cpuSlowdownMultiplier: 1,
-		},
-		emulatedUserAgent: false,
-	});
+		undefined,
+		page,
+	);
 
-	await chrome.kill();
+	await browser.close();
 
 	return {
 		result,
