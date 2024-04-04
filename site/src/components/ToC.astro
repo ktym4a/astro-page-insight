@@ -1,0 +1,95 @@
+---
+import NavItem from "@/components/NavItem.astro";
+import Tag from "@/components/atoms/Tag.astro";
+import type { ColorType, ToCType } from "@/types/index";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+	baseColor: ColorType;
+	toc?:
+		| {
+				headings: MarkdownHeading[] | undefined;
+				tagName: string;
+		  }
+		| undefined;
+}
+
+const { baseColor, toc = undefined } = Astro.props;
+
+let tableOfContents: ToCType = [];
+if (toc?.headings) {
+	for (const heading of toc.headings) {
+		if (tableOfContents === undefined) {
+			tableOfContents = [];
+		}
+		if (heading.depth === 1 || heading.depth === 2 || heading.depth === 3) {
+			if (heading.depth === 3) {
+				const lastHeading = tableOfContents[tableOfContents.length - 1];
+				if (!lastHeading || lastHeading.depth !== 2) {
+					throw new Error(
+						"Cannot add `h3` to table of contents without a preceding `h2`",
+					);
+				}
+				if (!lastHeading.children) {
+					lastHeading.children = [];
+				}
+
+				lastHeading.children.push({
+					...heading,
+					children: [],
+				});
+			} else {
+				tableOfContents.push({
+					...heading,
+					children: [],
+				});
+			}
+		}
+	}
+}
+---
+
+{
+    toc?.headings && (
+        <Tag text={toc.tagName} className='gap-1'>
+            <ul class='flex flex-col gap-1 break-all' id='toc'>
+                {tableOfContents.map((heading) => (
+                    <>
+                        <NavItem
+                            href={`#${heading.slug}`}
+                            id={`toc_${heading.slug}`}
+                            current={false}
+                            colors={{
+                                hoverText: baseColor.hoverText as string,
+                                focusText: baseColor.focusText as string,
+                                toCActiveColor:
+                                    baseColor.toCActiveColor as string
+                            }}
+                            title={`${heading.text}`}
+                        />
+                        {heading.children && heading.children.length > 0 && (
+                            <ul class='flex flex-col gap-1 break-all pl-4'>
+                                {heading.children.map((child) => (
+                                    <NavItem
+                                        href={`#${child.slug}`}
+                                        id={`toc_${child.slug}`}
+                                        current={false}
+                                        colors={{
+                                            hoverText:
+                                                baseColor.hoverText as string,
+                                            focusText:
+                                                baseColor.focusText as string,
+                                            toCActiveColor:
+                                                baseColor.toCActiveColor as string
+                                        }}
+                                        title={`${child.text}`}
+                                    />
+                                ))}
+                            </ul>
+                        )}
+                    </>
+                ))}
+            </ul>
+        </Tag>
+    )
+}

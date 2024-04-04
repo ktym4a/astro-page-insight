@@ -1,0 +1,31 @@
+---
+import { formatPostDate } from "@/utils/index";
+
+interface Props {
+	date: Date;
+	type: "list" | "detail";
+}
+
+const { date, type } = Astro.props;
+
+const iconSize =
+	type === "list" ? "h-3 w-3 md:h-4 md:w-4" : "h-4 w-4 md:h-5 md:w-5";
+---
+
+<p class='inline-flex items-center gap-1'>
+    <svg
+        xmlns='http://www.w3.org/2000/svg'
+        class={iconSize}
+        viewBox='0 0 24 24'
+        stroke-width='2'
+        stroke='currentColor'
+        fill='none'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+    >
+        <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+        <path d='M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4'></path>
+        <path d='M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4'></path>
+    </svg>
+    <time datetime={formatPostDate(date)}>{formatPostDate(date)}</time>
+</p>

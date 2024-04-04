@@ -1,0 +1,32 @@
+---
+import NavLink from "@/components/atoms/NavLink.astro";
+import NavLinkIcon from "@/components/atoms/NavLinkIcon.astro";
+import type { ColorType } from "@/types/index";
+
+interface Props {
+	colors: ColorType;
+	current: boolean;
+	history?: "auto" | "push" | "replace";
+	href: string;
+	id?: string;
+	title: string;
+	type?: "file" | "folder" | undefined;
+}
+
+const {
+	colors,
+	current,
+	history = "auto",
+	href,
+	id,
+	title,
+	type = undefined,
+} = Astro.props;
+---
+
+<li class={`relative group ${current ? 'current' : ''}`} id={id}>
+    <NavLink history={history} href={href} colors={colors} title={title}>
+        <NavLinkIcon type={type} />
+        <span class='flex-1'>{title}</span>
+    </NavLink>
+</li>

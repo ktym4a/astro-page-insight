@@ -1,0 +1,30 @@
+---
+import Tag from "@/components/atoms/Tag.astro";
+import type { ColorType } from "@/types/index";
+
+interface Props {
+	baseColor: ColorType;
+	publishedDate: Date;
+	updatedDate?: Date | undefined;
+	text: string;
+	id: string;
+}
+
+const { baseColor, text, id } = Astro.props;
+---
+
+<Tag text='Metadata'>
+    <div class='space-y-3'>
+        <h1
+            id={id}
+            class={`break-words -mt-8 pt-8 text-2xl font-bold before:content-['#'] before:text-ctp-text before:pr-3 md:text-4xl ${baseColor.text}`}
+            >{text}</h1
+        >
+        <!-- <div
+            class='flex flex-wrap items-end justify-end gap-1 gap-x-4 text-sm md:flex-row md:gap-4 md:text-base'
+        >
+            <PublicDate date={publishedDate} type='detail' />
+            {updatedDate && <UpdatedDate date={updatedDate} type='detail' />}
+        </div> -->
+    </div>
+</Tag>

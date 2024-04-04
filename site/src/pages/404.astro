@@ -1,0 +1,45 @@
+---
+import Tag from "@/components/atoms/Tag.astro";
+import { COLORS } from "@/constants/color";
+import { SITE_NAME } from "@/constants/index";
+import Layout from "@/layouts/Layout.astro";
+
+const pageName = "404";
+const title = `${pageName} - ${SITE_NAME}`;
+const description = "Page not found";
+const baseColor = COLORS.GREEN;
+---
+
+<Layout
+    activeName='404'
+    title={title}
+    description={description}
+    baseColor={baseColor}
+>
+    <section id='StatusCode'>
+        <Tag text='StatusCode'>
+            <h1
+                class='mb-0 break-words text-2xl font-bold tracking-wide md:mb-1 md:text-4xl lg:text-6xl'
+            >
+                <span class='text-ctp-green'>4</span><span class='text-ctp-pink'
+                    >0</span
+                ><span class='text-ctp-blue'>4</span>
+            </h1>
+            <p
+                class='mb-0 text-xl font-bold text-ctp-peach md:mb-1 md:text-2xl lg:text-4xl'
+                >Not Found</p
+            >
+        </Tag>
+    </section>
+    <section id='Message'>
+        <Tag text='Message' className='gap-2'>
+            <p
+                class={`mb-1 text-pretty text-2xl font-bold md:mb-3 md:text-4xl ${baseColor.text}`}
+                >( ._.)</p
+            >
+            <p class='text-pretty font-mono md:text-lg'
+                >The page you are looking for does not exist.</p
+            >
+        </Tag>
+    </section>
+</Layout>

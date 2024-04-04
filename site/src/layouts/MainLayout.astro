@@ -1,0 +1,52 @@
+---
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import Tag from "@/components/atoms/Tag.astro";
+import type { ColorType } from "@/types/index";
+
+interface Props {
+	baseColor: ColorType;
+	currentPath: string;
+	currentName?: string | undefined;
+	routes: string[];
+	tagName?: string | undefined;
+}
+
+const {
+	baseColor,
+	currentPath,
+	currentName = undefined,
+	routes,
+	tagName = "Main",
+} = Astro.props;
+---
+
+<div
+    class='md:ml-0 lg:pr-10'
+>
+    <div
+        id='main'
+        class='grid auto-cols-full grid-rows-[auto_1fr] gap-4 px-4 py-6 md:px-6 lg:grid-rows-[1fr]'
+    >
+        <div class='block lg:hidden'>
+            <Tag
+                text='Breadcrumbs'
+                className='gap-1 overflow-x-auto md:gap-0'
+            >
+                <Breadcrumbs
+                    baseColor={baseColor}
+                    currentPath={currentPath}
+                    currentName={currentName}
+                    position='main'
+                    routes={routes}
+                />
+            </Tag>
+        </div>
+        <main class='w-full'>
+            <Tag text={tagName} className='gap-2'>
+                <div class='space-y-4 md:space-y-6'>
+                    <slot />
+                </div>
+            </Tag>
+        </main>
+    </div>
+</div>

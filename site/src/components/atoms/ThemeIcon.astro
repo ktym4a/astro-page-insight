@@ -1,0 +1,39 @@
+---
+import type { ColorType } from "@/types/index";
+
+interface Props {
+	baseColor: ColorType;
+}
+
+const { baseColor } = Astro.props;
+---
+
+<div
+    class='mt-auto flex w-full flex-col items-center justify-center gap-2 pb-4 md:w-auto md:pb-6'
+>
+    <button
+        id='themeToggle'
+        aria-label='Toggle theme'
+        class={`relative z-10 motion-safe:transition-filter ease-in-out motion-safe:duration-1000 flex aspect-[1] w-full flex-col items-center justify-center rounded-md bg-ctp-surface0 dark:bg-ctp-crust md:bg-ctp-surface0/30 md:dark:bg-ctp-crust/40 p-[2px] outline-dashed outline-0 outline-ctp-overlay2 hover:saturate-200 focus-visible:no-underline focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-ctp-green focus-visible:saturate-200 dark:hover:saturate-350 dark:focus-visible:saturate-350 md:aspect-auto md:p-1 md:outline-2 ${baseColor.focusOutline} ${baseColor.hoverOutline} ${baseColor.hoverText} ${baseColor.focusText}`}
+    >
+        <svg
+            xmlns='http://www.w3.org/2000/svg'
+            class='h-6 w-6 md:h-8 md:w-8'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            stroke-width='2'
+            stroke='currentColor'
+            fill='none'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+        >
+            <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+            <path d='M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0'></path>
+            <path d='M12 3v18'></path>
+            <path d='M12 14l7 -7'></path>
+            <path d='M12 19l8.5 -8.5'></path>
+            <path d='M12 9l4.5 -4.5'></path>
+        </svg>
+    </button>
+</div>

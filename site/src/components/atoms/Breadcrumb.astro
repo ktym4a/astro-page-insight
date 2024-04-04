@@ -1,0 +1,35 @@
+---
+import Link from "@/components/atoms/Link.astro";
+import type { ColorType } from "@/types/index";
+
+interface Props {
+	colors: ColorType;
+	currentPath: string;
+	href: string;
+	name?: string | undefined;
+	path: string;
+}
+
+const { colors, currentPath, href, path, name = path } = Astro.props;
+---
+
+<p class='flex gap-1 md:gap-2'>
+    <span aria-hidden='true'>/</span>
+    {
+        path === currentPath ? (
+            <span class={`font-bold ${colors.text}`}>{name}</span>
+        ) : (
+            <Link
+                href={href}
+                class={`font-bold underline`}
+                colors={{
+                    text: colors.text as string,
+                    outline: colors.outline as string
+                }}
+                title={name}
+            >
+                {name}
+            </Link>
+        )
+    }
+</p>

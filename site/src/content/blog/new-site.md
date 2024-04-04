@@ -1,3 +1,10 @@
+---
+title: 'Astroでサイトを作り直しました'
+tags: ['Astro']
+publishedDate: 2024-01-25
+lang: ja
+---
+
 # `astro-page-insight`
 
 ![](https://raw.githubusercontent.com/ktym4a/astro-page-insight/main/.github/demo.png)
