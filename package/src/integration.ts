@@ -44,7 +44,7 @@ export default defineIntegration({
 						}
 						customElements.define("page-insight-root", PageInsightRoot);
 						initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
-						document.addEventListener("astro:page-load", () => {
+						document.addEventListener("astro:after-swap", () => {
 							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
 						});
 						document.addEventListener("astro:before-preparation", () => {

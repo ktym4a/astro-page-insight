@@ -5,9 +5,6 @@
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that shows everything to improve from Lighthouse results directly on the page.
 
 > [!IMPORTANT]
-> Astro 4.0 or later is required.
-
-> [!IMPORTANT]
 > This result is by dev mode, so it may not be accurate.  
 > Especially, the Score is not accurate.
 
@@ -15,8 +12,7 @@ This is an [Astro integration](https://docs.astro.build/en/guides/integrations-g
 
 ### Prerequisites
 
-You need to have Chrome.  
-if you see errors like `ERR_LAUNCHER_NOT_INSTALLED`, you may need to install Chrome.
+Astro 4.0 or later is required.
 
 
 ### Installation

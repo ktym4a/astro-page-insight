@@ -54,7 +54,7 @@ const astroPageInsightToolbar: DevToolbarApp = {
 		initPageInsight(canvas);
 		getLHData();
 
-		document.addEventListener("astro:page-load", () => {
+		document.addEventListener("astro:after-swap", () => {
 			initPageInsight(canvas);
 			getLHData();
 		});
