@@ -14,7 +14,7 @@
 	"author": "ktym4a",
 	"license": "MIT",
 	"dependencies": {
-		"astro": "^4.5.14",
+		"astro": "^4.5.15",
 		"astro-page-insight": "workspace:*"
 	},
 	"devDependencies": {
