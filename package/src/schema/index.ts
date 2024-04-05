@@ -5,7 +5,7 @@ export const integrationOptionsSchema = z
 		/**
 		 * @name lighthouse options
 		 * @description
-		 * `lh` is an object that contains the threshold value and breakpoint for lighthouse audit.
+		 * `lh` is an object that contains the threshold value, breakpoint and pwa for lighthouse audit.
 		 * ```js
 		 * lh: {
 		 *  weight: 0,

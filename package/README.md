@@ -74,7 +74,7 @@ Here is the options:
 
 ### Example
 
-```.ts
+```ts
 import pageInsight from "astro-page-insight";
 
 export default defineConfig({
@@ -100,8 +100,8 @@ export default defineConfig({
 
 If you want to ignore the cache, add the following to your `.gitignore`:
 
-```.gitignore
-.pageinsight
+```diff
++ .pageinsight
 ```
 
 ### Notification

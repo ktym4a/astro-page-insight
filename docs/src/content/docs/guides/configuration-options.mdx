@@ -1,0 +1,61 @@
+---
+title: Configuration Options
+description: An overview of all the configuration options Astro Page Insight supports.
+---
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Warning">If you set `build.bundle` to `true`, **It will bundle results from local cache, So you need to have `lighthouse results(cache)` on build time.**</Aside>
+
+## Configuration
+
+You can configure the following options:
+
+```js
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import astroPageInsight from 'astro-page-insight';
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [
+    astroPageInsight({
+      lh: {  // Lighthouse Config
+        // `weight` is the threshold value in the audit.
+        // All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
+        // Default: 0
+        weight: 0,
+        // `breakPoint` is used to determine whether on mobile or desktop.
+        // if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
+        // Default: 767
+        breakPoint: 1024,
+        // `pwa` is used to determine whether to include the PWA audit.
+        // Default: false
+        pwa: true,
+	    },
+      // `firstFetch` is used for when to do the first fetch.
+      // Default: "none"
+      firstFetch: "none", // ["load", "open", "none"]
+      // `cache` is used to enable the cache feature.
+      // Default: false
+      cache: true,
+      build: { // Build time Config
+        // `bundle` is used to determine whether to bundle the page insight.
+        // Default: false
+        bundle: true,
+        // `showOnLoad` is used to determine whether to show the page insight on page load.
+        // Default: false
+        showOnLoad: true,
+      },
+    })
+  ],
+});
+```
+
+### gitignore
+
+If you want to ignore the cache, add the following to your `.gitignore`:
+
+```diff
+// .gitignore
++ .pageinsight
+```

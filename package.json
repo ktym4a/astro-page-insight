@@ -9,6 +9,8 @@
 		"playground:blog": "pnpm --filter blog dev",
 		"playground:ssr": "pnpm --filter ssr dev",
 		"playground:starlog": "pnpm --filter starlog dev",
+		"docs:dev": "pnpm --filter docs dev",
+		"docs:build": "pnpm --filter docs build",
 		"changeset": "changeset",
 		"release": "node scripts/release.mjs",
 		"lint": "biome check .",
