@@ -1,5 +1,60 @@
 # astro-page-insight
 
+## 0.6.0
+
+### Minor Changes
+
+- 2e7dd4f: Add `build.bundle` and `build.showOnLoad` options.
+
+  This option allows you to specify whether to bundle the page insight and show the page insight on page load.
+
+  If you set `build.bundle` to `true`, **It will bundle results from local cache, So you need to have `lighthouse results(cache)` on build time.**
+
+  ```diff
+  type PageInsightOptions = {
+      lh?: {
+          weight?: number;
+          breakPoint?: number;
+          pwa?: boolean;
+      };
+      firstFetch?: "load" | "open" | "none";
+      experimentalCache?: boolean;
+  +   build? : {
+  +       bundle?: boolean;
+  +       showOnLoad?: boolean;
+  +   };
+  };
+  ```
+
+  - `bundle` is used to determine whether to bundle the page insight.
+  - `showOnLoad` is used to determine whether to show the page insight on page load.
+
+### Patch Changes
+
+- cf6acfd: [internal] refactor code
+- b8f8090: Remove `chrome-launcher` and change to use `puppeteer`.
+
+  Now it works even if chrome is not installed.
+
+- 643f042: Update the page insight options. The `experimentalCache` option is now deprecated.
+
+  ```diff
+  type PageInsightOptions = {
+      lh?: {
+          weight?: number;
+          breakPoint?: number;
+          pwa?: boolean;
+      };
+      firstFetch?: "load" | "open" | "none";
+  -   experimentalCache?: boolean;
+  +   cache?: boolean;
+      build?: {
+          bundle?: boolean;
+          showOnLoad?: boolean;
+      };
+  };
+  ```
+
 ## 0.5.4
 
 ### Patch Changes
