@@ -1,0 +1,16 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import type { MarkdownInstance } from "astro";
+
+const pages = await Astro.glob("../../../../package/README.md");
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+const readme = pages[0] as MarkdownInstance<Record<string, any>>;
+---
+
+<StarlightPage frontmatter={{ title: 'Demo' }} headings={readme.getHeadings()}>
+    <readme.Content />
+</StarlightPage>
+
+<script>
+    console.error('This is a demo page!!')
+</script>

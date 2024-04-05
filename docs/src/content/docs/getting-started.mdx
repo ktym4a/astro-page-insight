@@ -1,0 +1,66 @@
+---
+title: Getting Started
+description: Get started with Astro Page Insight.
+---
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Warning">Astro minimum Version: **Astro v4.0**</Aside>
+
+## Installation
+
+### Quick Install
+
+The `astro add` command automates the installation for you.
+
+<Tabs>
+    <TabItem label="pnpm" icon="pnpm">
+    ```bash
+    pnpm astro add astro-page-insight
+    ```
+    </TabItem>
+    <TabItem label="npm" icon="seti:npm">
+    ```bash
+    npx astro add astro-page-insight
+    ```
+    </TabItem>
+    <TabItem label="yarn" icon="seti:yarn">
+    ```bash
+    yarn astro add astro-page-insight
+    ```
+    </TabItem>
+</Tabs>
+
+### Manual Install
+
+1. Install the required dependencies.
+
+<Tabs>
+    <TabItem label="pnpm" icon="pnpm">
+    ```bash
+    pnpm add astro-page-insight
+    ```
+    </TabItem>
+    <TabItem label="npm" icon="seti:npm">
+    ```bash
+    npm install astro-page-insight
+    ```
+    </TabItem>
+    <TabItem label="yarn" icon="seti:yarn">
+    ```bash
+    yarn add astro-page-insight
+    ```
+    </TabItem>
+</Tabs>
+
+2. Add the integration to your Astro config.
+
+```diff
+// astro.config.mjs
++import pageInsight from "astro-page-insight";
+
+export default defineConfig({
+  integrations: [
++    pageInsight(),
+  ],
+});
+```

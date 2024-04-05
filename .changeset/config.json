@@ -7,5 +7,5 @@
 	"access": "public",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",
-	"ignore": ["blog", "ssr", "starlog", "site"]
+	"ignore": ["blog", "ssr", "starlog", "docs"]
 }

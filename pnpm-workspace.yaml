@@ -3,4 +3,4 @@ packages:
   - "playground/blog"
   - "playground/ssr"
   - "playground/starlog"
-  - "site"
+  - "docs"
