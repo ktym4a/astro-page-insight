@@ -2,7 +2,7 @@ import fs from "node:fs";
 import type { AstroIntegrationLogger } from "astro";
 import { type ConfigEnv, type Plugin as VitePlugin, normalizePath } from "vite";
 
-export const astroScriptsPlugin = (
+export const astroPageInsightPlugin = (
 	cacheDir: string,
 	assetsDir: string,
 	logger: AstroIntegrationLogger,

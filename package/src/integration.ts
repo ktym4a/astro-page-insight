@@ -5,7 +5,7 @@ import {
 	watchIntegration,
 } from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
-import { astroScriptsPlugin } from "./plugins/vite-plugin-page-insight.js";
+import { astroPageInsightPlugin } from "./plugins/vite-plugin-page-insight.js";
 import { integrationOptionsSchema } from "./schema/index.js";
 import { getLHReport, saveLHReport, startLH } from "./server/index.js";
 import { organizeLHResult } from "./utils/lh.js";
@@ -53,7 +53,7 @@ export default defineIntegration({
 					);
 
 					addVitePlugin(params, {
-						plugin: astroScriptsPlugin(cacheDir, assetsDir, logger),
+						plugin: astroPageInsightPlugin(cacheDir, assetsDir, logger),
 					});
 				}
 			},
