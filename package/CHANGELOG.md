@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.6.1
+
+### Patch Changes
+
+- e28ec19: Reduce cache size by skip unused `screenshot-thumbnails` and `final-screenshot` audits.
+- 31d88c6: internal: update packages
+
 ## 0.6.0
 
 ### Minor Changes
