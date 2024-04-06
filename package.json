@@ -17,7 +17,7 @@
 		"lint:fix": "biome check --apply ."
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.6.3",
+		"@biomejs/biome": "1.6.4",
 		"@changesets/cli": "^2.27.1"
 	}
 }
