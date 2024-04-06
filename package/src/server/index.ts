@@ -32,6 +32,7 @@ export const startLH = async (options: LHOptions) => {
 		{
 			output: "json",
 			formFactor,
+			skipAudits: ["screenshot-thumbnails", "final-screenshot"],
 			disableFullPageScreenshot: true,
 			onlyCategories: categories,
 			screenEmulation: {
