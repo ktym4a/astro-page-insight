@@ -1,5 +1,4 @@
 import { defineConfig } from "tsup";
-import { devDependencies, peerDependencies } from "./package.json";
 
 export default defineConfig((options) => {
 	const dev = !!options.watch;
@@ -13,10 +12,7 @@ export default defineConfig((options) => {
 		clean: true,
 		splitting: false,
 		minify: !dev,
-		external: [
-			...Object.keys(peerDependencies),
-			...Object.keys(devDependencies),
-		],
+		external: ["astro", "astro-integration-kit", "vite"],
 		tsconfig: "tsconfig.json",
 	};
 });
