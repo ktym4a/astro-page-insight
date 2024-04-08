@@ -1,5 +1,5 @@
-import type { Buttons } from "../types";
-import { showToast } from "../ui/toast";
+import type { Buttons } from "../types/index.ts";
+import { showToast } from "../ui/toast.js";
 
 export function getLHData() {
 	if (import.meta.hot) {

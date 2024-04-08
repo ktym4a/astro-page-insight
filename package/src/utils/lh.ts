@@ -3,7 +3,7 @@ import type {
 	MetricSavings,
 	Result,
 	ScoreDisplayMode,
-} from "lighthouse/types/lhr/audit-result";
+} from "lighthouse/types/lhr/audit-result.d.ts";
 import type {
 	AuditType,
 	CacheLHResultByFormFactor,

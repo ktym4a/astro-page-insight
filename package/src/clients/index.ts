@@ -1,21 +1,29 @@
-import { CATEGORIES } from "../constants";
-import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
-import { createConsoleAlertButton } from "../ui/consoleAlert";
-import { initEvent } from "../ui/event";
-import { createFilterButton } from "../ui/filter";
-import { createHideButton } from "../ui/hide";
-import { desktopIcon, mobileIcon } from "../ui/icons";
-import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
-import { createPowerButton } from "../ui/power";
-import { createScoreButton } from "../ui/score";
-import { initStyle } from "../ui/style";
-import { createToolbar } from "../ui/toolbar";
+import { CATEGORIES } from "../constants/index.ts";
+import type {
+	Buttons,
+	LoadOptionsType,
+	PageInsightData,
+} from "../types/index.ts";
+import { createConsoleAlertButton } from "../ui/consoleAlert.js";
+import { initEvent } from "../ui/event.js";
+import { createFilterButton } from "../ui/filter.js";
+import { createHideButton } from "../ui/hide.js";
+import { desktopIcon, mobileIcon } from "../ui/icons.js";
+import {
+	createIndicatorButton,
+	getFormFactor,
+	getIcon,
+} from "../ui/indicator.js";
+import { createPowerButton } from "../ui/power.js";
+import { createScoreButton } from "../ui/score.js";
+import { initStyle } from "../ui/style.js";
+import { createToolbar } from "../ui/toolbar.js";
 import {
 	generateDefaultLHData,
 	generateLHReportFileName,
 	organizeLHResult,
 	updateCanvas,
-} from "../utils/lh";
+} from "../utils/lh.js";
 
 export const initPageInsightForClient = async (
 	assetsDir: string,
