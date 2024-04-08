@@ -16,7 +16,6 @@ export default defineConfig((options) => {
 		external: [
 			...Object.keys(peerDependencies),
 			...Object.keys(devDependencies),
-			"lightningcss",
 		],
 		tsconfig: "tsconfig.json",
 	};
