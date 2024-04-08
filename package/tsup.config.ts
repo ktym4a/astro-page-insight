@@ -1,5 +1,5 @@
 import { defineConfig } from "tsup";
-import { peerDependencies } from "./package.json";
+import { devDependencies, peerDependencies } from "./package.json";
 
 export default defineConfig((options) => {
 	const dev = !!options.watch;
@@ -13,7 +13,11 @@ export default defineConfig((options) => {
 		clean: true,
 		splitting: false,
 		minify: !dev,
-		external: [...Object.keys(peerDependencies)],
+		external: [
+			...Object.keys(peerDependencies),
+			...Object.keys(devDependencies),
+			"lightningcss",
+		],
 		tsconfig: "tsconfig.json",
 	};
 });

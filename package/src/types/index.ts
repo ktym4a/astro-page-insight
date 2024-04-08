@@ -1,4 +1,4 @@
-import type { Result } from "lighthouse/types/lhr/audit-result.d.ts";
+import type { Result } from "lighthouse/types/lhr/audit-result.d.js";
 
 export type PositionType = {
 	top: number;

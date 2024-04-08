@@ -2,7 +2,6 @@ import {
 	addVitePlugin,
 	createResolver,
 	defineIntegration,
-	watchIntegration,
 } from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
 import { astroPageInsightPlugin } from "./plugins/vite-plugin-page-insight.js";
@@ -27,12 +26,11 @@ export default defineIntegration({
 				const assetsDir = config.build.assets;
 
 				if (command === "dev") {
-					watchIntegration(params, resolve());
-					addDevToolbarApp(resolve("./plugin.ts"));
+					addDevToolbarApp(resolve("./plugin.js"));
 				}
 
 				if (build.bundle && command === "build") {
-					const bundleId: string = resolve("./clients/index.ts");
+					const bundleId: string = resolve("./clients/index.js");
 					injectScript(
 						"page",
 						`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";

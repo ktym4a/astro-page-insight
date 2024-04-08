@@ -1,9 +1,9 @@
-import { CATEGORIES } from "../constants/index.ts";
+import { CATEGORIES } from "../constants/index.js";
 import type {
 	Buttons,
 	LoadOptionsType,
 	PageInsightData,
-} from "../types/index.ts";
+} from "../types/index.js";
 import { createConsoleAlertButton } from "../ui/consoleAlert.js";
 import { initEvent } from "../ui/event.js";
 import { createFilterButton } from "../ui/filter.js";

@@ -1,4 +1,4 @@
-import type { Buttons } from "../types/index.ts";
+import type { Buttons } from "../types/index.js";
 import { showToast } from "../ui/toast.js";
 
 export function getLHData() {
