@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.6.3
+
+### Patch Changes
+
+- fe636ee: fix type bug
+
 ## 0.6.2
 
 ### Patch Changes
