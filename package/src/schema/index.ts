@@ -120,4 +120,4 @@ export const integrationOptionsSchema = z
 		},
 	});
 
-export type IntegrationOptions = z.infer<typeof integrationOptionsSchema>;
+export type IntegrationOptions = z.input<typeof integrationOptionsSchema>;
