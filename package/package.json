@@ -25,11 +25,11 @@
 		"access": "public"
 	},
 	"sideEffects": false,
-	"types": "./dist/index.d.ts",
+	"types": "./dist/integration.d.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
+			"types": "./dist/integration.d.ts",
+			"import": "./dist/integration.js"
 		}
 	},
 	"files": ["dist"],

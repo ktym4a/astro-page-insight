@@ -119,5 +119,3 @@ export const integrationOptionsSchema = z
 			showOnLoad: false,
 		},
 	});
-
-export type IntegrationOptions = z.input<typeof integrationOptionsSchema>;
