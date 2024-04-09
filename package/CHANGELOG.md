@@ -1,5 +1,12 @@
 # astro-page-insight
 
+## 0.6.2
+
+### Patch Changes
+
+- 96fa081: internal: update deps
+- 3e2d0eb: internal: fix type
+
 ## 0.6.1
 
 ### Patch Changes
