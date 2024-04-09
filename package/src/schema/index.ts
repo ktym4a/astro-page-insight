@@ -23,7 +23,7 @@ export const integrationOptionsSchema = z
 				 * `weight` is the threshold value in the audit.
 				 * All audit items have weights assigned by lighthouse and can be filtered by thresholds(`weight`).
 				 */
-				weight: z.number().optional().default(0),
+				weight: z.number().default(0).optional(),
 				/**
 				 * @name breakPoint
 				 * @default `767`
@@ -32,7 +32,7 @@ export const integrationOptionsSchema = z
 				 * `breakPoint` is used to determine whether on mobile or desktop.
 				 * if the viewport width is less than the `breakPoint`, the lighthouse will run as a mobile device.
 				 */
-				breakPoint: z.number().optional().default(767),
+				breakPoint: z.number().default(767).optional(),
 				/**
 				 * @name pwa
 				 * @default `false`
@@ -41,13 +41,13 @@ export const integrationOptionsSchema = z
 				 * `pwa` is used to determine whether to include the PWA audit.
 				 * if `pwa` is `true`, will include the PWA audit.
 				 */
-				pwa: z.boolean().optional().default(false),
+				pwa: z.boolean().default(false).optional(),
 			})
-			.optional()
 			.default({
 				weight: 0,
 				breakPoint: 767,
-			}),
+				pwa: false,
+			}).optional(),
 		/**
 		 * @name firstFetch
 		 * @default `none`
@@ -58,13 +58,13 @@ export const integrationOptionsSchema = z
 		 * if `firstFetch` is `open`, will fetch on first app open.
 		 * if `firstFetch` is `none`, only fetch on user interaction.
 		 */
-		firstFetch: z.enum(["load", "open", "none"]).optional().default("none"),
+		firstFetch: z.enum(["load", "open", "none"]).default("none").optional(),
 
 		// TODO: remove experimentalCache in the next major release
 		/**
 		 * @deprecated Use `cache` instead. it will be removed in the next major release.
 		 */
-		experimentalCache: z.boolean().optional().default(false),
+		experimentalCache: z.boolean().default(false).optional(),
 
 		/**
 		 * @name cache
@@ -74,7 +74,7 @@ export const integrationOptionsSchema = z
 		 * `cache` is used to enable the cache feature.
 		 * if `cache` is `true`, will enable to cache the lighthouse report.
 		 */
-		cache: z.boolean().optional().default(false),
+		cache: z.boolean().default(false).optional(),
 
 		build: z
 			.object({
@@ -86,7 +86,7 @@ export const integrationOptionsSchema = z
 				 * `bundle` is used to determine whether to bundle the page insight.
 				 * if `bundle` is `true`, will bundle the page insight. so you can see the insight after build.
 				 */
-				bundle: z.boolean().optional().default(false),
+				bundle: z.boolean().default(false).optional(),
 
 				/**
 				 * @name showOnLoad
@@ -96,19 +96,19 @@ export const integrationOptionsSchema = z
 				 * `showOnLoad` is used to determine whether to show the page insight on page load.
 				 * if `showOnLoad` is `true`, will show the page insight on page load.
 				 */
-				showOnLoad: z.boolean().optional().default(false),
+				showOnLoad: z.boolean().default(false).optional(),
 			})
-			.optional()
 			.default({
 				bundle: false,
 				showOnLoad: false,
-			}),
+			})
+			.optional(),
 	})
-	.optional()
 	.default({
 		lh: {
 			weight: 0,
 			breakPoint: 767,
+			pwa: false,
 		},
 		firstFetch: "none",
 		// TODO: remove experimentalCache in the next major release
@@ -118,6 +118,6 @@ export const integrationOptionsSchema = z
 			bundle: false,
 			showOnLoad: false,
 		},
-	});
+	}).optional();
 
 export type IntegrationOptions = z.infer<typeof integrationOptionsSchema>;
