@@ -12,13 +12,15 @@ export default defineConfig({
 		astroPageInsight({
 			lh: {
 				// pwa: true,
+				breakPoint: 120
 			},
 			// firstFetch: "open",
 			cache: true,
-			// build: {
-			// 	bundle: false,
-			// 	showOnLoad: true
-			// },
+			build: {
+				bundle: false,
+				// showOnLoad: true
+			},
 		}),
+		// astroPageInsight()
 	],
 });
