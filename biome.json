@@ -13,6 +13,6 @@
 		}
 	},
 	"files": {
-		"ignore": ["dist", ".astro", ".pageinsight"]
+		"ignore": ["dist", ".astro", ".pageinsight", "coverage", "coverage-unit"]
 	}
 }

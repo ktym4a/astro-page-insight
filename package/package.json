@@ -32,7 +32,10 @@
 			"import": "./src/index.ts"
 		}
 	},
-	"scripts": {},
+	"scripts": {
+		"test:unit": "vitest run --coverage",
+		"test:unit:dev": "vitest --coverage.enabled=true"
+	},
 	"type": "module",
 	"peerDependencies": {
 		"astro": "^4.0.0"
@@ -43,6 +46,8 @@
 		"puppeteer": "^22.6.3"
 	},
 	"devDependencies": {
-		"vite": "^5.2.8"
+		"@vitest/coverage-v8": "^1.4.0",
+		"vite": "^5.2.8",
+		"vitest": "^1.4.0"
 	}
 }
