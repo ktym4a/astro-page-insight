@@ -7,8 +7,12 @@ import {
 import { CATEGORIES } from "./constants/index.js";
 import { astroPageInsightPlugin } from "./plugins/vite-plugin-page-insight.js";
 import { integrationOptionsSchema } from "./schema/index.js";
-import { getLHReport, saveLHReport, startLH } from "./server/index.js";
-import { organizeLHResult } from "./utils/lh.js";
+import {
+	getLHReport,
+	organizeLHResult,
+	saveLHReport,
+	startLH,
+} from "./server/index.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",

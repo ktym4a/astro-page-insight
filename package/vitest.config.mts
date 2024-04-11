@@ -5,7 +5,7 @@ export default defineConfig({
 	test: {
 		coverage: {
 			provider: "v8",
-			// include: ['src/*.mjs'],
+			include: ["src/server/*.ts", "src/utils/color.ts"],
 			exclude: ["tests/**/*", "coverage/**/*", "coverage-unit/**/*"],
 			reportsDirectory: "coverage-unit",
 		},

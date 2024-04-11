@@ -1,4 +1,9 @@
 import { CATEGORIES } from "../constants";
+import {
+	generateDefaultLHData,
+	generateLHReportFileName,
+	organizeLHResult,
+} from "../server";
 import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
 import { createConsoleAlertButton } from "../ui/consoleAlert";
 import { initEvent } from "../ui/event";
@@ -10,12 +15,7 @@ import { createPowerButton } from "../ui/power";
 import { createScoreButton } from "../ui/score";
 import { initStyle } from "../ui/style";
 import { createToolbar } from "../ui/toolbar";
-import {
-	generateDefaultLHData,
-	generateLHReportFileName,
-	organizeLHResult,
-	updateCanvas,
-} from "../utils/lh";
+import { updateCanvas } from "../utils/lh";
 
 export const initPageInsightForClient = async (
 	assetsDir: string,
