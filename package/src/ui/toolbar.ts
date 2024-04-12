@@ -154,7 +154,8 @@ export const createToolbarButton = (
 
 	const buttonWrap = document.createElement("div");
 	buttonWrap.classList.add("astro-page-insight-toolbar-button-wrap");
-	if(type) buttonWrap.classList.add(`astro-page-insight-toolbar-button-wrap-${type}`);
+	if (type)
+		buttonWrap.classList.add(`astro-page-insight-toolbar-button-wrap-${type}`);
 	buttonWrap.appendChild(button);
 
 	buttonParent.appendChild(buttonWrap);
