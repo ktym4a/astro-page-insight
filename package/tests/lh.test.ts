@@ -85,6 +85,8 @@ describe("lh", () => {
 			expect(result).not.toStrictEqual(obj);
 			expect(result.desktop).not.toHaveProperty("pwaErrors");
 			expect(result.mobile).not.toHaveProperty("pwaErrors");
+			expect(Object.keys(result.desktop.elements)).lengthOf(12);
+			expect(Object.keys(result.mobile.elements)).lengthOf(5);
 			expect(Object.keys(result.desktop.scoreList)).lengthOf(4);
 			expect(Object.keys(result.mobile.scoreList)).lengthOf(4);
 			expect(Object.keys(result.desktop.categoryCount)).lengthOf(4);
@@ -115,6 +117,18 @@ describe("lh", () => {
 			expect(result.desktop.metaErrors?.length).toBeGreaterThan(0);
 			expect(result.desktop.consoleErrors?.length).toBeGreaterThan(0);
 			expect(result.cache).toBe(true);
+		});
+
+		it("should return an LH result object filter by weight", async () => {
+			const cacheDir = "tests/fixtures/.pageinsight";
+			const url = "https://example.com/";
+			const weight = 20;
+			const pwa = false;
+
+			const result = await getLHReport(cacheDir, url, weight, pwa);
+
+			expect(Object.keys(result.desktop.elements)).lengthOf(8);
+			expect(Object.keys(result.mobile.elements)).lengthOf(1);
 		});
 
 		it("should return an LH result object with Desktop", async () => {

@@ -10,16 +10,14 @@ import {
 	createToolbarWrapper,
 	toggleToolbarWrapper,
 } from "../../src/ui/toolbar";
+import { createShadowRoot } from "../utils";
 
 describe("toolbar", () => {
 	describe("createToolbar", () => {
 		it("should create a tooltip", () => {
-			// shadow dom
-			const shadowDom = document.createElement("div");
-			shadowDom.attachShadow({ mode: "open" });
-			document.body.appendChild(shadowDom);
+			const shadowRoot = createShadowRoot();
 
-			const toolbarWrap = createToolbar(shadowDom.shadowRoot as ShadowRoot);
+			const toolbarWrap = createToolbar(shadowRoot as ShadowRoot);
 			expect(toolbarWrap).not.toBeNull();
 			expect(toolbarWrap).toBeInstanceOf(HTMLDivElement);
 			expect(
@@ -182,45 +180,39 @@ describe("toolbar", () => {
 
 	describe("toggleToolbarWrapper", () => {
 		it("should toggle toolbarWrapper", () => {
-			// shadow dom
-			const shadowDom = document.createElement("div");
-			shadowDom.attachShadow({ mode: "open" });
-			document.body.appendChild(shadowDom);
+			const shadowRoot = createShadowRoot();
 
 			const icon = "<svg></svg>";
 			const buttonParent = document.createElement("div");
-			shadowDom.shadowRoot?.appendChild(buttonParent);
+			shadowRoot.appendChild(buttonParent);
 			const type = "type";
 
 			const button = createToolbarButton(icon, buttonParent, false, type);
 
-			toggleToolbarWrapper(shadowDom.shadowRoot as ShadowRoot, type);
+			toggleToolbarWrapper(shadowRoot, type);
 
 			expect(button.classList.contains("active")).toBe(true);
 
-			toggleToolbarWrapper(shadowDom.shadowRoot as ShadowRoot, type);
+			toggleToolbarWrapper(shadowRoot, type);
 
 			expect(button.classList.contains("active")).toBe(false);
 		});
 
 		it("should not toggle toolbarWrapper", () => {
-			// shadow dom
-			const shadowDom = document.createElement("div");
-			shadowDom.attachShadow({ mode: "open" });
-			document.body.appendChild(shadowDom);
+			const shadowRoot = createShadowRoot();
 
 			const icon = "<svg></svg>";
 			const buttonParent = document.createElement("div");
-			shadowDom.shadowRoot?.appendChild(buttonParent);
+			shadowRoot.appendChild(buttonParent);
 			const type = "type";
 
 			const button = createToolbarButton(icon, buttonParent, false, type);
 
-			toggleToolbarWrapper(shadowDom.shadowRoot as ShadowRoot, "aaaa");
+			toggleToolbarWrapper(shadowRoot, "test");
 
 			expect(button.classList.contains("active")).toBe(false);
 
-			toggleToolbarWrapper(shadowDom.shadowRoot as ShadowRoot, "aaaa");
+			toggleToolbarWrapper(shadowRoot, "test");
 
 			expect(button.classList.contains("active")).toBe(false);
 		});
