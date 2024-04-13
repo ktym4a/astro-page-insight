@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
+import { CATEGORIES } from "../../src/constants";
 import type { FilterTypes, LHResultForTooltip } from "../../src/types";
 import { createFilter, createFilterButton } from "../../src/ui/filter";
 import { createToolbar } from "../../src/ui/toolbar";
 import { lhResult } from "../fixtures/lhResult";
 import { createShadowRoot } from "../utils";
-import { CATEGORIES } from '../../src/constants';
 
 describe("filter", () => {
 	describe("createFilterButton", () => {
@@ -83,29 +83,26 @@ describe("filter", () => {
 			const modal = shadowRoot.querySelector(
 				".astro-page-insight-modal-filter",
 			);
-			// show modal to string
-			// console.log(shadowRoot.host.outerHTML);
 
 			const details = modal?.children[2]?.children;
 
 			expect(modal).not.toBeNull();
 			expect(modal).toBeInstanceOf(HTMLDivElement);
 			expect(modal?.childNodes[2]?.textContent).toBe(
-				`Filter - (${formFactor
-					.charAt(0)
-					.toUpperCase()}${formFactor.slice(1)})`,
+				`Filter - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(
+					1,
+				)})`,
 			);
 
 			expect(details).lengthOf(4);
 
-
-			if(details) {
+			if (details) {
 				for (const detail of details) {
 					expect(detail).toBeInstanceOf(HTMLDivElement);
 					const child = detail.children[0] as HTMLDivElement;
 					expect(child).toBeInstanceOf(HTMLDivElement);
 					expect(child.style.background).toBe("");
-				};
+				}
 			}
 		});
 
@@ -147,29 +144,26 @@ describe("filter", () => {
 			const modal = shadowRoot.querySelector(
 				".astro-page-insight-modal-filter",
 			);
-			// show modal to string
-			// console.log(shadowRoot.host.outerHTML);
 
 			const details = modal?.children[2]?.children;
 
 			expect(modal).not.toBeNull();
 			expect(modal).toBeInstanceOf(HTMLDivElement);
 			expect(modal?.childNodes[2]?.textContent).toBe(
-				`Filter - (${formFactor
-					.charAt(0)
-					.toUpperCase()}${formFactor.slice(1)})`,
+				`Filter - (${formFactor.charAt(0).toUpperCase()}${formFactor.slice(
+					1,
+				)})`,
 			);
 
 			expect(details).lengthOf(4);
 
-
-			if(details) {
+			if (details) {
 				for (const detail of details) {
 					expect(detail).toBeInstanceOf(HTMLDivElement);
 					const child = detail.children[0] as HTMLDivElement;
 					expect(child).toBeInstanceOf(HTMLDivElement);
 					expect(child.style.background).not.toBe("");
-				};
+				}
 			}
 		});
 	});

@@ -89,13 +89,7 @@ const createHighlightElement = (
 			detailSelector: hideArguments.detailSelector || "",
 		});
 		mappingData(formFactor, render.canvas, render.lhResult, filter);
-		createHideList(
-			render.canvas,
-			formFactor,
-			hideArguments.hideHighlights,
-			render.lhResult,
-			filter,
-		);
+		createHideList(render.canvas, formFactor, render.lhResult, filter);
 	};
 
 	return highlight;

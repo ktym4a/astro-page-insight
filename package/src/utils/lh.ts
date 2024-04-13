@@ -27,7 +27,7 @@ export const updateCanvas = ({
 	categoryCount,
 }: UpdateMappingType) => {
 	mappingData(formFactor, canvas, result, filter);
-	createHideList(canvas, formFactor, filter.hideList, result, filter);
+	createHideList(canvas, formFactor, result, filter);
 	createScore(canvas, formFactor, scoreList);
 	createFilter(canvas, formFactor, categoryCount, result, filter);
 	createConsoleErrorList(

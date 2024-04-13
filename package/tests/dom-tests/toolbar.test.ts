@@ -10,7 +10,7 @@ import {
 	createToolbarWrapper,
 	toggleToolbarWrapper,
 } from "../../src/ui/toolbar";
-import { createShadowRoot } from "../utils";
+import { createShadowRoot } from "../utils.js";
 
 describe("toolbar", () => {
 	describe("createToolbar", () => {

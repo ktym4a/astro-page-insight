@@ -4,13 +4,21 @@ import {
 	generateLHReportFileName,
 	organizeLHResult,
 } from "../server/index.js";
-import type { Buttons, LoadOptionsType, PageInsightData } from "../types/index.js";
+import type {
+	Buttons,
+	LoadOptionsType,
+	PageInsightData,
+} from "../types/index.js";
 import { createConsoleAlertButton } from "../ui/consoleAlert.js";
 import { initEvent } from "../ui/event.js";
 import { createFilterButton } from "../ui/filter.js";
 import { createHideButton } from "../ui/hide.js";
 import { desktopIcon, mobileIcon } from "../ui/icons.js";
-import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator.js";
+import {
+	createIndicatorButton,
+	getFormFactor,
+	getIcon,
+} from "../ui/indicator.js";
 import { createPowerButton } from "../ui/power.js";
 import { createScoreButton } from "../ui/score.js";
 import { initStyle } from "../ui/style.js";
