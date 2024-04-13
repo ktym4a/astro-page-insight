@@ -81,7 +81,6 @@ export const initPageInsightForClient = async (
 		pageInsightRoot.shadowRoot,
 		showOnLoad,
 		initObj.toolbarWrap,
-		false,
 		initObj.buttons,
 	);
 
