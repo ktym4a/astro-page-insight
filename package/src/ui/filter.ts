@@ -25,7 +25,7 @@ export const createFilterButton = (
 		filterIcon,
 		toolbarWrap,
 		isFetching,
-		"filter",
+		"filtaaaer",
 		() => {
 			toggleToolbarWrapper(canvas, "filter");
 		},
