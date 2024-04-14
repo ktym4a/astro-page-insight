@@ -5,7 +5,7 @@ import {
 	createConsoleErrorList,
 } from "../../src/ui/consoleAlert";
 import { createToolbar } from "../../src/ui/toolbar";
-import { lhResult } from "../fixtures/lhResult";
+import { lhResult } from "../fixtures/dummy";
 import { createShadowRoot } from "../utils";
 
 describe("consoleAlert", () => {

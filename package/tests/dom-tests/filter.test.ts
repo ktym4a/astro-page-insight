@@ -4,7 +4,7 @@ import { CATEGORIES } from "../../src/constants";
 import type { FilterTypes, LHResultForTooltip } from "../../src/types";
 import { createFilter, createFilterButton } from "../../src/ui/filter";
 import { createToolbar } from "../../src/ui/toolbar";
-import { lhResult } from "../fixtures/lhResult";
+import { lhResult } from "../fixtures/dummy";
 import { createShadowRoot } from "../utils";
 
 describe("filter", () => {

@@ -28,6 +28,7 @@ export const createHighlight = (
 		filter,
 		render,
 	);
+
 	updateHHighlightPosition(highlight, hideArguments.selector, rect);
 
 	if (categories) {
@@ -84,7 +85,7 @@ const createHighlightElement = (
 
 	const button = createToolbarButton(eyeXIcon, highlight);
 	button.onclick = () => {
-		hideArguments.hideHighlights.push({
+		filter.hideList.push({
 			selector: hideArguments.selector,
 			detailSelector: hideArguments.detailSelector || "",
 		});

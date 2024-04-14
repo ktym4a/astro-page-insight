@@ -12,7 +12,7 @@ export default defineConfig({
 		astroPageInsight({
 			lh: {
 				// pwa: true,
-				breakPoint: 120,
+				// breakPoint: 7,
 			},
 			// firstFetch: "open",
 			cache: true,

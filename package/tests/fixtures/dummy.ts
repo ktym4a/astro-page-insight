@@ -1015,3 +1015,76 @@ export const lhResultWithPWA: CacheLHResultByFormFactor = {
 	},
 	cache: true,
 };
+
+export const highlightObj = {
+	hideArguments: {
+		selector: "html > body > *:nth-child(2) > *:nth-child(1)",
+		detailSelector: "body > main > h1",
+	},
+	rect: {
+		top: 138,
+		bottom: 211,
+		left: 353,
+		right: 1073,
+		width: 720,
+		height: 73,
+	},
+	filter: {
+		categories: {
+			Accessibility: false,
+			"Best Practices": false,
+			Performance: false,
+			SEO: false,
+		},
+		hideList: [],
+	},
+	render: {
+		canvas: {},
+		lhResult: {
+			elements: {
+				"html > body > *:nth-child(2) > *:nth-child(1)": [
+					{
+						score: 0,
+						scoreDisplayMode: "numeric",
+						title:
+							"Background and foreground colors have a sufficient contrast ratio",
+						description:
+							"Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.8/color-contrast).",
+						categories: ["Accessibility"],
+						rect: {
+							top: 138,
+							bottom: 211,
+							left: 353,
+							right: 1073,
+							width: 720,
+							height: 73,
+						},
+						detailSelector: "body > main > h1",
+					},
+				],
+				"html > body > *:nth-child(2) > *:nth-child(3)": [
+					{
+						score: null,
+						scoreDisplayMode: "informative",
+						title: "Largest Contentful Paint element",
+						description:
+							"This is the largest contentful element painted within the viewport. [Learn more about the Largest Contentful Paint element](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+						categories: ["LCP", "Performance"],
+						rect: {
+							top: 353,
+							bottom: 457,
+							left: 353,
+							right: 1073,
+							width: 720,
+							height: 104,
+						},
+						detailSelector: "body > main > p",
+					},
+				],
+			},
+			metaErrors: [],
+			consoleErrors: [],
+		},
+	},
+	categories: ["Accessibility"],
+};

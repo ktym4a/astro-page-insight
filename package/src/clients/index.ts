@@ -303,7 +303,6 @@ export const mappingData = (
 
 		const hideArguments = {
 			selector,
-			hideHighlights: filter.hideList,
 			detailSelector: detailSelector ?? "",
 		};
 
