@@ -4,7 +4,7 @@ export const createToolbar = (canvas: ShadowRoot) => {
 	const toolbar = document.createElement("div");
 	toolbar.classList.add("astro-page-insight-toolbar");
 	toolbar.style.position = "fixed";
-	toolbar.style.bottom = "50px";
+	toolbar.style.bottom = "70px";
 	toolbar.style.right = "20px";
 	toolbar.style.zIndex = "1000001";
 
