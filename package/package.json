@@ -41,14 +41,14 @@
 		"astro": "^4.0.0"
 	},
 	"dependencies": {
-		"astro-integration-kit": "^0.9.0",
-		"lighthouse": "^11.7.0",
-		"puppeteer": "^22.6.3"
+		"astro-integration-kit": "^0.11.0",
+		"lighthouse": "^11.7.1",
+		"puppeteer": "^22.6.4"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "^1.4.0",
+		"@vitest/coverage-v8": "^1.5.0",
 		"happy-dom": "^14.7.1",
 		"vite": "^5.2.8",
-		"vitest": "^1.4.0"
+		"vitest": "^1.5.0"
 	}
 }

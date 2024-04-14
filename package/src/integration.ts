@@ -2,7 +2,6 @@ import {
 	addVitePlugin,
 	createResolver,
 	defineIntegration,
-	watchIntegration,
 } from "astro-integration-kit";
 import { CATEGORIES } from "./constants/index.js";
 import { astroPageInsightPlugin } from "./plugins/vite-plugin-page-insight.js";
@@ -20,110 +19,111 @@ export default defineIntegration({
 		const cacheDir = ".pageinsight";
 
 		return {
-			"astro:config:setup": (params) => {
-				const { addDevToolbarApp, command, injectScript, config, logger } =
-					params;
+			hooks: {
+				"astro:config:setup": (params) => {
+					const { addDevToolbarApp, command, injectScript, config, logger } =
+						params;
 
-				const assetsDir = config.build.assets;
+					const assetsDir = config.build.assets;
 
-				if (command === "dev") {
-					watchIntegration(params, resolve());
-					addDevToolbarApp(resolve("./plugin.ts"));
-				}
+					if (command === "dev") {
+						addDevToolbarApp(resolve("./plugin.ts"));
+					}
 
-				if (build.bundle && command === "build") {
-					const bundleId: string = resolve("./clients/index.ts");
-					injectScript(
-						"page",
-						`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";
-						class PageInsightRoot extends HTMLElement {
-							constructor() {
-								super();
-								this.attachShadow({ mode: "open" });
+					if (build.bundle && command === "build") {
+						const bundleId: string = resolve("./clients/index.ts");
+						injectScript(
+							"page",
+							`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";
+							class PageInsightRoot extends HTMLElement {
+								constructor() {
+									super();
+									this.attachShadow({ mode: "open" });
+								}
 							}
-						}
-						customElements.define("page-insight-root", PageInsightRoot);
-						initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
-						document.addEventListener("astro:after-swap", () => {
+							customElements.define("page-insight-root", PageInsightRoot);
 							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
-						});
-						document.addEventListener("astro:before-preparation", () => {
-							removePageInsightRoot();
-						});`,
-					);
-
-					addVitePlugin(params, {
-						plugin: astroPageInsightPlugin(cacheDir, assetsDir, logger),
-					});
-				}
-			},
-			"astro:server:setup": async ({ server, logger }) => {
-				server.hot.on(
-					"astro-dev-toolbar:astro-page-insight-app:init",
-					async ({ url }, client) => {
-						const lhReports = await getLHReport(
-							cacheDir,
-							url,
-							lh.weight,
-							lh.pwa,
+							document.addEventListener("astro:after-swap", () => {
+								initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+							});
+							document.addEventListener("astro:before-preparation", () => {
+								removePageInsightRoot();
+							});`,
 						);
 
-						client.send("astro-dev-toolbar:astro-page-insight-app:options", {
-							breakPoint: lh.breakPoint,
-							categories: CATEGORIES,
-							firstFetch,
-							lhReports,
+						addVitePlugin(params, {
+							plugin: astroPageInsightPlugin(cacheDir, assetsDir, logger),
 						});
-					},
-				);
-
-				server.hot.on(
-					"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-					async ({ width, height, url }, client) => {
-						try {
-							const lhData = await startLH({
+					}
+				},
+				"astro:server:setup": async ({ server, logger }) => {
+					server.hot.on(
+						"astro-dev-toolbar:astro-page-insight-app:init",
+						async ({ url }, client) => {
+							const lhReports = await getLHReport(
+								cacheDir,
 								url,
-								width,
-								height,
+								lh.weight,
+								lh.pwa,
+							);
+
+							client.send("astro-dev-toolbar:astro-page-insight-app:options", {
 								breakPoint: lh.breakPoint,
-								weight: lh.weight,
-								pwa: lh.pwa,
+								categories: CATEGORIES,
+								firstFetch,
+								lhReports,
 							});
-							if (lhData.result) {
-								// TODO: remove experimentalCache in the next major release
-								if (experimentalCache || cache) {
-									await saveLHReport(
-										`${cacheDir}/${lhData.formFactor}`,
-										url,
+						},
+					);
+
+					server.hot.on(
+						"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
+						async ({ width, height, url }, client) => {
+							try {
+								const lhData = await startLH({
+									url,
+									width,
+									height,
+									breakPoint: lh.breakPoint,
+									weight: lh.weight,
+									pwa: lh.pwa,
+								});
+								if (lhData.result) {
+									// TODO: remove experimentalCache in the next major release
+									if (experimentalCache || cache) {
+										await saveLHReport(
+											`${cacheDir}/${lhData.formFactor}`,
+											url,
+											lhData.result,
+										);
+									}
+
+									const result = organizeLHResult(
 										lhData.result,
+										lh.weight,
+										lh.pwa,
+									);
+
+									client.send(
+										"astro-dev-toolbar:astro-page-insight-app:on-success",
+										{
+											...result,
+											url,
+											formFactor: lhData.formFactor,
+										},
 									);
 								}
-
-								const result = organizeLHResult(
-									lhData.result,
-									lh.weight,
-									lh.pwa,
-								);
-
+							} catch (error) {
+								logger.error("Something went wrong.");
+								console.error(error);
 								client.send(
-									"astro-dev-toolbar:astro-page-insight-app:on-success",
-									{
-										...result,
-										url,
-										formFactor: lhData.formFactor,
-									},
+									"astro-dev-toolbar:astro-page-insight-app:on-error",
+									"Something went wrong.\nPlease try again.",
 								);
 							}
-						} catch (error) {
-							logger.error("Something went wrong.");
-							console.error(error);
-							client.send(
-								"astro-dev-toolbar:astro-page-insight-app:on-error",
-								"Something went wrong.\nPlease try again.",
-							);
-						}
-					},
-				);
+						},
+					);
+				},
 			},
 		};
 	},
