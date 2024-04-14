@@ -1,10 +1,10 @@
+import { mappingData } from "../clients/index.js";
 import type {
 	FilterTypes,
 	HideElement,
 	LHResult,
 	LHResultForTooltip,
 } from "../types/index.js";
-import { mappingData } from "../utils/lh.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
 	createToolbarButton,

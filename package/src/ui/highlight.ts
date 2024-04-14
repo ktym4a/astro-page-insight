@@ -1,3 +1,4 @@
+import { mappingData } from "../clients/index.js";
 import { COLORS } from "../constants/index.js";
 import type {
 	FilterTypes,
@@ -6,7 +7,6 @@ import type {
 	LHResultForTooltip,
 	PositionType,
 } from "../types/index.js";
-import { mappingData } from "../utils/lh.js";
 import { createHideList } from "./hide.js";
 import { eyeXIcon } from "./icons.js";
 import { createToolbarButton } from "./toolbar.js";

@@ -6,7 +6,12 @@ import {
 	showInitialIcon,
 	showSuccess,
 } from "./clients/devTool.js";
-import { initPageInsight, initToolbar } from "./clients/index.js";
+import {
+	createFetchButton,
+	initPageInsight,
+	initToolbar,
+	updateCanvas,
+} from "./clients/index.js";
 import type {
 	Buttons,
 	LHResult,
@@ -16,7 +21,6 @@ import type {
 } from "./types/index.js";
 import { getFormFactor } from "./ui/indicator.js";
 import { createToastArea } from "./ui/toast.js";
-import { createFetchButton, updateCanvas } from "./utils/lh.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
