@@ -265,23 +265,6 @@ export const updateCanvas = ({
 	);
 };
 
-export const createFetchButton = (
-	toolbarWrap: HTMLDivElement,
-	fetchStart: () => void,
-	isFetching: boolean,
-) => {
-	const fetchButton = createToolbarButton(
-		reloadCircleIcon,
-		toolbarWrap,
-		isFetching,
-		"fetch",
-		fetchStart,
-		"Fetch Lighthouse report.",
-	);
-
-	return fetchButton;
-};
-
 export const mappingData = (
 	formFactor: LHResult["formFactor"],
 	canvas: ShadowRoot,

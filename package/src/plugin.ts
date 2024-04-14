@@ -6,12 +6,7 @@ import {
 	showInitialIcon,
 	showSuccess,
 } from "./clients/devTool.js";
-import {
-	createFetchButton,
-	initPageInsight,
-	initToolbar,
-	updateCanvas,
-} from "./clients/index.js";
+import { initPageInsight, initToolbar, updateCanvas } from "./clients/index.js";
 import type {
 	Buttons,
 	LHResult,
@@ -19,8 +14,10 @@ import type {
 	PageInsightData,
 	PageInsightStatus,
 } from "./types/index.js";
+import { reloadCircleIcon } from "./ui/icons.js";
 import { getFormFactor } from "./ui/indicator.js";
 import { createToastArea } from "./ui/toast.js";
+import { createToolbarButton } from "./ui/toolbar.js";
 
 const astroPageInsightToolbar: DevToolbarApp = {
 	id: "astro-page-insight-app",
@@ -90,10 +87,13 @@ const astroPageInsightToolbar: DevToolbarApp = {
 
 					buttons = {
 						...initObj.buttons,
-						fetchButton: createFetchButton(
+						fetchButton: createToolbarButton(
+							reloadCircleIcon,
 							initObj.toolbarWrap,
-							fetchStart,
 							fetchStatus.isFetching,
+							"fetch",
+							fetchStart,
+							"Fetch Lighthouse report.",
 						),
 					};
 					if (fetchStatus.isFetching && buttons.fetchButton)
