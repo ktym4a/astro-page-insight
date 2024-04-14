@@ -6,13 +6,12 @@ export const createPowerButton = (
 	canvas: ShadowRoot,
 	showOnLoad: boolean,
 	toolbarWrap: HTMLDivElement,
-	isFetching: boolean,
 	buttons: Omit<Buttons, "fetchButton">,
 ) => {
 	const powerButton = createToolbarButton(
 		powerIcon,
 		toolbarWrap,
-		isFetching,
+		false,
 		"power",
 		() => {
 			const buttonList = Object.values(buttons);

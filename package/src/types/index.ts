@@ -102,7 +102,7 @@ export type LHResultForTooltip = {
 	elements: LHResult["elements"];
 	metaErrors: LHResult["metaErrors"];
 	consoleErrors: LHResult["consoleErrors"];
-	pwaErrors: LHResult["pwaErrors"];
+	pwaErrors?: LHResult["pwaErrors"];
 };
 
 export type HideElement = {
@@ -133,7 +133,6 @@ export type FilterTypes = {
 
 export type HideArguments = {
 	selector: string;
-	hideHighlights: HideElement[];
 	detailSelector?: string;
 };
 

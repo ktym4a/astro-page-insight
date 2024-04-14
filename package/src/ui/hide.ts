@@ -1,10 +1,10 @@
+import { mappingData } from "../clients/index.js";
 import type {
 	FilterTypes,
 	HideElement,
 	LHResult,
 	LHResultForTooltip,
 } from "../types/index.js";
-import { mappingData } from "../utils/lh.js";
 import { eyeIcon, eyeXIcon, filterIcon } from "./icons.js";
 import {
 	createToolbarButton,
@@ -38,7 +38,6 @@ export const createHideButton = (
 export const createHideList = (
 	canvas: ShadowRoot,
 	formFactor: LHResult["formFactor"],
-	hideHighlights: HideElement[],
 	lhResult: LHResultForTooltip,
 	filter: FilterTypes,
 ) => {
@@ -68,7 +67,7 @@ export const createHideList = (
 	contentWrapper.style.marginTop = "10px";
 
 	const button = canvas.querySelector("[data-button-type='hide']");
-	if (hideHighlights.length === 0) {
+	if (filter.hideList.length === 0) {
 		const textElement = createToolbarSubTitle("No hidden highlights found.");
 		contentWrapper.appendChild(textElement);
 		if (button)
@@ -77,13 +76,12 @@ export const createHideList = (
 		if (button) button.classList.add("astro-page-insight-toolbar-button-alert");
 	}
 
-	for (const [index, element] of hideHighlights.entries()) {
+	for (const [index, element] of filter.hideList.entries()) {
 		const content = createContent(
 			canvas,
 			formFactor,
 			element,
-			index === hideHighlights.length - 1,
-			hideHighlights,
+			index === filter.hideList.length - 1,
 			lhResult,
 			filter,
 		);
@@ -103,7 +101,6 @@ const createContent = (
 	formFactor: LHResult["formFactor"],
 	element: HideElement,
 	isLast: boolean,
-	hideHighlights: HideElement[],
 	lhResult: LHResultForTooltip,
 	filter: FilterTypes,
 ) => {
@@ -117,8 +114,8 @@ const createContent = (
 	contentWrapper.appendChild(textElement);
 
 	const clickHandler = () => {
-		hideHighlights.splice(hideHighlights.indexOf(element), 1);
-		createHideList(canvas, formFactor, hideHighlights, lhResult, filter);
+		filter.hideList.splice(filter.hideList.indexOf(element), 1);
+		createHideList(canvas, formFactor, lhResult, filter);
 		mappingData(formFactor, canvas, lhResult, filter);
 	};
 

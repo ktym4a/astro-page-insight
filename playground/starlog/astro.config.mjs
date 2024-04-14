@@ -7,7 +7,7 @@ export default defineConfig({
 	integrations: [
 		astroPageInsight({
 			lh: {
-				// pwa: true,
+				pwa: true,
 			},
 			// firstFetch: "open",
 			cache: true,

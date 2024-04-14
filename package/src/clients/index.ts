@@ -1,21 +1,43 @@
-import { CATEGORIES } from "../constants";
-import type { Buttons, LoadOptionsType, PageInsightData } from "../types";
-import { createConsoleAlertButton } from "../ui/consoleAlert";
-import { initEvent } from "../ui/event";
-import { createFilterButton } from "../ui/filter";
-import { createHideButton } from "../ui/hide";
-import { desktopIcon, mobileIcon } from "../ui/icons";
-import { createIndicatorButton, getFormFactor, getIcon } from "../ui/indicator";
-import { createPowerButton } from "../ui/power";
-import { createScoreButton } from "../ui/score";
-import { initStyle } from "../ui/style";
-import { createToolbar } from "../ui/toolbar";
+import { CATEGORIES } from "../constants/index.js";
+
+import type {
+	AuditType,
+	Buttons,
+	FilterCategoryType,
+	FilterTypes,
+	HideArguments,
+	LHResult,
+	LHResultForTooltip,
+	LoadOptionsType,
+	PageInsightData,
+	PositionType,
+	Tooltips,
+	UpdateMappingType,
+} from "../types/index.js";
+import {
+	createConsoleAlertButton,
+	createConsoleErrorList,
+} from "../ui/consoleAlert.js";
+import { initEvent } from "../ui/event.js";
+import { createFilter, createFilterButton } from "../ui/filter.js";
+import { createHideButton, createHideList } from "../ui/hide.js";
+import { createHighlight } from "../ui/highlight.js";
+import { desktopIcon, mobileIcon, reloadCircleIcon } from "../ui/icons.js";
+import {
+	createIndicatorButton,
+	getFormFactor,
+	getIcon,
+} from "../ui/indicator.js";
+import { createPowerButton } from "../ui/power.js";
+import { createScore, createScoreButton } from "../ui/score.js";
+import { initStyle } from "../ui/style.js";
+import { createToolbar, createToolbarButton } from "../ui/toolbar.js";
+import { createTooltip } from "../ui/tooltip.js";
 import {
 	generateDefaultLHData,
 	generateLHReportFileName,
 	organizeLHResult,
-	updateCanvas,
-} from "../utils/lh";
+} from "../utils/lh.js";
 
 export const initPageInsightForClient = async (
 	assetsDir: string,
@@ -73,7 +95,6 @@ export const initPageInsightForClient = async (
 		pageInsightRoot.shadowRoot,
 		showOnLoad,
 		initObj.toolbarWrap,
-		false,
 		initObj.buttons,
 	);
 
@@ -221,4 +242,195 @@ export const initToolbar = (
 			filterCategories,
 		},
 	};
+};
+
+export const updateCanvas = ({
+	canvas,
+	result,
+	filter,
+	formFactor,
+	scoreList,
+	categoryCount,
+}: UpdateMappingType) => {
+	mappingData(formFactor, canvas, result, filter);
+	createHideList(canvas, formFactor, result, filter);
+	createScore(canvas, formFactor, scoreList);
+	createFilter(canvas, formFactor, categoryCount, result, filter);
+	createConsoleErrorList(
+		canvas,
+		formFactor,
+		result.consoleErrors,
+		result.metaErrors,
+		result.pwaErrors,
+	);
+};
+
+export const mappingData = (
+	formFactor: LHResult["formFactor"],
+	canvas: ShadowRoot,
+	result: LHResultForTooltip,
+	filter: FilterTypes,
+) => {
+	for (const highlight of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-highlight",
+	)) {
+		highlight.remove();
+	}
+	for (const tooltip of canvas.querySelectorAll<HTMLDivElement>(
+		".astro-page-insight-tooltip",
+	)) {
+		tooltip.remove();
+	}
+
+	for (const [selector, value] of Object.entries(result.elements)) {
+		if (!value[0]) continue;
+		if (
+			filter.hideList.some((hideElement) => hideElement.selector === selector)
+		)
+			continue;
+
+		const position = value[0].rect;
+		const detailSelector = value[0].detailSelector;
+		if (!checkAudit(selector, position)) continue;
+
+		const { tooltips, selectorCategory } = createAuditData(
+			value,
+			selector,
+			filter.categories,
+		);
+
+		if (Object.keys(tooltips).length === 0) continue;
+
+		const hideArguments = {
+			selector,
+			detailSelector: detailSelector ?? "",
+		};
+
+		const render = {
+			canvas,
+			lhResult: result,
+		};
+
+		const mapElem = createMapElement(
+			formFactor,
+			hideArguments,
+			position,
+			tooltips,
+			selectorCategory,
+			filter,
+			render,
+		);
+
+		if (mapElem) canvas.appendChild(mapElem);
+	}
+};
+
+const checkAudit = (selector: string, position: PositionType) => {
+	if (selector === "") return false;
+	if (
+		position.width === 0 &&
+		position.height === 0 &&
+		position.top === 0 &&
+		position.left === 0
+	)
+		return false;
+
+	return true;
+};
+
+const createAuditData = (
+	value: AuditType[],
+	selector: string,
+	filterCategory: FilterCategoryType,
+) => {
+	let score: number | null = 1;
+	let selectorCategory = [] as string[];
+	const tooltips: Tooltips = {};
+
+	for (const audit of value) {
+		if (selector === "") {
+			continue;
+		}
+		if (
+			!audit.categories.some((category) => filterCategory[category] === false)
+		)
+			continue;
+
+		score =
+			audit.score === null || score === null
+				? null
+				: Math.min(score ?? 1, audit.score);
+		selectorCategory = [
+			...Array.from(new Set([...selectorCategory, ...audit.categories])),
+		];
+		for (const category of audit.categories) {
+			if (
+				filterCategory[category] === true ||
+				filterCategory[category] === undefined
+			)
+				continue;
+
+			tooltips[category] = [
+				...(tooltips[category] ?? []),
+				{
+					title: audit.title,
+					content: audit.description,
+					score: audit.score,
+					subTitle: audit.categories,
+					scoreDisplayMode: audit.scoreDisplayMode,
+					id: selector,
+				},
+			];
+		}
+	}
+
+	return {
+		tooltips,
+		selectorCategory,
+	};
+};
+
+const createMapElement = (
+	formFactor: LHResult["formFactor"],
+	hideArguments: HideArguments,
+	position: PositionType,
+	tooltips: Tooltips,
+	selectorCategory: string[],
+	filter: FilterTypes,
+	render: {
+		canvas: ShadowRoot;
+		lhResult: LHResultForTooltip;
+	},
+) => {
+	try {
+		const highlight = createHighlight(
+			formFactor,
+			hideArguments,
+			position,
+			filter,
+			render,
+			selectorCategory,
+		);
+
+		let title: string | undefined;
+		if (highlight.dataset.target === "rect") {
+			title =
+				"No element found or Find multiple elements, so the position is maybe not correct.";
+		}
+
+		const toolTip = createTooltip(
+			tooltips,
+			{
+				text: title,
+				icon: true,
+			},
+			position,
+		);
+		highlight.appendChild(toolTip);
+
+		return highlight;
+	} catch (e) {
+		console.error(e);
+		return undefined;
+	}
 };
