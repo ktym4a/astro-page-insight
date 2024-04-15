@@ -34,7 +34,8 @@
 	},
 	"scripts": {
 		"test:unit": "vitest run --coverage",
-		"test:unit:dev": "vitest --coverage.enabled=true"
+		"test:unit:dev": "vitest --coverage.enabled=true",
+		"test:e2e": "playwright test"
 	},
 	"type": "module",
 	"peerDependencies": {
@@ -46,6 +47,8 @@
 		"puppeteer": "^22.6.4"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.43.1",
+		"@types/node": "^20.12.7",
 		"@vitest/coverage-v8": "^1.5.0",
 		"happy-dom": "^14.7.1",
 		"vite": "^5.2.8",

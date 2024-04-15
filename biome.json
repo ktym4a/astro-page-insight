@@ -13,6 +13,13 @@
 		}
 	},
 	"files": {
-		"ignore": ["dist", ".astro", ".pageinsight", "coverage", "coverage-unit"]
+		"ignore": [
+			"dist",
+			".astro",
+			".pageinsight",
+			"coverage",
+			"coverage-unit",
+			"playwright-report"
+		]
 	}
 }
