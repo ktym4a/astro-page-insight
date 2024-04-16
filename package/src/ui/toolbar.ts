@@ -179,7 +179,7 @@ export const createToolbarWrapper = (type: string) => {
 	toolbarWrapper.style.width = "50vw";
 	toolbarWrapper.style.overflowY = "auto";
 	toolbarWrapper.style.right = "65px";
-	toolbarWrapper.style.bottom = "50px";
+	toolbarWrapper.style.bottom = "70px";
 	toolbarWrapper.style.display = "none";
 	toolbarWrapper.style.zIndex = "200010";
 	toolbarWrapper.style.maxHeight = "40vh";

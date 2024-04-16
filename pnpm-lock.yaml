@@ -73,6 +73,15 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(@types/node@20.12.7)(happy-dom@14.7.1)
 
+  package/e2e/fixtures/blog:
+    dependencies:
+      astro:
+        specifier: ^4.6.1
+        version: 4.6.1(sass@1.75.0)(typescript@5.4.5)
+      astro-page-insight:
+        specifier: workspace:*
+        version: link:../../..
+
   playground/blog:
     dependencies:
       '@astrojs/check':
@@ -7968,7 +7977,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 5.2.8(@types/node@20.12.7)
+      vite: 5.2.8(sass@1.75.0)
     dev: false
 
   /vitest@1.5.0(@types/node@20.12.7)(happy-dom@14.7.1):

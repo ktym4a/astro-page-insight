@@ -35,7 +35,8 @@
 	"scripts": {
 		"test:unit": "vitest run --coverage",
 		"test:unit:dev": "vitest --coverage.enabled=true",
-		"test:e2e": "playwright test"
+		"test:e2e": "playwright test",
+		"test:e2e:install": "playwright install --with-deps"
 	},
 	"type": "module",
 	"peerDependencies": {

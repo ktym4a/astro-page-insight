@@ -4,3 +4,4 @@ packages:
   - "playground/ssr"
   - "playground/starlog"
   - "docs"
+  - "package/e2e/fixtures/*"

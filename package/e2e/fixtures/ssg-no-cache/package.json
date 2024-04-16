@@ -1,0 +1,9 @@
+{
+	"name": "@e2e/ssg-no-cache",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"astro": "^4.6.1",
+		"astro-page-insight": "workspace:*"
+	}
+}
