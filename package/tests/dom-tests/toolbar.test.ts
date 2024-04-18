@@ -220,9 +220,10 @@ describe("toolbar", () => {
 
 	describe("createToolbarElement", () => {
 		it("should create a toolbarElement by not last", () => {
-			const toolbarElement = createToolbarElement(false);
+			const toolbarElement = createToolbarElement(false, "Test");
 
 			expect(toolbarElement).not.toBeNull();
+			expect(toolbarElement.dataset.type).toBe("test");
 			expect(toolbarElement).toBeInstanceOf(HTMLDivElement);
 			expect(toolbarElement.style.marginBottom).toBe("7px");
 			expect(toolbarElement.style.borderBottom).toBe("1px solid #cdd6f4");
@@ -230,9 +231,10 @@ describe("toolbar", () => {
 		});
 
 		it("should create a toolbarElement by last", () => {
-			const toolbarElement = createToolbarElement(true);
+			const toolbarElement = createToolbarElement(true, "test 1");
 
 			expect(toolbarElement).not.toBeNull();
+			expect(toolbarElement.dataset.type).toBe("test 1");
 			expect(toolbarElement).toBeInstanceOf(HTMLDivElement);
 			expect(toolbarElement.style.marginBottom).toBe("");
 			expect(toolbarElement.style.borderBottom).toBe("");

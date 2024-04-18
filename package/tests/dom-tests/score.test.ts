@@ -64,7 +64,7 @@ describe("score", () => {
 			expect(modal?.childNodes[1]?.textContent).toContain("No data.");
 		});
 
-		it("should create a createHideList with data", () => {
+		it("should create a createScore with data", () => {
 			const shadowRoot = createShadowRoot();
 			const formFactor = "desktop";
 			const testObj = lhResult[formFactor];
@@ -79,6 +79,11 @@ describe("score", () => {
 			expect(modal?.children[1]?.children).lengthOf(
 				Object.keys(testObj.scoreList).length,
 			);
+			for (const detail of modal?.children[1]
+				?.children as HTMLCollectionOf<HTMLDivElement>) {
+				expect(detail).toBeInstanceOf(HTMLDivElement);
+				expect(detail.dataset.type).toBeTruthy();
+			}
 		});
 	});
 });

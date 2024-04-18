@@ -248,8 +248,9 @@ export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 	}
 };
 
-export const createToolbarElement = (isLast: boolean) => {
+export const createToolbarElement = (isLast: boolean, type: string) => {
 	const contentElement = document.createElement("div");
+	contentElement.dataset.type = type.toLowerCase();
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "7px";

@@ -30,8 +30,8 @@ export const createTooltip = (
 		const tooltip = tooltipEntries[index];
 		if (!tooltip) continue;
 
-		const details = createDetails(index === tooltipsLength - 1);
 		const category = tooltip[0];
+		const details = createDetails(index === tooltipsLength - 1, category);
 
 		const summary = createSummary(category, tooltips[1].length);
 		details.appendChild(summary);
@@ -99,9 +99,10 @@ const createTooltipWrapper = (top?: number) => {
 	return tooltipWrapper;
 };
 
-export const createDetails = (isLast: boolean) => {
+export const createDetails = (isLast: boolean, type: string) => {
 	const details = document.createElement("details");
 	details.open = true;
+	details.dataset.type = type.toLowerCase();
 	if (!isLast) {
 		details.style.paddingBottom = "15px";
 	}

@@ -82,6 +82,7 @@ const createHighlightElement = (
 	highlight.style.border = `2px solid ${COLORS.red}`;
 	highlight.tabIndex = 0;
 	highlight.dataset.selector = hideArguments.selector;
+	highlight.dataset.detailSelector = hideArguments.detailSelector;
 
 	const button = createToolbarButton(eyeXIcon, highlight);
 	button.onclick = () => {
