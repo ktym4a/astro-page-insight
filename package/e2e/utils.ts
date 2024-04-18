@@ -25,3 +25,12 @@ export function testFactory() {
 	});
 	return test;
 }
+
+export const buttonListForDev: [string, string][] = [
+	["indicator", "Here is current checked device."],
+	["console-alert", "Show non-element errors."],
+	["hide", "Show the hidden highlights."],
+	["score", "Show the score of each category."],
+	["filter", "Filter the result."],
+	["fetch", "Fetch Lighthouse report."],
+];

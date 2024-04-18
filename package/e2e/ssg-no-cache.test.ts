@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { testFactory } from "./utils";
+import { buttonListForDev, testFactory } from "./utils";
 
 const test = testFactory();
 
@@ -12,6 +12,10 @@ test.describe("ssg with no cache - dev", () => {
 			'button[data-app-id="astro-page-insight-app"]',
 		);
 		expect(appButton).toBeVisible();
+
+		const notification = appButton.locator(".notification");
+		const notificationLevel = await notification.getAttribute("data-level");
+		expect(notificationLevel).toBe(null);
 
 		await appButton.click();
 
@@ -26,32 +30,118 @@ test.describe("ssg with no cache - dev", () => {
 		expect(pageInsightToolbar).toBeVisible();
 		expect(pageInsightToolbar).toHaveCount(1);
 
-		const buttons = pageInsightToolbar.getByRole("button");
+		const pageInsightHighlight = pageInsightCanvas.locator(
+			".astro-page-insight-highlight",
+		);
+		expect(pageInsightHighlight).toHaveCount(0);
+
+		const buttons = await pageInsightToolbar
+			.getByRole("button")
+			.and(pageInsightCanvas.locator("[data-tooltip]"));
 		expect(buttons).toHaveCount(6);
 
-		const hiddenButton = pageInsightToolbar.getByRole("button", {
-			disabled: true,
-		});
-		expect(hiddenButton).toHaveCount(1);
-		expect(hiddenButton).toHaveAttribute("data-button-type", "indicator");
-		expect(hiddenButton).toHaveAttribute(
-			"data-tooltip",
-			"Here is current checked device.",
-		);
+		for (const [i, obj] of Object.entries(buttonListForDev)) {
+			const button = buttons.nth(Number(i));
+			const [type, tooltip] = obj;
+			expect(button).toHaveAttribute("data-button-type", type);
+			expect(button).toHaveAttribute("data-tooltip", tooltip);
+			expect(button).not.toHaveClass("active");
+			expect(button).not.toHaveClass("astro-page-insight-toolbar-button-alert");
+
+			if (type === "indicator") {
+				expect(button).toBeDisabled();
+			} else {
+				expect(button).not.toBeDisabled();
+			}
+
+			const modal = pageInsightToolbar.locator(`div[data-type="${type}"]`);
+			expect(modal).not.toBeVisible();
+			if (type === "fetch" || type === "indicator") {
+				continue;
+			}
+
+			await button.click();
+
+			expect(modal).toBeVisible();
+			expect(button).toHaveClass("active");
+			const title = modal.locator("h2");
+			expect(title).toContainText("- (Desktop)");
+
+			await button.click();
+			expect(modal).not.toBeVisible();
+			expect(button).not.toHaveClass("active");
+		}
 
 		await appButton.click();
 	});
 
-	test("Click buttons", async ({ dev, page }) => {
+	test("Resize with no data", async ({ dev, page }) => {
 		await page.goto("http://localhost:4321/");
 
 		const toolbar = page.locator("astro-dev-toolbar");
 		const appButton = toolbar.locator(
 			'button[data-app-id="astro-page-insight-app"]',
 		);
-		expect(appButton).toBeVisible();
 
 		await appButton.click();
+
+		const pageInsightToolbar = toolbar.locator(".astro-page-insight-toolbar");
+
+		const buttons = await pageInsightToolbar
+			.getByRole("button")
+			.and(pageInsightToolbar.locator("[data-tooltip]"));
+		expect(buttons).toHaveCount(6);
+
+		await page.setViewportSize({ width: 767, height: 667 });
+		for (const [i, obj] of Object.entries(buttonListForDev)) {
+			const button = buttons.nth(Number(i));
+			const [type] = obj;
+
+			const modal = pageInsightToolbar.locator(`div[data-type="${type}"]`);
+			if (type === "fetch" || type === "indicator") {
+				continue;
+			}
+
+			await button.click();
+
+			const title = modal.locator("h2");
+			expect(title).toContainText("- (Mobile)");
+		}
+
+		await page.setViewportSize({ width: 768, height: 667 });
+		for (const [i, obj] of Object.entries(buttonListForDev)) {
+			const button = buttons.nth(Number(i));
+			const [type] = obj;
+
+			const modal = pageInsightToolbar.locator(`div[data-type="${type}"]`);
+			if (type === "fetch" || type === "indicator") {
+				continue;
+			}
+
+			await button.click();
+
+			const title = modal.locator("h2");
+			expect(title).toContainText("- (Desktop)");
+		}
+
+		await appButton.click();
+	});
+
+	test("Get data for Desktop", async ({ dev, page }) => {
+		await page.goto("http://localhost:4321/");
+
+		await page.setViewportSize({ width: 1200, height: 667 });
+
+		const toolbar = page.locator("astro-dev-toolbar");
+		const appButton = toolbar.locator(
+			'button[data-app-id="astro-page-insight-app"]',
+		);
+
+		await appButton.click();
+
+		const notification = appButton.locator(".notification");
+		let notificationLevel = await notification.getAttribute("data-level");
+		expect(notificationLevel).toBe(null);
 
 		const pageInsightCanvas = await toolbar.locator(
 			'astro-dev-toolbar-app-canvas[data-app-id="astro-page-insight-app"]',
@@ -61,103 +151,181 @@ test.describe("ssg with no cache - dev", () => {
 			".astro-page-insight-toolbar",
 		);
 
-		// console alert
-		const consoleAlertModal = pageInsightToolbar.locator(
-			'div[data-type="console-alert"]',
+		const highlights = pageInsightCanvas.locator(
+			".astro-page-insight-highlight",
 		);
-		expect(consoleAlertModal).not.toBeVisible();
-		const consoleAlertButton = pageInsightToolbar.locator(
-			'button[data-button-type="console-alert"]',
-		);
-		expect(consoleAlertButton).not.toHaveClass("active");
-		await consoleAlertButton.click();
-		expect(consoleAlertModal).toBeVisible();
-		expect(consoleAlertButton).toHaveClass("active");
-		const consoleAlertModalTitle = consoleAlertModal.locator("h2");
-		expect(consoleAlertModalTitle).toContainText(
-			"Non-element errors - (Desktop)",
-		);
-		const consoleAlertModalText = consoleAlertModal.locator("p").last();
-		expect(consoleAlertModalText).toContainText("No non-element errors found.");
-		await consoleAlertButton.click();
-		expect(consoleAlertModal).not.toBeVisible();
+		let highlightsCount = await highlights.count();
+		await expect(highlightsCount).toBe(0);
 
-		// hide
-		const hideModal = pageInsightToolbar.locator('div[data-type="hide"]');
-		expect(hideModal).not.toBeVisible();
-		const hideButton = pageInsightToolbar.locator(
-			'button[data-button-type="hide"]',
-		);
-		expect(hideButton).not.toHaveClass("active");
-		await hideButton.click();
-		expect(hideModal).toBeVisible();
-		expect(hideButton).toHaveClass("active");
-		const hideModalTitle = hideModal.locator("h2");
-		expect(hideModalTitle).toContainText("Hide highlights - (Desktop)");
-		const hideModalText = hideModal.locator("p").last();
-		expect(hideModalText).toContainText("No hidden highlights found.");
-		await hideButton.click();
-		expect(hideModal).not.toBeVisible();
-
-		// score
-		const scoreModal = pageInsightToolbar.locator('div[data-type="score"]');
-		expect(scoreModal).not.toBeVisible();
-		const scoreButton = pageInsightToolbar.locator(
-			'button[data-button-type="score"]',
-		);
-		expect(scoreButton).not.toHaveClass("active");
-		await scoreButton.click();
-		expect(scoreModal).toBeVisible();
-		expect(scoreButton).toHaveClass("active");
-		const scoreModalTitle = scoreModal.locator("h2");
-		expect(scoreModalTitle).toContainText("Score - (Desktop)");
-		const scoreModalText = scoreModal.locator("p").last();
-		expect(scoreModalText).toContainText("No data.");
-		await scoreButton.click();
-		expect(scoreModal).not.toBeVisible();
-
-		// filter
-		const filterModal = pageInsightToolbar.locator('div[data-type="filter"]');
-		expect(filterModal).not.toBeVisible();
-		const filterButton = pageInsightToolbar.locator(
-			'button[data-button-type="filter"]',
-		);
-		expect(filterButton).not.toHaveClass("active");
-		await filterButton.click();
-		expect(filterModal).toBeVisible();
-		expect(filterButton).toHaveClass("active");
-		const filterModalTitle = filterModal.locator("h2");
-		expect(filterModalTitle).toContainText("Filter - (Desktop)");
-		await filterButton.click();
-		expect(filterModal).not.toBeVisible();
-
-		// fetch
 		const fetchButton = pageInsightToolbar.locator(
 			'button[data-button-type="fetch"]',
 		);
+		expect(fetchButton).not.toBeDisabled();
+		expect(fetchButton).not.toHaveClass("animate");
+
+		// fetch start
 		await fetchButton.click();
-		expect(consoleAlertButton).toBeDisabled();
-		expect(hideButton).toBeDisabled();
-		expect(scoreButton).toBeDisabled();
-		expect(filterButton).toBeDisabled();
 		expect(fetchButton).toBeDisabled();
+		expect(fetchButton).toHaveClass("animate");
+		notificationLevel = await notification.getAttribute("data-level");
+		expect(notificationLevel).toBe("warning");
 
 		await page.waitForSelector(".astro-page-insight-toast");
+
+		// fetch end
 		const toast = await pageInsightCanvas.locator(".astro-page-insight-toast");
 		expect(toast).toBeVisible();
 		expect(toast).toHaveCount(1);
 		expect(toast).toContainText("Analysis of lighthouse results is complete.");
 
-		expect(consoleAlertButton).not.toBeDisabled();
-		expect(hideButton).not.toBeDisabled();
-		expect(scoreButton).not.toBeDisabled();
-		expect(filterButton).not.toBeDisabled();
-		expect(fetchButton).not.toBeDisabled();
+		notificationLevel = await notification.getAttribute("data-level");
+		expect(notificationLevel).toBe("info");
 
+		expect(fetchButton).not.toBeDisabled();
+		expect(fetchButton).not.toHaveClass("animate");
+
+		// check the toast is hidden
 		await page.waitForSelector(".astro-page-insight-toast", {
 			state: "detached",
 		});
 		expect(toast).not.toBeVisible();
+
+		// test highlight
+		highlightsCount = await highlights.count();
+		expect(highlightsCount).toBeGreaterThan(0);
+		const dataDetailSelector = await highlights
+			.first()
+			.getAttribute("data-detail-selector");
+		const highlight = pageInsightCanvas.locator(
+			`[data-detail-selector="${dataDetailSelector}"]`,
+		);
+		expect(highlight).toBeVisible();
+		expect(highlight).toHaveCSS("width", "1199px");
+		await page.setViewportSize({ width: 1100, height: 667 });
+		expect(highlight).toHaveCSS("width", "1099px");
+		const tooltip = highlight.locator(".astro-page-insight-tooltip");
+		expect(tooltip).not.toBeVisible();
+
+		await highlight.hover();
+		expect(tooltip).toBeVisible();
+		const accessibilityTooltip = tooltip.locator("[data-type='accessibility']");
+		expect(accessibilityTooltip).toBeVisible();
+		const performanceTooltip = tooltip.locator("[data-type='performance']");
+		expect(performanceTooltip).toBeVisible();
+
+		// test console-alert
+		const consoleAlertButton = pageInsightToolbar.locator(
+			'button[data-button-type="console-alert"]',
+		);
+		expect(consoleAlertButton).not.toBeDisabled();
+		expect(consoleAlertButton).toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
+		await consoleAlertButton.click();
+		const consoleAlertModal = pageInsightToolbar.locator(
+			'div[data-type="console-alert"]',
+		);
+		expect(consoleAlertModal).toBeVisible();
+		expect(consoleAlertModal.locator('[data-type="console"]')).toBeVisible();
+		expect(consoleAlertModal.locator('[data-type="document"]')).toBeVisible();
+
+		// test hide
+		const hideButton = pageInsightToolbar.locator(
+			'button[data-button-type="hide"]',
+		);
+		expect(hideButton).not.toBeDisabled();
+		expect(hideButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
+		await hideButton.click();
+		const hideModal = pageInsightToolbar.locator('div[data-type="hide"]');
+		expect(hideModal).toBeVisible();
+		expect(hideModal).toContainText("No hidden highlights found.");
+		const hideHighlightButton = highlight.getByRole("button");
+		await hideHighlightButton.click();
+		expect(
+			hideModal.locator(`[data-type="${dataDetailSelector}"]`),
+		).toBeVisible();
+		expect(tooltip).not.toBeVisible();
+		expect(highlight).not.toBeVisible();
+		expect(hideButton).toHaveClass(
+			"active astro-page-insight-toolbar-button-alert",
+		);
+		expect(hideModal).not.toContainText("No hidden highlights found.");
+		const restoreButton = hideModal.getByRole("button");
+		expect(hideModal).toBeVisible();
+		expect(restoreButton).toBeVisible();
+		await restoreButton.click();
+		expect(highlight).toBeVisible();
+		expect(hideButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
+		expect(hideModal).toContainText("No hidden highlights found.");
+
+		// test score
+		const scoreButton = pageInsightToolbar.locator(
+			'button[data-button-type="score"]',
+		);
+		expect(scoreButton).not.toBeDisabled();
+		expect(scoreButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
+		await scoreButton.click();
+		const scoreModal = pageInsightToolbar.locator('div[data-type="score"]');
+		expect(scoreModal).toBeVisible();
+		expect(scoreModal).not.toContainText("No data.");
+		expect(scoreModal.locator('[data-type="pwa"]')).not.toBeVisible();
+		expect(scoreModal.locator('[data-type="accessibility"]')).toBeVisible();
+		expect(scoreModal.locator('[data-type="best practices"]')).toBeVisible();
+		expect(scoreModal.locator('[data-type="performance"]')).toBeVisible();
+		expect(scoreModal.locator('[data-type="seo"]')).toBeVisible();
+
+		// test filter
+		const filterButton = pageInsightToolbar.locator(
+			'button[data-button-type="filter"]',
+		);
+		expect(filterButton).not.toBeDisabled();
+		expect(filterButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
+		await filterButton.click();
+		const filterModal = pageInsightToolbar.locator('div[data-type="filter"]');
+		expect(filterModal).toBeVisible();
+		const filterPwa = filterModal.locator('[data-type="pwa"]');
+		expect(filterPwa).not.toBeVisible();
+		const filterAccessibility = filterModal.locator(
+			'[data-type="accessibility"]',
+		);
+		expect(filterAccessibility).toBeVisible();
+		expect(filterAccessibility).toContainText("1");
+		const filterBestPractices = filterModal.locator(
+			'[data-type="best practices"]',
+		);
+		expect(filterBestPractices).toBeVisible();
+		expect(filterBestPractices).toContainText("0");
+		const filterPerformance = filterModal.locator('[data-type="performance"]');
+		expect(filterPerformance).toBeVisible();
+		expect(filterPerformance).toContainText("1");
+		const filterSeo = filterModal.locator('[data-type="seo"]');
+		expect(filterSeo).toBeVisible();
+		expect(filterSeo).toContainText("0");
+		const filterAccessibilityButton = filterAccessibility.getByRole("button");
+		await filterAccessibilityButton.click();
+		await highlight.hover();
+		expect(tooltip).toBeVisible();
+		expect(accessibilityTooltip).not.toBeVisible();
+		expect(performanceTooltip).toBeVisible();
+		expect(filterButton).toHaveClass(
+			"active astro-page-insight-toolbar-button-alert",
+		);
+		await filterAccessibilityButton.click();
+		await highlight.hover();
+		expect(tooltip).toBeVisible();
+		expect(accessibilityTooltip).toBeVisible();
+		expect(performanceTooltip).toBeVisible();
+		expect(filterButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 
 		await appButton.click();
 	});
