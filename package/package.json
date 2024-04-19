@@ -36,7 +36,7 @@
 		"test:unit": "vitest run --coverage",
 		"test:unit:dev": "vitest --coverage.enabled=true",
 		"test:e2e": "playwright test",
-		"test:e2e:install": "playwright install --with-deps"
+		"test:e2e:install": "playwright install --with-deps && npx puppeteer browsers install chrome"
 	},
 	"type": "module",
 	"peerDependencies": {
