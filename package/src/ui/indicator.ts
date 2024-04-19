@@ -15,9 +15,10 @@ export const getIcon = (formFactor: "mobile" | "desktop") => {
 
 export const createIndicatorButton = (
 	toolbarWrap: HTMLDivElement,
-	icon: string,
+	formFactor: "mobile" | "desktop",
 ) => {
-	createToolbarButton(
+	const icon = getIcon(formFactor);
+	const button = createToolbarButton(
 		icon,
 		toolbarWrap,
 		true,
@@ -25,4 +26,7 @@ export const createIndicatorButton = (
 		() => {},
 		"Here is current checked device.",
 	);
+	button.dataset.formFactor = formFactor;
+
+	return button;
 };

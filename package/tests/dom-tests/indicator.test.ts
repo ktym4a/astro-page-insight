@@ -33,15 +33,13 @@ describe("indicator", () => {
 	});
 
 	describe("createIndicatorButton", () => {
-		it("should create a createIndicatorButton", () => {
+		it("should create a createIndicatorButton with Desktop", () => {
 			const type = "indicator";
 			const tooltip = "Here is current checked device.";
 
 			const toolbarWrap = document.createElement("div");
 
-			createIndicatorButton(toolbarWrap, "<svg></svg>");
-
-			const button = toolbarWrap.querySelector("button") as HTMLButtonElement;
+			const button = createIndicatorButton(toolbarWrap, "desktop");
 
 			expect(button).not.toBeNull();
 			expect(button).toBeInstanceOf(HTMLButtonElement);
@@ -49,6 +47,29 @@ describe("indicator", () => {
 			expect(button.disabled).toBe(true);
 			expect(button.dataset.buttonType).toBe(type);
 			expect(button.dataset.tooltip).toBe(tooltip);
+			expect(button.dataset.formFactor).toBe("desktop");
+			expect(
+				button.parentElement?.classList.contains(
+					`astro-page-insight-toolbar-button-wrap-${type}`,
+				),
+			).toBe(true);
+		});
+
+		it("should create a createIndicatorButton with Desktop", () => {
+			const type = "indicator";
+			const tooltip = "Here is current checked device.";
+
+			const toolbarWrap = document.createElement("div");
+
+			const button = createIndicatorButton(toolbarWrap, "mobile");
+
+			expect(button).not.toBeNull();
+			expect(button).toBeInstanceOf(HTMLButtonElement);
+			expect(button.type).toBe("button");
+			expect(button.disabled).toBe(true);
+			expect(button.dataset.buttonType).toBe(type);
+			expect(button.dataset.tooltip).toBe(tooltip);
+			expect(button.dataset.formFactor).toBe("mobile");
 			expect(
 				button.parentElement?.classList.contains(
 					`astro-page-insight-toolbar-button-wrap-${type}`,
