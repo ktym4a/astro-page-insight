@@ -23,10 +23,7 @@ import { createFilter, createFilterButton } from "../ui/filter.js";
 import { createHideButton, createHideList } from "../ui/hide.js";
 import { createHighlight } from "../ui/highlight.js";
 import { desktopIcon, mobileIcon } from "../ui/icons.js";
-import {
-	createIndicatorButton,
-	getFormFactor,
-} from "../ui/indicator.js";
+import { createIndicatorButton, getFormFactor } from "../ui/indicator.js";
 import { createPowerButton } from "../ui/power.js";
 import { createScore, createScoreButton } from "../ui/score.js";
 import { initStyle } from "../ui/style.js";
