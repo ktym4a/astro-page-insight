@@ -51,8 +51,8 @@ importers:
         specifier: ^11.7.1
         version: 11.7.1
       puppeteer:
-        specifier: ^22.6.4
-        version: 22.6.4
+        specifier: ^22.6.5
+        version: 22.6.5
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^1.5.0
@@ -1725,6 +1725,23 @@ packages:
 
   /@puppeteer/browsers@2.2.1:
     resolution: {integrity: sha512-QSXujx4d4ogDamQA8ckkkRieFzDgZEuZuGiey9G7CuDcbnX4iINKWxTPC5Br2AEzY9ICAvcndqgAUFMMKnS/Tw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      debug: 4.3.4
+      extract-zip: 2.0.1
+      progress: 2.0.3
+      proxy-agent: 6.4.0
+      semver: 7.6.0
+      tar-fs: 3.0.5
+      unbzip2-stream: 1.4.3
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@puppeteer/browsers@2.2.2:
+    resolution: {integrity: sha512-hZ/JhxPIceWaGSEzUZp83/8M49CoxlkuThfTR7t4AoCu5+ZvJ3vktLm60Otww2TXeROB5igiZ8D9oPQh6ckBVg==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
@@ -6262,16 +6279,31 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@22.6.4:
-    resolution: {integrity: sha512-J9hXNwZmuqKDmNMj6kednZH8jzbdX9735NQfQJrq5LRD4nHisAMyW9pCD7glKi+iM7RV9JkesI1MYhdsN+0ZSQ==}
+  /puppeteer-core@22.6.5:
+    resolution: {integrity: sha512-s0/5XkAWe0/dWISiljdrybjwDCHhgN31Nu/wznOZPKeikgcJtZtbvPKBz0t802XWqfSQnQDt3L6xiAE5JLlfuw==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@puppeteer/browsers': 2.2.2
+      chromium-bidi: 0.5.17(devtools-protocol@0.0.1262051)
+      debug: 4.3.4
+      devtools-protocol: 0.0.1262051
+      ws: 8.16.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
+  /puppeteer@22.6.5:
+    resolution: {integrity: sha512-YuoRKGj3MxHhUwrey7vmNvU4odGdUdNsj1ee8pfcqQlLWIXfMOXZCAXh8xdzpZESHH3tCGWp2xmPZE8E6iUEWg==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@puppeteer/browsers': 2.2.1
+      '@puppeteer/browsers': 2.2.2
       cosmiconfig: 9.0.0
       devtools-protocol: 0.0.1262051
-      puppeteer-core: 22.6.4
+      puppeteer-core: 22.6.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -7488,6 +7520,7 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    requiresBuild: true
     dev: false
 
   /unherit@3.0.1:
