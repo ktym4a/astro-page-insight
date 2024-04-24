@@ -416,6 +416,14 @@ test.describe("ssg with no cache - dev", () => {
 			"active astro-page-insight-toolbar-button-alert",
 		);
 
+		await filterAccessibilityButton.click();
+		await filterPerformanceButton.click();
+		expect(highlight).toBeVisible();
+		await highlight.hover();
+		expect(tooltip).toBeVisible();
+		expect(accessibilityTooltip).toBeVisible();
+		expect(performanceTooltip).toBeVisible();
+
 		await appButton.click();
 	});
 });
