@@ -4,5 +4,16 @@ import { defineConfig } from "astro/config";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://example.com",
-	integrations: [astroPageInsight()],
+	server: {
+		port: 4322,
+	},
+	integrations: [
+		astroPageInsight({
+			lh: {
+				breakPoint: 300,
+				pwa: true,
+			},
+			cache: true,
+		}),
+	],
 });

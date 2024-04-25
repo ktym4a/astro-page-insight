@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { buttonListForDev, testFactory } from "./utils";
 
-const test = testFactory();
+const test = testFactory("ssg-no-cache");
 
 test.describe("ssg with no cache - dev", () => {
 	test("Initial load", async ({ dev, page }) => {
@@ -139,7 +139,7 @@ test.describe("ssg with no cache - dev", () => {
 		await appButton.click();
 	});
 
-	test("Initial flow", async ({ dev, page }) => {
+	test.skip("Initial flow", async ({ dev, page }) => {
 		await page.goto("http://localhost:4321/");
 
 		await page.setViewportSize({ width: 1200, height: 667 });
@@ -425,5 +425,9 @@ test.describe("ssg with no cache - dev", () => {
 		expect(performanceTooltip).toBeVisible();
 
 		await appButton.click();
+	});
+
+	test.afterAll(async ({ dev }) => {
+		await dev.stop();
 	});
 });

@@ -2,7 +2,7 @@ import { fileURLToPath } from "node:url";
 import { test as base } from "@playwright/test";
 import * as Astro from "astro";
 
-export function testFactory() {
+export function testFactory(name: string) {
 	// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
 	let devServer;
 
@@ -10,7 +10,7 @@ export function testFactory() {
 		// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 		async dev({}, use) {
 			const root = fileURLToPath(
-				new URL("./fixtures/ssg-no-cache/", import.meta.url),
+				new URL(`./fixtures/${name}/`, import.meta.url),
 			);
 
 			devServer ??= await Astro.dev({
