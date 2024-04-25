@@ -82,6 +82,15 @@ importers:
         specifier: workspace:*
         version: link:../../..
 
+  package/e2e/fixtures/ssg-with-cache:
+    dependencies:
+      astro:
+        specifier: ^4.6.3
+        version: 4.6.3(sass@1.75.0)(typescript@5.4.5)
+      astro-page-insight:
+        specifier: workspace:*
+        version: link:../../..
+
   playground/blog:
     dependencies:
       '@astrojs/check':
