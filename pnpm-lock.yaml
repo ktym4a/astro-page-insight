@@ -82,7 +82,7 @@ importers:
         specifier: workspace:*
         version: link:../../..
 
-  package/e2e/fixtures/ssg-with-cache:
+  package/e2e/fixtures/ssg-with-custom:
     dependencies:
       astro:
         specifier: ^4.6.3
