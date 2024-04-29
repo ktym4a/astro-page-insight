@@ -16,13 +16,15 @@ export default defineIntegration({
 		// TODO: remove experimentalCache in the next major release
 		const { lh, firstFetch, experimentalCache, cache, build } = options;
 		const { resolve } = createResolver(import.meta.url);
-		const cacheDir = ".pageinsight";
+		let cacheDir = ".pageinsight";
 
 		return {
 			hooks: {
 				"astro:config:setup": (params) => {
 					const { addDevToolbarApp, command, injectScript, config, logger } =
 						params;
+
+					cacheDir = new URL(cacheDir, config.root).pathname;
 
 					const assetsDir = config.build.assets;
 
