@@ -42,7 +42,7 @@
 	},
 	"dependencies": {
 		"astro-integration-kit": "^0.11.0",
-		"lighthouse": "^11.7.1",
+		"lighthouse": "^12.0.0",
 		"puppeteer": "^22.6.5"
 	},
 	"devDependencies": {

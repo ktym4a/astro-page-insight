@@ -48,8 +48,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(astro@4.6.1)
       lighthouse:
-        specifier: ^11.7.1
-        version: 11.7.1
+        specifier: ^12.0.0
+        version: 12.0.0
       puppeteer:
         specifier: ^22.6.5
         version: 22.6.5
@@ -1721,23 +1721,6 @@ packages:
 
   /@paulirish/trace_engine@0.0.19:
     resolution: {integrity: sha512-3tjEzXBBtU83DkCJAdU2UwBBunspiwTCn+Y5jOxm592cfEuLr/T7Lcn+QhRerVqkSik2mnjN4X6NgHZjI9Biwg==}
-    dev: false
-
-  /@puppeteer/browsers@2.2.1:
-    resolution: {integrity: sha512-QSXujx4d4ogDamQA8ckkkRieFzDgZEuZuGiey9G7CuDcbnX4iINKWxTPC5Br2AEzY9ICAvcndqgAUFMMKnS/Tw==}
-    engines: {node: '>=18'}
-    hasBin: true
-    dependencies:
-      debug: 4.3.4
-      extract-zip: 2.0.1
-      progress: 2.0.3
-      proxy-agent: 6.4.0
-      semver: 7.6.0
-      tar-fs: 3.0.5
-      unbzip2-stream: 1.4.3
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /@puppeteer/browsers@2.2.2:
@@ -4860,8 +4843,8 @@ packages:
     resolution: {integrity: sha512-i4jTmg7tvZQFwNFiwB+nCK6a7ICR68Xcwo+VIVd6Spi71vBNFUlds5HiDrSbClZdkQDON2Bhqv+KKJIo5zkPeA==}
     dev: false
 
-  /lighthouse@11.7.1:
-    resolution: {integrity: sha512-QuvkZvobZ8Gjv2Jkxl6TKhV5JYBzU+lzpqTY+Y1iH5IUc1SMYK4IOpBnSpp6PkM2FbNyur9uoNutPhsuLLqGTg==}
+  /lighthouse@12.0.0:
+    resolution: {integrity: sha512-8lZJ/D/fH/bQMyAmVUjts1IS0NOMa0SSbyce+OGQdKbaroVnontuVh9HsB9z/1ba3dEyBguOJiMkl6gkqyf7Tw==}
     engines: {node: '>=18.16'}
     hasBin: true
     dependencies:
@@ -4885,7 +4868,7 @@ packages:
       open: 8.4.2
       parse-cache-control: 1.0.1
       ps-list: 8.1.1
-      puppeteer-core: 22.6.4
+      puppeteer-core: 22.6.5
       robots-parser: 3.0.1
       semver: 5.7.2
       speedline-core: 1.4.3
@@ -6262,21 +6245,6 @@ packages:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
-    dev: false
-
-  /puppeteer-core@22.6.4:
-    resolution: {integrity: sha512-QtfJwPmqQec3EHc6LqbEz03vSiuVAr9bYp0TV87dLoreev6ZevsXdLgOfQgoA3GocrsSe/eUf7NRPQ1lQfsc3w==}
-    engines: {node: '>=18'}
-    dependencies:
-      '@puppeteer/browsers': 2.2.1
-      chromium-bidi: 0.5.17(devtools-protocol@0.0.1262051)
-      debug: 4.3.4
-      devtools-protocol: 0.0.1262051
-      ws: 8.16.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
     dev: false
 
   /puppeteer-core@22.6.5:
