@@ -43,7 +43,7 @@
 	"dependencies": {
 		"astro-integration-kit": "^0.11.0",
 		"lighthouse": "^11.7.1",
-		"puppeteer": "^22.6.5"
+		"puppeteer": "^22.7.1"
 	},
 	"devDependencies": {
 		"@vitest/coverage-v8": "^1.5.0",
