@@ -283,6 +283,7 @@ test.describe("ssg with no cache - dev", () => {
 		expect(consoleAlertModal).toBeVisible();
 		expect(consoleAlertModal.locator('[data-type="console"]')).toBeVisible();
 		expect(consoleAlertModal.locator('[data-type="document"]')).toBeVisible();
+		expect(consoleAlertModal.locator('[data-type="pwa"]')).not.toBeVisible();
 		await page.setViewportSize({ width: 400, height: 667 });
 		await expect(consoleAlertButton).not.toHaveClass(
 			"astro-page-insight-toolbar-button-alert",

@@ -10,7 +10,7 @@ export default defineConfig({
 	integrations: [
 		astroPageInsight({
 			lh: {
-				breakPoint: 300,
+				breakPoint: 375,
 				pwa: true,
 			},
 			cache: true,
