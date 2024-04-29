@@ -48,7 +48,7 @@
 	"devDependencies": {
 		"@vitest/coverage-v8": "^1.5.0",
 		"happy-dom": "^14.7.1",
-		"vite": "^5.2.8",
+		"vite": "^5.2.10",
 		"vitest": "^1.5.2"
 	}
 }
