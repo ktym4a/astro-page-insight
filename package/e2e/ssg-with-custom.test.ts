@@ -59,7 +59,6 @@ test.describe("ssg with custom - dev", () => {
 			'div[data-type="console-alert"]',
 		);
 		await expect(consoleAlertModal).toBeVisible();
-		await expect(consoleAlertModal.locator('[data-type="pwa"]')).toBeVisible();
 
 		const scoreButton = pageInsightToolbar.locator(
 			'button[data-button-type="score"]',
@@ -67,7 +66,6 @@ test.describe("ssg with custom - dev", () => {
 		await scoreButton.click();
 		const scoreModal = pageInsightToolbar.locator('div[data-type="score"]');
 		await expect(scoreModal).toBeVisible();
-		await expect(scoreModal.locator('[data-type="pwa"]')).toBeVisible();
 	});
 
 	test.afterAll(async ({ dev }) => {
@@ -154,13 +152,11 @@ test.describe("ssg with custom - preview", () => {
 		await consoleAlertButton.click();
 		const consoleAlertModal = toolbar.locator('div[data-type="console-alert"]');
 		await expect(consoleAlertModal).toBeVisible();
-		await expect(consoleAlertModal.locator('[data-type="pwa"]')).toBeVisible();
 
 		const scoreButton = toolbar.locator('button[data-button-type="score"]');
 		await scoreButton.click();
 		const scoreModal = toolbar.locator('div[data-type="score"]');
 		await expect(scoreModal).toBeVisible();
-		await expect(scoreModal.locator('[data-type="pwa"]')).toBeVisible();
 	});
 
 	test.afterAll(async ({ preview }) => {

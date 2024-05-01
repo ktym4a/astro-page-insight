@@ -67,7 +67,6 @@ describe("consoleAlert", () => {
 				formFactor,
 				testObj.consoleErrors,
 				testObj.metaErrors,
-				testObj.pwaErrors,
 			);
 
 			const modal = shadowRoot.querySelector(
@@ -88,13 +87,11 @@ describe("consoleAlert", () => {
 			expect(
 				button?.classList.contains("astro-page-insight-toolbar-button-alert"),
 			).toBe(true);
-			expect(details).lengthOf(3);
+			expect(details).lengthOf(2);
 			const consoleDetail = modal?.querySelector("[data-type='console']");
 			expect(consoleDetail).not.toBeNull();
 			const documentDetail = modal?.querySelector("[data-type='document']");
 			expect(documentDetail).not.toBeNull();
-			const pwaDetail = modal?.querySelector("[data-type='pwa']");
-			expect(pwaDetail).not.toBeNull();
 		});
 
 		it("should create a createConsoleErrorList with Mobile", () => {
@@ -110,7 +107,6 @@ describe("consoleAlert", () => {
 				formFactor,
 				testObj.consoleErrors,
 				testObj.metaErrors,
-				testObj.pwaErrors,
 			);
 
 			const modal = shadowRoot.querySelector(
@@ -131,7 +127,7 @@ describe("consoleAlert", () => {
 			expect(
 				button?.classList.contains("astro-page-insight-toolbar-button-alert"),
 			).toBe(true);
-			expect(details).lengthOf(3);
+			expect(details).lengthOf(2);
 		});
 
 		it("should create a createConsoleErrorList with consoleErrors", () => {
@@ -142,13 +138,7 @@ describe("consoleAlert", () => {
 			const toolbarWrap = createToolbar(shadowRoot);
 			createConsoleAlertButton(shadowRoot, toolbarWrap, false);
 
-			createConsoleErrorList(
-				shadowRoot,
-				formFactor,
-				testObj.consoleErrors,
-				[],
-				[],
-			);
+			createConsoleErrorList(shadowRoot, formFactor, testObj.consoleErrors, []);
 
 			const modal = shadowRoot.querySelector(
 				".astro-page-insight-modal-console-alert",
@@ -166,13 +156,7 @@ describe("consoleAlert", () => {
 			const toolbarWrap = createToolbar(shadowRoot);
 			createConsoleAlertButton(shadowRoot, toolbarWrap, false);
 
-			createConsoleErrorList(
-				shadowRoot,
-				formFactor,
-				[],
-				testObj.metaErrors,
-				[],
-			);
+			createConsoleErrorList(shadowRoot, formFactor, [], testObj.metaErrors);
 
 			const modal = shadowRoot.querySelector(
 				".astro-page-insight-modal-console-alert",
@@ -189,7 +173,7 @@ describe("consoleAlert", () => {
 			const toolbarWrap = createToolbar(shadowRoot);
 			createConsoleAlertButton(shadowRoot, toolbarWrap, false);
 
-			createConsoleErrorList(shadowRoot, formFactor, [], [], []);
+			createConsoleErrorList(shadowRoot, formFactor, [], []);
 
 			const modal = shadowRoot.querySelector(
 				".astro-page-insight-modal-console-alert",

@@ -17,7 +17,6 @@ import type {
 export const organizeLHResult = (
 	lhResult: RunnerResult,
 	weight: number,
-	pwa: boolean,
 ): Omit<LHResult, "url" | "formFactor"> => {
 	const { lhr, artifacts } = lhResult;
 
@@ -41,7 +40,6 @@ export const organizeLHResult = (
 	const categoryCount = {} as CategoryCountType;
 
 	for (const value of Object.values(lhr.categories)) {
-		if (!pwa && value.id === "pwa") continue;
 		scoreList[value.title] = value.score;
 		categoryCount[value.title] = 0;
 		for (const audit of value.auditRefs) {
@@ -62,10 +60,6 @@ export const organizeLHResult = (
 
 	let elements = {} as LHResult["elements"];
 	let metaErrors = [] as LHResult["metaErrors"];
-	let pwaErrors: LHResult["pwaErrors"];
-	if (pwa) {
-		pwaErrors = [];
-	}
 
 	for (const incomplete of artifacts.Accessibility.violations) {
 		if (categories[incomplete.id] === undefined) continue;
@@ -145,19 +139,6 @@ export const organizeLHResult = (
 		if (categories[audit.id] === undefined) continue;
 		const category = categories[audit.id] || [];
 
-		if (pwa && category.includes("PWA")) {
-			if (audit.score !== null && audit.score < 1) {
-				if (pwaErrors !== undefined) {
-					pwaErrors.push({
-						message: audit.title,
-						level: audit.score === 0 ? "error" : "warning",
-						content: audit.description,
-					});
-				}
-			}
-			continue;
-		}
-
 		if (!audit.details) continue;
 		if (audit.details.type !== "table" && audit.details.type !== "list")
 			continue;
@@ -180,16 +161,6 @@ export const organizeLHResult = (
 		metaErrors = returnObj.metaErrors;
 	}
 
-	if (pwa && pwaErrors !== undefined) {
-		return {
-			elements,
-			metaErrors,
-			consoleErrors,
-			scoreList,
-			categoryCount,
-			pwaErrors,
-		};
-	}
 	return {
 		elements,
 		metaErrors,
@@ -364,7 +335,7 @@ export const generateLHReportFileName = (url: string) => {
 	return `${decodeURI(fileName)}.json`;
 };
 
-export const generateDefaultLHData = (pwa: boolean) => {
+export const generateDefaultLHData = () => {
 	const lhResult: CacheLHResultByFormFactor = {
 		desktop: {
 			elements: {},
@@ -382,12 +353,6 @@ export const generateDefaultLHData = (pwa: boolean) => {
 		},
 		cache: false,
 	};
-	if (pwa) {
-		lhResult.desktop.elements.pwa = [];
-		lhResult.desktop.pwaErrors = [];
-		lhResult.mobile.elements.pwa = [];
-		lhResult.mobile.pwaErrors = [];
-	}
 
 	return lhResult;
 };

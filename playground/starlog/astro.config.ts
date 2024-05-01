@@ -6,9 +6,7 @@ export default defineConfig({
 	site: "https://example.com",
 	integrations: [
 		astroPageInsight({
-			lh: {
-				pwa: true,
-			},
+			lh: {},
 			// firstFetch: "open",
 			cache: true,
 			build: {

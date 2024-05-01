@@ -23,9 +23,7 @@ export const startLH = async (options: LHOptions) => {
 	const url = new URL(options.url);
 	url.searchParams.set("astro-page-insight", "true");
 
-	const categories = options.pwa
-		? ["accessibility", "best-practices", "performance", "seo", "pwa"]
-		: ["accessibility", "best-practices", "performance", "seo"];
+	const categories = ["accessibility", "best-practices", "performance", "seo"];
 
 	const result = await lighthouse(
 		url.toString(),
@@ -65,9 +63,8 @@ export const getLHReport = async (
 	cacheDir: string,
 	url: string,
 	weight: number,
-	pwa: boolean,
 ): Promise<CacheLHResultByFormFactor> => {
-	const lhResult = generateDefaultLHData(pwa);
+	const lhResult = generateDefaultLHData();
 
 	const fileName = generateLHReportFileName(url);
 	const filePathDesktop = `${cacheDir}/desktop/${fileName}`;
@@ -78,7 +75,7 @@ export const getLHReport = async (
 			.readFile(filePathDesktop, { encoding: "utf-8" })
 			.catch(() => null);
 		if (file) {
-			const result = organizeLHResult(JSON.parse(file), weight, pwa);
+			const result = organizeLHResult(JSON.parse(file), weight);
 			lhResult.desktop = result;
 			lhResult.cache = true;
 		}
@@ -89,7 +86,7 @@ export const getLHReport = async (
 			.readFile(filePathMobile, { encoding: "utf-8" })
 			.catch(() => null);
 		if (file) {
-			const result = organizeLHResult(JSON.parse(file), weight, pwa);
+			const result = organizeLHResult(JSON.parse(file), weight);
 			lhResult.mobile = result;
 			lhResult.cache = true;
 		}

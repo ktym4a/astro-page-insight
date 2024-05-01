@@ -11,7 +11,6 @@ export default defineConfig({
 		sitemap(),
 		astroPageInsight({
 			lh: {
-				// pwa: true,
 				// breakPoint: 7,
 			},
 			// firstFetch: "open",

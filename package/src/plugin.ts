@@ -125,7 +125,6 @@ const astroPageInsightToolbar: DevToolbarApp = {
 						elements: result.elements,
 						metaErrors: result.metaErrors,
 						consoleErrors: result.consoleErrors,
-						pwaErrors: result.pwaErrors,
 					};
 					pageInsightData.scoreListByFormFactor[result.formFactor] =
 						result.scoreList;

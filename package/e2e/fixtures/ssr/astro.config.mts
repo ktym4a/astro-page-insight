@@ -14,7 +14,6 @@ export default defineConfig({
 		astroPageInsight({
 			lh: {
 				breakPoint: 375,
-				pwa: true,
 			},
 			cache: true,
 			build: {

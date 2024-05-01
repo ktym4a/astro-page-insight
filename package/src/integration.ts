@@ -44,9 +44,9 @@ export default defineIntegration({
 								}
 							}
 							customElements.define("page-insight-root", PageInsightRoot);
-							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+							initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.breakPoint});
 							document.addEventListener("astro:after-swap", () => {
-								initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.pwa}, ${lh.breakPoint});
+								initPageInsightForClient("${assetsDir}", ${build.showOnLoad}, ${lh.weight}, ${lh.breakPoint});
 							});
 							document.addEventListener("astro:before-preparation", () => {
 								removePageInsightRoot();
@@ -62,12 +62,7 @@ export default defineIntegration({
 					server.hot.on(
 						"astro-dev-toolbar:astro-page-insight-app:init",
 						async ({ url }, client) => {
-							const lhReports = await getLHReport(
-								cacheDir,
-								url,
-								lh.weight,
-								lh.pwa,
-							);
+							const lhReports = await getLHReport(cacheDir, url, lh.weight);
 
 							client.send("astro-dev-toolbar:astro-page-insight-app:options", {
 								breakPoint: lh.breakPoint,
@@ -88,7 +83,6 @@ export default defineIntegration({
 									height,
 									breakPoint: lh.breakPoint,
 									weight: lh.weight,
-									pwa: lh.pwa,
 								});
 								if (lhData.result) {
 									// TODO: remove experimentalCache in the next major release
@@ -100,11 +94,7 @@ export default defineIntegration({
 										);
 									}
 
-									const result = organizeLHResult(
-										lhData.result,
-										lh.weight,
-										lh.pwa,
-									);
+									const result = organizeLHResult(lhData.result, lh.weight);
 
 									client.send(
 										"astro-dev-toolbar:astro-page-insight-app:on-success",

@@ -38,7 +38,6 @@ export const createConsoleErrorList = (
 	formFactor: LHResult["formFactor"],
 	consoleErrors: LHResult["consoleErrors"],
 	metaErrors: LHResult["metaErrors"],
-	pwaErrors: LHResult["pwaErrors"],
 ) => {
 	const existingConsoleError = canvas.querySelector(
 		".astro-page-insight-modal-console-alert",
@@ -60,11 +59,7 @@ export const createConsoleErrorList = (
 	const contentWrapper = document.createElement("div");
 	contentWrapper.style.marginTop = "10px";
 
-	const tooltips = createErrorTooltipsData(
-		consoleErrors,
-		metaErrors,
-		pwaErrors,
-	);
+	const tooltips = createErrorTooltipsData(consoleErrors, metaErrors);
 
 	const tooltipEntries = Object.entries(tooltips).sort((a, b) =>
 		a[0].localeCompare(b[0]),
@@ -133,24 +128,8 @@ export const createConsoleErrorList = (
 const createErrorTooltipsData = (
 	consoleErrors: LHResult["consoleErrors"],
 	metaErrors: LHResult["metaErrors"],
-	pwaErrors: LHResult["pwaErrors"],
 ) => {
 	const tooltips: ErrorTooltips = {};
-	if (pwaErrors !== undefined) {
-		for (const pwaError of pwaErrors) {
-			const category = "PWA";
-			const content = pwaError.content ?? "";
-			tooltips[category] = [
-				...(tooltips[category] ?? []),
-				{
-					title: pwaError.message,
-					score: pwaError.level === "error" ? 0 : 0.5,
-					scoreDisplayMode: "",
-					content,
-				},
-			];
-		}
-	}
 
 	for (const consoleMessage of consoleErrors) {
 		const category = "Console";
