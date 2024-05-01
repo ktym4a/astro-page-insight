@@ -1,5 +1,14 @@
 # astro-page-insight
 
+## 0.6.4
+
+### Patch Changes
+
+- f19e79d: [Internal] Add buildstep
+- e6ed7fc: [Internal] update packages
+- 6535e36: [internal] add Unit tests
+- 8643c8d: [Internal] add e2e tests
+
 ## 0.6.3
 
 ### Patch Changes

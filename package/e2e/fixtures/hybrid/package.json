@@ -6,5 +6,6 @@
 		"@astrojs/node": "^8.2.5",
 		"astro": "^4.7.0",
 		"astro-page-insight": "workspace:*"
-	}
+	},
+	"version": null
 }
