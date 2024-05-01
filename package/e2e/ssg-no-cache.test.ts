@@ -139,7 +139,7 @@ test.describe("ssg with no cache - dev", () => {
 		await appButton.click();
 	});
 
-	test.skip("Initial flow", async ({ dev, page }) => {
+	test("Initial flow", async ({ dev, page }) => {
 		await page.goto("http://localhost:4321/");
 
 		await page.setViewportSize({ width: 1200, height: 667 });
