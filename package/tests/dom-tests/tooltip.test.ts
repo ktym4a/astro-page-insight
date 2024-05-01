@@ -153,9 +153,10 @@ describe("tooltip", () => {
 		it("should create a details with no last", () => {
 			const last = false;
 
-			const details = createDetails(last);
+			const details = createDetails(last, "test");
 
 			expect(details).not.toBeNull();
+			expect(details.dataset.type).toBe("test");
 			expect(details).toBeInstanceOf(HTMLDetailsElement);
 			expect(details.style.paddingBottom).toBe("15px");
 		});
@@ -163,9 +164,10 @@ describe("tooltip", () => {
 		it("should create a details with last", () => {
 			const last = true;
 
-			const details = createDetails(last);
+			const details = createDetails(last, "test");
 
 			expect(details).not.toBeNull();
+			expect(details.dataset.type).toBe("test");
 			expect(details).toBeInstanceOf(HTMLDetailsElement);
 			expect(details.style.paddingBottom).toBe("");
 		});

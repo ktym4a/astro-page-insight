@@ -126,6 +126,11 @@ describe("hide", () => {
 				button?.classList.contains("astro-page-insight-toolbar-button-alert"),
 			).toBe(true);
 			expect(modal?.children[2]?.children).lengthOf(2);
+			for (const detail of modal?.children[2]
+				?.children as HTMLCollectionOf<HTMLDivElement>) {
+				expect(detail).toBeInstanceOf(HTMLDivElement);
+				expect(detail.dataset.type).toBeTruthy();
+			}
 		});
 	});
 });

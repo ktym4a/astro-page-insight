@@ -16,7 +16,9 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --apply .",
 		"test:unit": "pnpm --filter astro-page-insight test:unit",
-		"test:unit:dev": "pnpm --filter astro-page-insight test:unit:dev"
+		"test:unit:dev": "pnpm --filter astro-page-insight test:unit:dev",
+		"test:e2e": "pnpm --filter astro-page-insight test:e2e",
+		"test:e2e:install": "pnpm --filter astro-page-insight test:e2e:install"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.7.0",

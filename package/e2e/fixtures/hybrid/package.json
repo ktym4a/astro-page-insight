@@ -1,0 +1,10 @@
+{
+	"name": "@e2e/hybrid",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"@astrojs/node": "^8.2.5",
+		"astro": "^4.6.3",
+		"astro-page-insight": "workspace:*"
+	}
+}

@@ -86,7 +86,7 @@ const createContent = (
 	isLast: boolean,
 ) => {
 	const color = getColorKey(score);
-	const contentElement = createToolbarElement(isLast);
+	const contentElement = createToolbarElement(isLast, category);
 	const contentWrapper = createToolbarContentWrapper();
 	contentWrapper.style.flexWrap = "wrap";
 	contentElement.appendChild(contentWrapper);

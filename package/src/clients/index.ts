@@ -23,11 +23,7 @@ import { createFilter, createFilterButton } from "../ui/filter.js";
 import { createHideButton, createHideList } from "../ui/hide.js";
 import { createHighlight } from "../ui/highlight.js";
 import { desktopIcon, mobileIcon } from "../ui/icons.js";
-import {
-	createIndicatorButton,
-	getFormFactor,
-	getIcon,
-} from "../ui/indicator.js";
+import { createIndicatorButton, getFormFactor } from "../ui/indicator.js";
 import { createPowerButton } from "../ui/power.js";
 import { createScore, createScoreButton } from "../ui/score.js";
 import { initStyle } from "../ui/style.js";
@@ -136,8 +132,7 @@ export const initToolbar = (
 	const toolbarWrap = createToolbar(root);
 
 	const formFactor = getFormFactor(options.breakPoint);
-	const icon = getIcon(formFactor);
-	createIndicatorButton(toolbarWrap, icon);
+	const indicatorButton = createIndicatorButton(toolbarWrap, formFactor);
 
 	const buttons = {
 		consoleAlertButton: createConsoleAlertButton(root, toolbarWrap, isFetching),
@@ -199,17 +194,19 @@ export const initToolbar = (
 	const mediaQuery = window.matchMedia(`(max-width: ${options.breakPoint}px)`);
 
 	const handleMediaQuery = (mql: MediaQueryListEvent) => {
-		const indicatorButton = root.querySelector<HTMLButtonElement>(
-			'button[data-button-type="indicator"]',
-		);
-
 		let formFactor: "mobile" | "desktop";
 		if (mql.matches) {
 			formFactor = "mobile";
-			if (indicatorButton) indicatorButton.innerHTML = mobileIcon;
+			if (indicatorButton) {
+				indicatorButton.innerHTML = mobileIcon;
+				indicatorButton.dataset.formFactor = formFactor;
+			}
 		} else {
 			formFactor = "desktop";
-			if (indicatorButton) indicatorButton.innerHTML = desktopIcon;
+			if (indicatorButton) {
+				indicatorButton.innerHTML = desktopIcon;
+				indicatorButton.dataset.formFactor = formFactor;
+			}
 		}
 		updateCanvas({
 			canvas: root,

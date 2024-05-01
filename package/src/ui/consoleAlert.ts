@@ -86,8 +86,8 @@ export const createConsoleErrorList = (
 		const tooltip = tooltipEntries[index];
 		if (!tooltip) continue;
 
-		const details = createDetails(index === tooltipsLength - 1);
 		const category = tooltip[0];
+		const details = createDetails(index === tooltipsLength - 1, category);
 
 		const summary = createSummary(category, tooltips[1].length);
 		details.appendChild(summary);

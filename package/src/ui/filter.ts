@@ -112,7 +112,7 @@ const createContent = (
 		lhResult: LHResultForTooltip;
 	},
 ) => {
-	const contentElement = createToolbarElement(isLast);
+	const contentElement = createToolbarElement(isLast, category);
 	const contentWrapper = createToolbarContentWrapper();
 	contentElement.appendChild(contentWrapper);
 

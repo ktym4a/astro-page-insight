@@ -179,7 +179,7 @@ export const createToolbarWrapper = (type: string) => {
 	toolbarWrapper.style.width = "50vw";
 	toolbarWrapper.style.overflowY = "auto";
 	toolbarWrapper.style.right = "65px";
-	toolbarWrapper.style.bottom = "50px";
+	toolbarWrapper.style.bottom = "70px";
 	toolbarWrapper.style.display = "none";
 	toolbarWrapper.style.zIndex = "200010";
 	toolbarWrapper.style.maxHeight = "40vh";
@@ -248,8 +248,9 @@ export const toggleToolbarWrapper = (canvas: ShadowRoot, type: string) => {
 	}
 };
 
-export const createToolbarElement = (isLast: boolean) => {
+export const createToolbarElement = (isLast: boolean, type: string) => {
 	const contentElement = document.createElement("div");
+	contentElement.dataset.type = type.toLowerCase();
 
 	if (!isLast) {
 		contentElement.style.marginBottom = "7px";

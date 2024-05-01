@@ -49,7 +49,7 @@ export const createHideList = (
 	const hideWrapper = createToolbarWrapper("hide");
 	hideWrapper.innerHTML = `
     <style>
-		.astro-page-insight-hide-button > svg {
+		.astro-page-insight-restore-button > svg {
             width: 18px !important;
             height: 18px !important;
         }
@@ -104,7 +104,10 @@ const createContent = (
 	lhResult: LHResultForTooltip,
 	filter: FilterTypes,
 ) => {
-	const contentElement = createToolbarElement(isLast);
+	const contentElement = createToolbarElement(
+		isLast,
+		element.detailSelector || "",
+	);
 	const contentWrapper = createToolbarContentWrapper();
 	contentElement.appendChild(contentWrapper);
 
@@ -123,12 +126,12 @@ const createContent = (
 		eyeIcon,
 		contentWrapper,
 		false,
-		"hide",
+		"restore",
 		clickHandler,
 	);
 	button.style.padding = "2px";
 	button.style.borderRadius = "5px";
-	button.classList.add("astro-page-insight-hide-button");
+	button.classList.add("astro-page-insight-restore-button");
 
 	return contentElement;
 };

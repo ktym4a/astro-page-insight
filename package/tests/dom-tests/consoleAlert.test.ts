@@ -89,6 +89,12 @@ describe("consoleAlert", () => {
 				button?.classList.contains("astro-page-insight-toolbar-button-alert"),
 			).toBe(true);
 			expect(details).lengthOf(3);
+			const consoleDetail = modal?.querySelector("[data-type='console']");
+			expect(consoleDetail).not.toBeNull();
+			const documentDetail = modal?.querySelector("[data-type='document']");
+			expect(documentDetail).not.toBeNull();
+			const pwaDetail = modal?.querySelector("[data-type='pwa']");
+			expect(pwaDetail).not.toBeNull();
 		});
 
 		it("should create a createConsoleErrorList with Mobile", () => {

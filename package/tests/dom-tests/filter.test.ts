@@ -84,7 +84,8 @@ describe("filter", () => {
 				".astro-page-insight-modal-filter",
 			);
 
-			const details = modal?.children[2]?.children;
+			const details = modal?.children[2]
+				?.children as HTMLCollectionOf<HTMLDivElement>;
 
 			expect(modal).not.toBeNull();
 			expect(modal).toBeInstanceOf(HTMLDivElement);
@@ -99,6 +100,7 @@ describe("filter", () => {
 			if (details) {
 				for (const detail of details) {
 					expect(detail).toBeInstanceOf(HTMLDivElement);
+					expect(detail.dataset.type).toBeTruthy();
 					const child = detail.children[0] as HTMLDivElement;
 					expect(child).toBeInstanceOf(HTMLDivElement);
 					expect(child.style.background).toBe("");
@@ -145,7 +147,8 @@ describe("filter", () => {
 				".astro-page-insight-modal-filter",
 			);
 
-			const details = modal?.children[2]?.children;
+			const details = modal?.children[2]
+				?.children as HTMLCollectionOf<HTMLDivElement>;
 
 			expect(modal).not.toBeNull();
 			expect(modal).toBeInstanceOf(HTMLDivElement);
@@ -160,6 +163,7 @@ describe("filter", () => {
 			if (details) {
 				for (const detail of details) {
 					expect(detail).toBeInstanceOf(HTMLDivElement);
+					expect(detail.dataset.type).toBeTruthy();
 					const child = detail.children[0] as HTMLDivElement;
 					expect(child).toBeInstanceOf(HTMLDivElement);
 					expect(child.style.background).not.toBe("");
