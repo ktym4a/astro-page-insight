@@ -432,3 +432,15 @@ test.describe("ssg with no cache - dev", () => {
 		await dev.stop();
 	});
 });
+
+test.describe("ssg with no cache - preview", () => {
+	test("Initial load", async ({ preview, page }) => {
+		await page.goto("http://localhost:4321/");
+
+		await expect(page.locator("page-insight-root")).toHaveCount(0);
+	});
+
+	test.afterAll(async ({ preview }) => {
+		await preview.stop();
+	});
+});

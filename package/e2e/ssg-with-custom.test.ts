@@ -74,3 +74,88 @@ test.describe("ssg with custom - dev", () => {
 		await dev.stop();
 	});
 });
+
+test.describe("ssg with custom - preview", () => {
+	test("Initial load", async ({ preview, page }) => {
+		await page.goto("http://localhost:4322/");
+		await expect(page.locator("page-insight-root")).toHaveCount(1);
+
+		const toolbar = page.locator("page-insight-root");
+		const powerButton = await toolbar.locator(
+			'button[data-button-type="power"]',
+		);
+
+		const consoleAlertButton = toolbar.locator(
+			'button[data-button-type="console-alert"]',
+		);
+
+		expect(powerButton).not.toBeDisabled();
+		expect(consoleAlertButton).toBeDisabled();
+
+		await powerButton.click();
+
+		expect(consoleAlertButton).not.toBeDisabled();
+
+		await page.goto("http://localhost:4322/about/");
+		await expect(page.locator(".astro-page-insight-toolbar")).toHaveCount(1);
+
+		await page.goto("http://localhost:4322/test");
+		await expect(page.locator(".astro-page-insight-toolbar")).toHaveCount(0);
+	});
+
+	test("Click to show", async ({ preview, page }) => {
+		await page.goto("http://localhost:4322/");
+		await page.setViewportSize({ width: 376, height: 667 });
+
+		const toolbar = page.locator("page-insight-root");
+
+		await page.waitForTimeout(1000);
+
+		const pageInsightHighlight = toolbar.locator(
+			".astro-page-insight-highlight",
+		);
+		expect(pageInsightHighlight).not.toBeVisible();
+
+		let formFactor = await toolbar
+			.locator('button[data-button-type="indicator"]')
+			.getAttribute("data-form-factor");
+		expect(formFactor).toBe("desktop");
+
+		const powerButton = await toolbar.locator(
+			'button[data-button-type="power"]',
+		);
+
+		await powerButton.click();
+		await expect(pageInsightHighlight).not.toBeVisible();
+
+		await page.setViewportSize({ width: 375, height: 667 });
+		await expect(pageInsightHighlight).toBeVisible();
+		formFactor = await toolbar
+			.locator('button[data-button-type="indicator"]')
+			.getAttribute("data-form-factor");
+		expect(formFactor).toBe("mobile");
+
+		await powerButton.click();
+		await expect(pageInsightHighlight).not.toBeVisible();
+
+		await powerButton.click();
+
+		const consoleAlertButton = toolbar.locator(
+			'button[data-button-type="console-alert"]',
+		);
+		await consoleAlertButton.click();
+		const consoleAlertModal = toolbar.locator('div[data-type="console-alert"]');
+		await expect(consoleAlertModal).toBeVisible();
+		await expect(consoleAlertModal.locator('[data-type="pwa"]')).toBeVisible();
+
+		const scoreButton = toolbar.locator('button[data-button-type="score"]');
+		await scoreButton.click();
+		const scoreModal = toolbar.locator('div[data-type="score"]');
+		await expect(scoreModal).toBeVisible();
+		await expect(scoreModal.locator('[data-type="pwa"]')).toBeVisible();
+	});
+
+	test.afterAll(async ({ preview }) => {
+		await preview.stop();
+	});
+});

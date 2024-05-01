@@ -14,6 +14,9 @@ export default defineConfig({
 				pwa: true,
 			},
 			cache: true,
+			build: {
+				bundle: true,
+			},
 		}),
 	],
 });

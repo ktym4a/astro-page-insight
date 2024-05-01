@@ -5,14 +5,15 @@ import * as Astro from "astro";
 export function testFactory(name: string) {
 	// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
 	let devServer;
+	// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
+	let build;
+	// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
+	let previewServer;
+	const root = fileURLToPath(new URL(`./fixtures/${name}/`, import.meta.url));
 
 	const test = base.extend({
 		// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 		async dev({}, use) {
-			const root = fileURLToPath(
-				new URL(`./fixtures/${name}/`, import.meta.url),
-			);
-
 			devServer ??= await Astro.dev({
 				root,
 				logLevel: "silent",
@@ -21,6 +22,27 @@ export function testFactory(name: string) {
 				},
 			});
 			await use(devServer);
+		},
+		// biome-ignore lint/correctness/noEmptyPattern: <explanation>
+		async build({}, use) {
+			build ??= await Astro.build({
+				root,
+				logLevel: "silent",
+				vite: {
+					logLevel: "silent",
+				},
+			});
+			await use(build);
+		},
+		async preview({ build }, use) {
+			previewServer ??= await Astro.preview({
+				root,
+				logLevel: "silent",
+				vite: {
+					logLevel: "silent",
+				},
+			});
+			await use(previewServer);
 		},
 	});
 	return test;
