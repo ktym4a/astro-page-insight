@@ -1,8 +1,9 @@
 {
-	"name": "@e2e/view-transitions",
+	"name": "@e2e/ssr",
 	"type": "module",
 	"private": true,
 	"dependencies": {
+		"@astrojs/node": "^8.2.5",
 		"astro": "^4.6.3",
 		"astro-page-insight": "workspace:*"
 	}
