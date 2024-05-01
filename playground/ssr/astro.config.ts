@@ -12,9 +12,7 @@ export default defineConfig({
 	integrations: [
 		svelte(),
 		astroPageInsight({
-			lh: {
-				pwa: true,
-			},
+			lh: {},
 			// firstFetch: "load",
 			cache: true,
 			build: {

@@ -39,10 +39,9 @@ export const initPageInsightForClient = async (
 	assetsDir: string,
 	showOnLoad: boolean,
 	weight: number,
-	pwa: boolean,
 	breakPoint: number,
 ) => {
-	const lhResult = generateDefaultLHData(pwa);
+	const lhResult = generateDefaultLHData();
 	let hasCache = false;
 
 	const fileName = generateLHReportFileName(window.location.href);
@@ -53,7 +52,7 @@ export const initPageInsightForClient = async (
 	});
 	if (responseDesktop.ok) {
 		const data = await responseDesktop.json();
-		const result = organizeLHResult(data, weight, pwa);
+		const result = organizeLHResult(data, weight);
 
 		lhResult.desktop = result;
 		hasCache = true;
@@ -65,7 +64,7 @@ export const initPageInsightForClient = async (
 	});
 	if (responseMobile.ok) {
 		const data = await responseMobile.json();
-		const result = organizeLHResult(data, weight, pwa);
+		const result = organizeLHResult(data, weight);
 
 		lhResult.mobile = result;
 		hasCache = true;
@@ -164,13 +163,11 @@ export const initToolbar = (
 			elements: options.lhReports.mobile.elements,
 			metaErrors: options.lhReports.mobile.metaErrors,
 			consoleErrors: options.lhReports.mobile.consoleErrors,
-			pwaErrors: options.lhReports.mobile.pwaErrors,
 		},
 		desktop: {
 			elements: options.lhReports.desktop.elements,
 			metaErrors: options.lhReports.desktop.metaErrors,
 			consoleErrors: options.lhReports.desktop.consoleErrors,
-			pwaErrors: options.lhReports.desktop.pwaErrors,
 		},
 	};
 
@@ -258,7 +255,6 @@ export const updateCanvas = ({
 		formFactor,
 		result.consoleErrors,
 		result.metaErrors,
-		result.pwaErrors,
 	);
 };
 

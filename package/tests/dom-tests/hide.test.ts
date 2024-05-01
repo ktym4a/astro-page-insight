@@ -52,7 +52,6 @@ describe("hide", () => {
 				consoleErrors: testObj.consoleErrors,
 				elements: testObj.elements,
 				metaErrors: testObj.metaErrors,
-				pwaErrors: testObj.pwaErrors,
 			};
 
 			const filter: FilterTypes = {
@@ -89,7 +88,6 @@ describe("hide", () => {
 				consoleErrors: testObj.consoleErrors,
 				elements: testObj.elements,
 				metaErrors: testObj.metaErrors,
-				pwaErrors: testObj.pwaErrors,
 			};
 
 			const filter: FilterTypes = {

@@ -53,7 +53,6 @@ describe("filter", () => {
 				consoleErrors: testObj.consoleErrors,
 				elements: testObj.elements,
 				metaErrors: testObj.metaErrors,
-				pwaErrors: testObj.pwaErrors,
 			};
 
 			const filterCategories = CATEGORIES.reduce((acc, cur) => {
@@ -116,7 +115,6 @@ describe("filter", () => {
 				consoleErrors: testObj.consoleErrors,
 				elements: testObj.elements,
 				metaErrors: testObj.metaErrors,
-				pwaErrors: testObj.pwaErrors,
 			};
 
 			const filterCategories = CATEGORIES.reduce((acc, cur) => {

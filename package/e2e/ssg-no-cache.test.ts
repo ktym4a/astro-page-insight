@@ -283,7 +283,6 @@ test.describe("ssg with no cache - dev", () => {
 		expect(consoleAlertModal).toBeVisible();
 		expect(consoleAlertModal.locator('[data-type="console"]')).toBeVisible();
 		expect(consoleAlertModal.locator('[data-type="document"]')).toBeVisible();
-		expect(consoleAlertModal.locator('[data-type="pwa"]')).not.toBeVisible();
 		await page.setViewportSize({ width: 400, height: 667 });
 		await expect(consoleAlertButton).not.toHaveClass(
 			"astro-page-insight-toolbar-button-alert",
@@ -337,7 +336,6 @@ test.describe("ssg with no cache - dev", () => {
 		const scoreModal = pageInsightToolbar.locator('div[data-type="score"]');
 		expect(scoreModal).toBeVisible();
 		expect(scoreModal).not.toContainText("No data.");
-		expect(scoreModal.locator('[data-type="pwa"]')).not.toBeVisible();
 		expect(scoreModal.locator('[data-type="accessibility"]')).toBeVisible();
 		expect(scoreModal.locator('[data-type="best practices"]')).toBeVisible();
 		expect(scoreModal.locator('[data-type="performance"]')).toBeVisible();
@@ -354,8 +352,6 @@ test.describe("ssg with no cache - dev", () => {
 		await filterButton.click();
 		const filterModal = pageInsightToolbar.locator('div[data-type="filter"]');
 		expect(filterModal).toBeVisible();
-		const filterPwa = filterModal.locator('[data-type="pwa"]');
-		expect(filterPwa).not.toBeVisible();
 		const filterAccessibility = filterModal.locator(
 			'[data-type="accessibility"]',
 		);

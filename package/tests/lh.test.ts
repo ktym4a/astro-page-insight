@@ -68,21 +68,8 @@ describe("lh", () => {
 				cache: false,
 			};
 
-			const defaultLHDataFalse = generateDefaultLHData(false);
-
+			const defaultLHDataFalse = generateDefaultLHData();
 			expect(defaultLHDataFalse).toStrictEqual(obj);
-			expect(defaultLHDataFalse.desktop.elements).not.toHaveProperty("pwa");
-			expect(defaultLHDataFalse.mobile.elements).not.toHaveProperty("pwa");
-			expect(defaultLHDataFalse.desktop.pwaErrors).not.toBeDefined();
-			expect(defaultLHDataFalse.mobile.pwaErrors).not.toBeDefined();
-
-			const defaultLHDataTrue = generateDefaultLHData(true);
-
-			expect(defaultLHDataTrue).not.toStrictEqual(obj);
-			expect(defaultLHDataTrue.desktop.elements).toHaveProperty("pwa");
-			expect(defaultLHDataTrue.mobile.elements).toHaveProperty("pwa");
-			expect(defaultLHDataTrue.desktop.pwaErrors).toBeDefined();
-			expect(defaultLHDataTrue.mobile.pwaErrors).toBeDefined();
 		});
 	});
 });
