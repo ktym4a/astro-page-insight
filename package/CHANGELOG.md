@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.7.0
+
+### Minor Changes
+
+- 4bcf3d0: Remove `pwa` option since `pwa` audits [have been removed from lighthouse](https://github.com/GoogleChrome/lighthouse/pull/15455).
+
 ## 0.6.4
 
 ### Patch Changes
