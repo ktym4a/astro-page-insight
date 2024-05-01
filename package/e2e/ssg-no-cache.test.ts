@@ -319,7 +319,7 @@ test.describe("ssg with no cache - dev", () => {
 		await expect(hideModal).toContainText("No hidden highlights found.");
 		await page.setViewportSize({ width: 1200, height: 667 });
 		const restoreButton = hideModal.getByRole("button");
-		expect(hideModal).toBeVisible();
+		await expect(hideModal).toBeVisible();
 		expect(restoreButton).toBeVisible();
 		await restoreButton.click();
 		expect(highlight).toBeVisible();
