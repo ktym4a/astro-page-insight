@@ -3,6 +3,10 @@ import { testFactory } from "./utils";
 
 const test = testFactory("ssr");
 
+test("stop dev server", async ({ dev }) => {
+	await dev.stop();
+});
+
 test.describe("ssr - preview", () => {
 	test("Initial load", async ({ preview, page }) => {
 		await page.goto("http://localhost:4324/");
