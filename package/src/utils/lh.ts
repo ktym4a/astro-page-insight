@@ -2,7 +2,7 @@ import type {
 	MetricSavings,
 	Result,
 	ScoreDisplayMode,
-} from "lighthouse/types/lhr/audit-result";
+} from "lighthouse/types/lhr/audit-result.d.ts";
 
 import type { RunnerResult } from "lighthouse";
 import type {
@@ -56,20 +56,6 @@ export const organizeLHResult = (
 			}
 			if (audit.acronym) {
 				categories[audit.id]?.push(audit.acronym);
-			}
-
-			if (audit.relevantAudits) {
-				for (const relevant of audit.relevantAudits) {
-					const relevantValue = categories[relevant];
-					if (relevantValue) {
-						categories[relevant] = Array.from(
-							new Set([...relevantValue, value.title]),
-						);
-					} else {
-						categories[relevant] = [value.title];
-					}
-					if (audit.acronym) categories[relevant]?.push(audit.acronym);
-				}
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { COLORS } from "../../src/constants";
-import { createToastArea, showToast } from "../../src/ui/toast";
-import { createShadowRoot } from "../utils";
+import { COLORS } from "../../src/constants/index.ts";
+import { createToastArea, showToast } from "../../src/ui/toast.ts";
+import { createShadowRoot } from "../utils.ts";
 
 describe("toast", () => {
 	describe("createToastArea", () => {

@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { testFactory } from "./utils";
+import { testFactory } from "./utils.ts";
 
 const test = testFactory("ssg-with-custom");
 

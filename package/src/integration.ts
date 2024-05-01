@@ -29,11 +29,11 @@ export default defineIntegration({
 					const assetsDir = config.build.assets;
 
 					if (command === "dev") {
-						addDevToolbarApp(resolve("./plugin.ts"));
+						addDevToolbarApp(resolve("./plugin.js"));
 					}
 
 					if (build.bundle && command === "build") {
-						const bundleId: string = resolve("./clients/index.ts");
+						const bundleId: string = resolve("./clients/index.js");
 						injectScript(
 							"page",
 							`import { initPageInsightForClient, removePageInsightRoot } from "${bundleId}";

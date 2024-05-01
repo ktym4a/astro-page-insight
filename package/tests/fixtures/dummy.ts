@@ -1,4 +1,4 @@
-import type { CacheLHResultByFormFactor } from "../../src/types";
+import type { CacheLHResultByFormFactor } from "../../src/types/index.ts";
 
 export const lhResult: CacheLHResultByFormFactor = {
 	desktop: {

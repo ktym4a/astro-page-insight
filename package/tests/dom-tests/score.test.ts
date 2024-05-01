@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { createScore, createScoreButton } from "../../src/ui/score";
-import { createToolbar } from "../../src/ui/toolbar";
-import { lhResult } from "../fixtures/dummy";
-import { createShadowRoot } from "../utils";
+import { createScore, createScoreButton } from "../../src/ui/score.ts";
+import { createToolbar } from "../../src/ui/toolbar.ts";
+import { lhResult } from "../fixtures/dummy.ts";
+import { createShadowRoot } from "../utils.ts";
 
 describe("score", () => {
 	describe("createScoreButton", () => {

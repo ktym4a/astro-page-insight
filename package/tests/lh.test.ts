@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { CacheLHResultByFormFactor } from "../src/types";
+import type { CacheLHResultByFormFactor } from "../src/types/index.ts";
 import {
 	generateDefaultLHData,
 	generateLHReportFileName,
-} from "../src/utils/lh";
+} from "../src/utils/lh.ts";
 
 describe("lh", () => {
 	describe("generateLHReportFileName", () => {

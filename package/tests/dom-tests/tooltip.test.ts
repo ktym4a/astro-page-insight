@@ -1,14 +1,14 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { COLORS } from "../../src/constants";
-import type { ErrorTooltips } from "../../src/types";
+import { COLORS } from "../../src/constants/index.ts";
+import type { ErrorTooltips } from "../../src/types/index.ts";
 import {
 	createContent,
 	createContentTitle,
 	createDetails,
 	createSummary,
 	createTooltip,
-} from "../../src/ui/tooltip";
+} from "../../src/ui/tooltip.ts";
 
 describe("tooltip", () => {
 	describe("createContent", () => {
