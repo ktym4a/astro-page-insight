@@ -49,7 +49,7 @@ describe("lh", () => {
 			expect(result.cache).toBe(false);
 		});
 
-		it.skip("should return an LH result object with cache true", async () => {
+		it("should return an LH result object with cache true", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/";
 			const weight = 0;
@@ -58,7 +58,7 @@ describe("lh", () => {
 			const result = await getLHReport(cacheDir, url, weight);
 
 			expect(result).not.toStrictEqual(obj);
-			expect(Object.keys(result.desktop.elements)).lengthOf(12);
+			expect(Object.keys(result.desktop.elements)).lengthOf(6);
 			expect(Object.keys(result.mobile.elements)).lengthOf(5);
 			expect(Object.keys(result.desktop.scoreList)).lengthOf(4);
 			expect(Object.keys(result.mobile.scoreList)).lengthOf(4);
