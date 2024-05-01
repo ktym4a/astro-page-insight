@@ -25,14 +25,17 @@
 		"access": "public"
 	},
 	"sideEffects": false,
-	"types": "./src/index.d.ts",
+	"types": "./dist/integration.d.ts",
 	"exports": {
 		".": {
-			"types": "./src/index.d.ts",
-			"import": "./src/index.ts"
+			"types": "./dist/integration.d.ts",
+			"import": "./dist/integration.js"
 		}
 	},
+	"files": ["dist"],
 	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
 		"test:unit": "vitest run --coverage",
 		"test:unit:dev": "vitest --coverage.enabled=true",
 		"test:e2e": "playwright test",
@@ -52,6 +55,7 @@
 		"@types/node": "^20.12.7",
 		"@vitest/coverage-v8": "^1.5.3",
 		"happy-dom": "^14.7.1",
+		"tsup": "^8.0.2",
 		"vite": "^5.2.10",
 		"vitest": "^1.5.3"
 	}

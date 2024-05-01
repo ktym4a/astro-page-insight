@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { buttonListForDev, testFactory } from "./utils";
+import { buttonListForDev, testFactory } from "./utils.ts";
 
 const test = testFactory("ssg-no-cache");
 

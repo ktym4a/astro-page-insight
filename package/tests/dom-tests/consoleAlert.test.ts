@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
 	createConsoleAlertButton,
 	createConsoleErrorList,
-} from "../../src/ui/consoleAlert";
-import { createToolbar } from "../../src/ui/toolbar";
-import { lhResult } from "../fixtures/dummy";
-import { createShadowRoot } from "../utils";
+} from "../../src/ui/consoleAlert.ts";
+import { createToolbar } from "../../src/ui/toolbar.ts";
+import { lhResult } from "../fixtures/dummy.ts";
+import { createShadowRoot } from "../utils.ts";
 
 describe("consoleAlert", () => {
 	describe("createConsoleAlertButton", () => {

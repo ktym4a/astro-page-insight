@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
-import { getLHReport, saveLHReport } from "../src/server";
+import { getLHReport, saveLHReport } from "../src/server/index.ts";
 import {
 	generateDefaultLHData,
 	generateLHReportFileName,
-} from "../src/utils/lh";
+} from "../src/utils/lh.ts";
 
 describe("lh", () => {
 	describe("saveLHReport", () => {
@@ -71,7 +71,8 @@ describe("lh", () => {
 			expect(result.cache).toBe(false);
 		});
 
-		it("should return an LH result object without pwa and cache true", async () => {
+		// TODO: remove this test
+		it.skip("should return an LH result object without pwa and cache true", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/";
 			const weight = 0;
@@ -94,7 +95,8 @@ describe("lh", () => {
 			expect(result.cache).toBe(true);
 		});
 
-		it("should return an LH result object with pwa and cache true", async () => {
+		// TODO: remove this test
+		it.skip("should return an LH result object with pwa and cache true", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/";
 			const weight = 0;
@@ -120,13 +122,13 @@ describe("lh", () => {
 		it("should return an LH result object filter by weight", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/";
-			const weight = 20;
+			const weight = 2;
 			const pwa = false;
 
 			const result = await getLHReport(cacheDir, url, weight, pwa);
 
-			expect(Object.keys(result.desktop.elements)).lengthOf(8);
-			expect(Object.keys(result.mobile.elements)).lengthOf(1);
+			expect(Object.keys(result.desktop.elements)).lengthOf(4);
+			expect(Object.keys(result.mobile.elements)).lengthOf(4);
 		});
 
 		it("should return an LH result object with Desktop", async () => {

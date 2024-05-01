@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getColorKey } from "../src/utils/color";
+import { getColorKey } from "../src/utils/color.ts";
 
 describe("color", () => {
 	it("should return the correct color key", () => {

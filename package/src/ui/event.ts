@@ -1,4 +1,4 @@
-import { refreshHighlightPositions } from "./highlight";
+import { refreshHighlightPositions } from "./highlight.js";
 
 export const initEvent = (canvas: ShadowRoot) => {
 	for (const event of ["scroll", "resize"]) {

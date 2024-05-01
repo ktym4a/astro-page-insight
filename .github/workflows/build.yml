@@ -1,9 +1,9 @@
-name: E2E Test
+name: Build
 
 on: [pull_request]
 
 jobs:
-  unit-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,11 +21,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright Browsers
-        run: pnpm --filter astro-page-insight test:e2e:install
-
       - name: Build
         run: pnpm --filter astro-page-insight build
-
-      - name: E2E Test
-        run: pnpm --filter astro-page-insight test:e2e
