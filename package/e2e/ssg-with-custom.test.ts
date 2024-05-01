@@ -15,7 +15,7 @@ test.describe("ssg with custom - dev", () => {
 		const appButton = await toolbar.locator(
 			'button[data-app-id="astro-page-insight-app"]',
 		);
-		expect(appButton).toBeVisible();
+		await expect(appButton).toBeVisible();
 
 		const notification = await appButton.locator(".notification");
 		const notificationLevel = await notification.getAttribute("data-level");
@@ -78,6 +78,7 @@ test.describe("ssg with custom - dev", () => {
 test.describe("ssg with custom - preview", () => {
 	test("Initial load", async ({ preview, page }) => {
 		await page.goto("http://localhost:4322/");
+		await page.setViewportSize({ width: 375, height: 667 });
 		await expect(page.locator("page-insight-root")).toHaveCount(1);
 
 		const toolbar = page.locator("page-insight-root");
@@ -90,14 +91,23 @@ test.describe("ssg with custom - preview", () => {
 		);
 
 		expect(powerButton).not.toBeDisabled();
-		expect(consoleAlertButton).toBeDisabled();
+		expect(consoleAlertButton).not.toBeDisabled();
+
+		const pageInsightHighlight = toolbar.locator(
+			".astro-page-insight-highlight",
+		);
+		await expect(pageInsightHighlight).toBeVisible();
 
 		await powerButton.click();
 
-		expect(consoleAlertButton).not.toBeDisabled();
+		await expect(consoleAlertButton).toBeDisabled();
+		await expect(pageInsightHighlight).not.toBeVisible();
 
 		await page.goto("http://localhost:4322/about/");
 		await expect(page.locator(".astro-page-insight-toolbar")).toHaveCount(1);
+		await expect(powerButton).not.toBeDisabled();
+		await expect(consoleAlertButton).not.toBeDisabled();
+		await expect(pageInsightHighlight).toBeVisible();
 
 		await page.goto("http://localhost:4322/test");
 		await expect(page.locator(".astro-page-insight-toolbar")).toHaveCount(0);
@@ -125,7 +135,6 @@ test.describe("ssg with custom - preview", () => {
 			'button[data-button-type="power"]',
 		);
 
-		await powerButton.click();
 		await expect(pageInsightHighlight).not.toBeVisible();
 
 		await page.setViewportSize({ width: 375, height: 667 });
@@ -137,7 +146,6 @@ test.describe("ssg with custom - preview", () => {
 
 		await powerButton.click();
 		await expect(pageInsightHighlight).not.toBeVisible();
-
 		await powerButton.click();
 
 		const consoleAlertButton = toolbar.locator(
