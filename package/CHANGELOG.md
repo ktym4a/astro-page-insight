@@ -1,5 +1,13 @@
 # astro-page-insight
 
+## 0.8.0
+
+### Minor Changes
+
+- 0f78c5b: Update dev toolbar api.
+
+  Astro 4.7.1 or later is required.
+
 ## 0.7.0
 
 ### Minor Changes
