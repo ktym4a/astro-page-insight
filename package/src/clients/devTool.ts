@@ -6,7 +6,7 @@ export function showInitialIcon(app: ToolbarAppEventTarget, cache: boolean) {
 	if (cache) {
 		app.toggleNotification({
 			state: true,
-			level: "warn",
+			level: "warning",
 		});
 	} else {
 		app.toggleNotification({

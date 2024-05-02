@@ -151,7 +151,7 @@ export default defineToolbarApp({
 			if (fetchStatus.isFetching) return;
 			app.toggleNotification({
 				state: true,
-				level: "warn",
+				level: "warning",
 			});
 
 			fetchStatus.isFetching = true;
