@@ -7,6 +7,7 @@
 	},
 	"scripts": {
 		"package:dev": "pnpm --filter astro-page-insight dev",
+		"package:build": "pnpm --filter astro-page-insight build",
 		"playground:blog": "pnpm --filter blog dev",
 		"playground:ssr": "pnpm --filter ssr dev",
 		"playground:starlog": "pnpm --filter starlog dev",

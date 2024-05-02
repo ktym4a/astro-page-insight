@@ -29,7 +29,12 @@ export default defineIntegration({
 					const assetsDir = config.build.assets;
 
 					if (command === "dev") {
-						addDevToolbarApp(resolve("./plugin.js"));
+						addDevToolbarApp({
+							id: "astro-page-insight-app",
+							name: "PageInsight",
+							icon: "file-search",
+							entrypoint: resolve("./plugin.js"),
+						});
 					}
 
 					if (build.bundle && command === "build") {

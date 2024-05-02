@@ -1,4 +1,4 @@
-import type { DevToolbarApp } from "astro";
+import { defineToolbarApp } from "astro/toolbar";
 import {
 	fetchLighthouse,
 	getLHData,
@@ -19,10 +19,7 @@ import { getFormFactor } from "./ui/indicator.js";
 import { createToastArea } from "./ui/toast.js";
 import { createToolbarButton } from "./ui/toolbar.js";
 
-const astroPageInsightToolbar: DevToolbarApp = {
-	id: "astro-page-insight-app",
-	name: "PageInsight",
-	icon: "file-search",
+export default defineToolbarApp({
 	init(canvas, eventTarget) {
 		// if load from LH, then skip
 		if (
@@ -188,6 +185,4 @@ const astroPageInsightToolbar: DevToolbarApp = {
 			);
 		}
 	},
-};
-
-export default astroPageInsightToolbar;
+});
