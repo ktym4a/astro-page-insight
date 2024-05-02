@@ -1,47 +1,19 @@
+import type { ToolbarAppEventTarget } from "astro/runtime/client/dev-toolbar/helpers.js";
 import type { Buttons } from "../types/index.js";
 import { showToast } from "../ui/toast.js";
 
-export function getLHData() {
-	if (import.meta.hot) {
-		import.meta.hot?.send("astro-dev-toolbar:astro-page-insight-app:init", {
-			url: window.location.href,
+export function showInitialIcon(app: ToolbarAppEventTarget, cache: boolean) {
+	if (cache) {
+		app.toggleNotification({
+			state: true,
+			level: "warning",
+		});
+	} else {
+		app.toggleNotification({
+			state: false,
 		});
 	}
 }
-
-export function showInitialIcon(eventTarget: EventTarget, cache: boolean) {
-	if (cache) {
-		eventTarget.dispatchEvent(
-			new CustomEvent("toggle-notification", {
-				detail: {
-					state: true,
-					level: "warning",
-				},
-			}),
-		);
-	} else {
-		eventTarget.dispatchEvent(
-			new CustomEvent("toggle-notification", {
-				detail: {
-					state: false,
-				},
-			}),
-		);
-	}
-}
-
-export const fetchLighthouse = (width: number, height: number, url: string) => {
-	if (import.meta.hot) {
-		import.meta.hot?.send(
-			"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-			{
-				width,
-				height,
-				url,
-			},
-		);
-	}
-};
 
 function activeButtons(buttons: Buttons) {
 	const buttonList = Object.values(buttons);
@@ -55,37 +27,29 @@ function activeButtons(buttons: Buttons) {
 
 export function showError(
 	canvas: ShadowRoot,
-	eventTarget: EventTarget,
+	app: ToolbarAppEventTarget,
 	buttons: Buttons,
 	message: string,
 ) {
 	activeButtons(buttons);
 
 	showToast(canvas, message, "error");
-	eventTarget.dispatchEvent(
-		new CustomEvent("toggle-notification", {
-			detail: {
-				state: true,
-				level: "error",
-			},
-		}),
-	);
+	app.toggleNotification({
+		state: true,
+		level: "error",
+	});
 }
 
 export function showSuccess(
 	canvas: ShadowRoot,
-	eventTarget: EventTarget,
+	app: ToolbarAppEventTarget,
 	buttons: Buttons,
 ) {
 	activeButtons(buttons);
 
 	showToast(canvas, "Analysis of lighthouse results is complete.", "success");
-	eventTarget.dispatchEvent(
-		new CustomEvent("toggle-notification", {
-			detail: {
-				state: true,
-				level: "info",
-			},
-		}),
-	);
+	app.toggleNotification({
+		state: true,
+		level: "info",
+	});
 }

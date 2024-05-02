@@ -29,7 +29,12 @@ export default defineIntegration({
 					const assetsDir = config.build.assets;
 
 					if (command === "dev") {
-						addDevToolbarApp(resolve("./plugin.js"));
+						addDevToolbarApp({
+							id: "astro-page-insight-app",
+							name: "PageInsight",
+							icon: "file-search",
+							entrypoint: resolve("./plugin.js"),
+						});
 					}
 
 					if (build.bundle && command === "build") {
@@ -58,13 +63,15 @@ export default defineIntegration({
 						});
 					}
 				},
-				"astro:server:setup": async ({ server, logger }) => {
-					server.hot.on(
+				"astro:server:setup": async ({ logger, toolbar }) => {
+					toolbar.on<{
+						url: string;
+					}>(
 						"astro-dev-toolbar:astro-page-insight-app:init",
-						async ({ url }, client) => {
+						async ({ url }) => {
 							const lhReports = await getLHReport(cacheDir, url, lh.weight);
 
-							client.send("astro-dev-toolbar:astro-page-insight-app:options", {
+							toolbar.send("astro-dev-toolbar:astro-page-insight-app:options", {
 								breakPoint: lh.breakPoint,
 								categories: CATEGORIES,
 								firstFetch,
@@ -73,9 +80,13 @@ export default defineIntegration({
 						},
 					);
 
-					server.hot.on(
+					toolbar.on<{
+						url: string;
+						width: number;
+						height: number;
+					}>(
 						"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
-						async ({ width, height, url }, client) => {
+						async ({ url, width, height }) => {
 							try {
 								const lhData = await startLH({
 									url,
@@ -96,7 +107,7 @@ export default defineIntegration({
 
 									const result = organizeLHResult(lhData.result, lh.weight);
 
-									client.send(
+									toolbar.send(
 										"astro-dev-toolbar:astro-page-insight-app:on-success",
 										{
 											...result,
@@ -108,7 +119,7 @@ export default defineIntegration({
 							} catch (error) {
 								logger.error("Something went wrong.");
 								console.error(error);
-								client.send(
+								toolbar.send(
 									"astro-dev-toolbar:astro-page-insight-app:on-error",
 									"Something went wrong.\nPlease try again.",
 								);
