@@ -32,7 +32,9 @@
 			"import": "./dist/integration.js"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup",
@@ -52,11 +54,11 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.43.1",
-		"@types/node": "^20.12.7",
+		"@types/node": "^20.12.8",
 		"@vitest/coverage-v8": "^1.5.3",
 		"happy-dom": "^14.7.1",
 		"tsup": "^8.0.2",
-		"vite": "^5.2.10",
+		"vite": "^5.2.11",
 		"vitest": "^1.5.3"
 	}
 }
