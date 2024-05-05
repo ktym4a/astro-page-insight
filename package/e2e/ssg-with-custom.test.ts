@@ -135,7 +135,11 @@ test.describe("ssg with custom - preview", () => {
 
 		await expect(pageInsightHighlight).not.toBeVisible();
 
+		await powerButton.click();
 		await page.setViewportSize({ width: 375, height: 667 });
+		await expect(pageInsightHighlight).not.toBeVisible();
+
+		await powerButton.click();
 		await expect(pageInsightHighlight).toBeVisible();
 		formFactor = await toolbar
 			.locator('button[data-button-type="indicator"]')
