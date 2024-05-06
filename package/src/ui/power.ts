@@ -16,18 +16,17 @@ export const createPowerButton = (
 		() => {
 			const buttonList = Object.values(buttons);
 			const elements = canvas.querySelectorAll(".astro-page-insight-highlight");
+			const hasClass = powerButton.classList.contains(
+				"astro-page-insight-toolbar-button-alert",
+			);
+
 			for (const element of elements) {
 				if (element instanceof HTMLElement) {
-					element.style.display =
-						element.style.display === "none" ? "block" : "none";
+					element.style.display = hasClass ? "block" : "none";
 				}
 			}
 
-			if (
-				powerButton.classList.contains(
-					"astro-page-insight-toolbar-button-alert",
-				)
-			) {
+			if (hasClass) {
 				powerButton.classList.remove("astro-page-insight-toolbar-button-alert");
 				for (const button of buttonList) {
 					if (button) {
