@@ -1,6 +1,6 @@
 # `astro-page-insight`
 
-![](https://raw.githubusercontent.com/ktym4a/astro-page-insight/main/.github/demo.png)
+![](https://raw.githubusercontent.com/ktym4a/astro-page-insight/main/.github/about.png)
 
 [docs](https://astro-page-insight.pages.dev/) | [demo](https://astro-page-insight.pages.dev/others/demo/)
 

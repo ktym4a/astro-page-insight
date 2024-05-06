@@ -18,6 +18,15 @@ export default defineConfig({
 			social: {
 				github: "https://github.com/ktym4a/astro-page-insight",
 			},
+			head: [
+				{
+					tag: "meta",
+					attrs: {
+						property: "og:image",
+						content: "https://astro-page-insight.pages.dev/ogp.png",
+					},
+				},
+			],
 			sidebar: [
 				{
 					label: "Getting Started",
