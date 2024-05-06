@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.8.1
+
+### Patch Changes
+
+- d5503c5: Fix a bug in resizing after build
+
 ## 0.8.0
 
 ### Minor Changes
