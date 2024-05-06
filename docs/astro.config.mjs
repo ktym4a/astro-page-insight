@@ -9,6 +9,10 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: "Astro Page Insight",
+			logo: {
+				src: "/src/assets/logo.png",
+				alt: "Astro Page Insight",
+			},
 			description:
 				"Shows everything to improve from Lighthouse results directly on the page.",
 			social: {
@@ -49,7 +53,7 @@ export default defineConfig({
 			expressiveCode: {
 				themes: [mocha, latte],
 			},
-			favicon: "/favicon.ico",
+			favicon: "/favicon.png",
 		}),
 		astroPageInsight({
 			lh: {
