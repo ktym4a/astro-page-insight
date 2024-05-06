@@ -58,7 +58,7 @@ export default defineConfig({
 			cache: true,
 			build: {
 				bundle: true,
-				// showOnLoad: true,
+				showOnLoad: true,
 			},
 		}),
 	],
