@@ -132,10 +132,23 @@ test.describe("ssg with custom - preview", () => {
 		const powerButton = await toolbar.locator(
 			'button[data-button-type="power"]',
 		);
+		await expect(powerButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 
 		await expect(pageInsightHighlight).not.toBeVisible();
 
+		await powerButton.click();
+		await expect(powerButton).toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 		await page.setViewportSize({ width: 375, height: 667 });
+		await expect(pageInsightHighlight).not.toBeVisible();
+
+		await powerButton.click();
+		await expect(powerButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 		await expect(pageInsightHighlight).toBeVisible();
 		formFactor = await toolbar
 			.locator('button[data-button-type="indicator"]')
@@ -143,8 +156,14 @@ test.describe("ssg with custom - preview", () => {
 		expect(formFactor).toBe("mobile");
 
 		await powerButton.click();
+		await expect(powerButton).toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 		await expect(pageInsightHighlight).not.toBeVisible();
 		await powerButton.click();
+		await expect(powerButton).not.toHaveClass(
+			"astro-page-insight-toolbar-button-alert",
+		);
 
 		const consoleAlertButton = toolbar.locator(
 			'button[data-button-type="console-alert"]',

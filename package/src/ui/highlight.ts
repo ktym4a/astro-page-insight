@@ -72,12 +72,23 @@ const createHighlightElement = (
 	},
 ) => {
 	const highlight = document.createElement("div");
+	const powerButton = render.canvas.querySelector<HTMLDivElement>(
+		"[data-button-type='power']",
+	);
+
 	highlight.style.position = "absolute";
 	highlight.style.background =
 		"linear-gradient(180deg, rgba(224, 204, 250, 0.33) 0%, rgba(224, 204, 250, 0.0825) 100%)";
 	highlight.style.borderRadius = "5px";
 	highlight.style.zIndex = "20000";
 	highlight.style.display = "block";
+	if (powerButton) {
+		if (
+			powerButton.classList.contains("astro-page-insight-toolbar-button-alert")
+		) {
+			highlight.style.display = "none";
+		}
+	}
 	highlight.classList.add("astro-page-insight-highlight");
 	highlight.style.border = `2px solid ${COLORS.red}`;
 	highlight.tabIndex = 0;
