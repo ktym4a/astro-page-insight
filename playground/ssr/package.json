@@ -12,12 +12,12 @@
 		"server": "node dist/server/entry.mjs"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.5.10",
+		"@astrojs/check": "^0.6.0",
 		"@astrojs/node": "^8.2.5",
 		"@astrojs/svelte": "^5.4.0",
-		"astro": "^4.7.1",
+		"astro": "^4.8.2",
 		"astro-page-insight": "workspace:*",
-		"svelte": "^4.2.15",
+		"svelte": "^4.2.16",
 		"typescript": "^5.4.5"
 	}
 }
