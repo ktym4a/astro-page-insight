@@ -11,10 +11,10 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.5.10",
-		"@astrojs/starlight": "^0.22.1",
+		"@astrojs/check": "^0.6.0",
+		"@astrojs/starlight": "^0.22.2",
 		"@catppuccin/vscode": "^3.14.0",
-		"astro": "^4.7.1",
+		"astro": "^4.8.2",
 		"astro-page-insight": "workspace:*",
 		"sharp": "^0.33.3",
 		"typescript": "^5.4.5"
