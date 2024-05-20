@@ -24,6 +24,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.7.3",
-		"@changesets/cli": "^2.27.1"
+		"@changesets/cli": "^2.27.2"
 	}
 }
