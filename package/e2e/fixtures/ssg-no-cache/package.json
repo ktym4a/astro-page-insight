@@ -3,7 +3,7 @@
 	"type": "module",
 	"private": true,
 	"dependencies": {
-		"astro": "^4.8.6",
+		"astro": "^4.9.1",
 		"astro-page-insight": "workspace:*"
 	},
 	"version": null
