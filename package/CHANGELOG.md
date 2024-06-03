@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.8.3
+
+### Patch Changes
+
+- b291b72: [internal] update dependencies.
+
 ## 0.8.2
 
 ### Patch Changes

@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [b291b72]
+  - astro-page-insight@0.8.3
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [a1fb09f]
   - astro-page-insight@0.8.2
 
