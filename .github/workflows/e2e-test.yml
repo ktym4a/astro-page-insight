@@ -24,8 +24,5 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm --filter astro-page-insight test:e2e:install
 
-      - name: Build
-        run: pnpm --filter astro-page-insight build
-
       - name: E2E Test
         run: pnpm --filter astro-page-insight test:e2e
