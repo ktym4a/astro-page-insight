@@ -13,9 +13,9 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.7.0",
-		"@astrojs/node": "^8.2.6",
+		"@astrojs/node": "^8.3.0",
 		"@astrojs/svelte": "^5.5.0",
-		"astro": "^4.10.1",
+		"astro": "^4.10.2",
 		"astro-page-insight": "workspace:*",
 		"svelte": "^4.2.18",
 		"typescript": "^5.4.5"
