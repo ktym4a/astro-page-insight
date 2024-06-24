@@ -1,6 +1,6 @@
 {
 	"name": "astro-page-insight",
-	"version": "0.8.3",
+	"version": "0.8.4",
 	"description": "Shows everything to improve from Lighthouse results directly on the page.",
 	"author": {
 		"email": "shoma@ktym4a.me",
@@ -32,7 +32,9 @@
 			"import": "./dist/integration.js"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup",

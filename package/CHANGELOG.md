@@ -1,5 +1,13 @@
 # astro-page-insight
 
+## 0.8.4
+
+### Patch Changes
+
+- 06bc17a: [internal] update dependencies
+- 3fbdaf7: [internal] dedupe
+- 9944c8e: Fixed a bug that could be undefined
+
 ## 0.8.3
 
 ### Patch Changes
