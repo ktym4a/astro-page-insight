@@ -188,6 +188,7 @@ const createAudit = (
 			return elementsValue;
 
 		for (const val of element.categories) {
+			if (categoryCount[val] === undefined) continue;
 			if (val in categoryCount) {
 				categoryCount[val] += 1;
 			}
@@ -197,6 +198,7 @@ const createAudit = (
 	}
 
 	for (const val of element.categories) {
+		if (categoryCount[val] === undefined) continue;
 		if (val in categoryCount) {
 			categoryCount[val] += 1;
 		}
