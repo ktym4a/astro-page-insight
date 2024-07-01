@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.7.0",
-		"astro": "^4.11.0",
+		"astro": "^4.11.3",
 		"astro-page-insight": "workspace:*",
 		"sass": "^1.77.6",
 		"sharp": "^0.33.4",
