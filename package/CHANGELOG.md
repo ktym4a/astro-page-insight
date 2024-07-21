@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.8.5
+
+### Patch Changes
+
+- 7222f83: [internal] update packages
+
 ## 0.8.4
 
 ### Patch Changes
