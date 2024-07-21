@@ -18,5 +18,8 @@
 		"astro-page-insight": "workspace:*",
 		"sharp": "^0.33.4",
 		"typescript": "^5.5.3"
+	},
+	"devDependencies": {
+		"wrangler": "^3.65.1"
 	}
 }

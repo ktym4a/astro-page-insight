@@ -1,7 +1,7 @@
 {
 	"name": "root",
 	"private": true,
-	"packageManager": "pnpm@8.14.1",
+	"packageManager": "pnpm@9.5.0",
 	"engines": {
 		"node": ">=18.19.0"
 	},
@@ -28,6 +28,6 @@
 	},
 	"volta": {
 		"node": "20.14.0",
-		"pnpm": "8.14.1"
+		"pnpm": "9.5.0"
 	}
 }
