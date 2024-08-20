@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.8.6
+
+### Patch Changes
+
+- e5e8072: [internal] fix some tests and update dependency
+
 ## 0.8.5
 
 ### Patch Changes
