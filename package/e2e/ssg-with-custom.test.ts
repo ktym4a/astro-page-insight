@@ -10,7 +10,7 @@ test.describe("ssg with custom - dev", () => {
 
 		const toolbar = page.locator("astro-dev-toolbar");
 
-		await page.waitForTimeout(1000);
+		await page.waitForTimeout(2000);
 
 		const appButton = await toolbar.locator(
 			'button[data-app-id="astro-page-insight-app"]',
@@ -77,6 +77,7 @@ test.describe("ssg with custom - preview", () => {
 	test("Initial load", async ({ preview, page }) => {
 		await page.goto("http://localhost:4322/");
 		await page.setViewportSize({ width: 375, height: 667 });
+		await page.waitForTimeout(2000);
 		await expect(page.locator("page-insight-root")).toHaveCount(1);
 
 		const toolbar = page.locator("page-insight-root");

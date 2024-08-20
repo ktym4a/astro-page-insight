@@ -11,11 +11,11 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.9.2",
-		"astro": "^4.13.3",
+		"@astrojs/check": "^0.9.3",
+		"astro": "^4.14.2",
 		"astro-page-insight": "workspace:*",
 		"sass": "^1.77.8",
-		"sharp": "^0.33.4",
+		"sharp": "^0.33.5",
 		"typescript": "^5.5.4"
 	}
 }
