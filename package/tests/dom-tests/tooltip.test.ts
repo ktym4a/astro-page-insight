@@ -144,7 +144,7 @@ describe("tooltip", () => {
 			const tooltipSummary = createSummary(category, length);
 
 			expect(tooltipSummary).not.toBeNull();
-			expect(tooltipSummary).toBeInstanceOf(HTMLDivElement);
+			expect(tooltipSummary).toBeInstanceOf(HTMLElement);
 			expect(tooltipSummary.textContent).toBe(`${category} (${length})`);
 		});
 	});

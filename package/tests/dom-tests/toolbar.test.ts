@@ -151,7 +151,7 @@ describe("toolbar", () => {
 			const toolbarTitle = createToolbarTitle(title, icon);
 
 			expect(toolbarTitle).not.toBeNull();
-			expect(toolbarTitle).toBeInstanceOf(HTMLDivElement);
+			expect(toolbarTitle).toBeInstanceOf(HTMLHeadingElement);
 			expect(toolbarTitle.childElementCount).toBe(2);
 			if (toolbarTitle.children[0])
 				expect(toolbarTitle.children[0].innerHTML).toBe(icon);
@@ -167,7 +167,7 @@ describe("toolbar", () => {
 			const toolbarTitle = createToolbarTitle(title, icon, subText);
 
 			expect(toolbarTitle).not.toBeNull();
-			expect(toolbarTitle).toBeInstanceOf(HTMLDivElement);
+			expect(toolbarTitle).toBeInstanceOf(HTMLHeadingElement);
 			expect(toolbarTitle.childElementCount).toBe(3);
 			if (toolbarTitle.children[0])
 				expect(toolbarTitle.children[0].innerHTML).toBe(icon);
