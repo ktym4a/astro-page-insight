@@ -4,7 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@astrojs/node": "^8.3.3",
-		"astro": "^4.15.1",
+		"astro": "^4.15.4",
 		"astro-page-insight": "workspace:*"
 	},
 	"version": null
