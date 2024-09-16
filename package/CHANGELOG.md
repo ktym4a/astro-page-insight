@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.8.7
+
+### Patch Changes
+
+- 19f34d1: [internal] update dependency
+
 ## 0.8.6
 
 ### Patch Changes
