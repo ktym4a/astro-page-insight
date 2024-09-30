@@ -312,11 +312,13 @@ test.describe("ssg with no cache - dev", () => {
 			"active astro-page-insight-toolbar-button-alert",
 		);
 		await page.setViewportSize({ width: 400, height: 667 });
+		await page.waitForTimeout(1000);
 		await expect(hideButton).not.toHaveClass(
 			"astro-page-insight-toolbar-button-alert",
 		);
 		await expect(hideModal).toContainText("No hidden highlights found.");
 		await page.setViewportSize({ width: 1200, height: 667 });
+		await page.waitForTimeout(1000);
 		const restoreButton = hideModal.getByRole("button");
 		await expect(hideModal).toBeVisible();
 		expect(restoreButton).toBeVisible();
