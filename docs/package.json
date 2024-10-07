@@ -11,15 +11,15 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.9.3",
+		"@astrojs/check": "^0.9.4",
 		"@astrojs/starlight": "^0.28.2",
 		"@catppuccin/vscode": "^3.15.2",
-		"astro": "^4.15.9",
+		"astro": "^4.15.11",
 		"astro-page-insight": "workspace:*",
 		"sharp": "^0.33.5",
 		"typescript": "^5.6.2"
 	},
 	"devDependencies": {
-		"wrangler": "^3.78.12"
+		"wrangler": "^3.80.0"
 	}
 }
