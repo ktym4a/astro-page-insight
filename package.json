@@ -24,7 +24,7 @@
 		"test:e2e:install": "pnpm --filter astro-page-insight test:e2e:install"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.3",
+		"@biomejs/biome": "1.9.4",
 		"@changesets/cli": "^2.27.9"
 	},
 	"volta": {
