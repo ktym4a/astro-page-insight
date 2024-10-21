@@ -13,9 +13,9 @@
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
 		"@astrojs/mdx": "^3.1.8",
-		"@astrojs/rss": "^4.0.8",
-		"@astrojs/sitemap": "^3.2.0",
-		"astro": "^4.16.2",
+		"@astrojs/rss": "^4.0.9",
+		"@astrojs/sitemap": "^3.2.1",
+		"astro": "^4.16.6",
 		"astro-page-insight": "workspace:*",
 		"typescript": "^5.6.3"
 	}
