@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.9.0
+
+### Minor Changes
+
+- ff08d31: [experimental] Support astro v5
+
 ## 0.8.7
 
 ### Patch Changes
