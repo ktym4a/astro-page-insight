@@ -32,9 +32,7 @@
 			"import": "./dist/integration.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup",
@@ -46,7 +44,7 @@
 	},
 	"type": "module",
 	"peerDependencies": {
-		"astro": "^4.0.0"
+		"astro": "^4.0.0 || ^5.0.0"
 	},
 	"dependencies": {
 		"astro-integration-kit": "^0.16.1",
