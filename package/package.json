@@ -50,16 +50,16 @@
 	},
 	"dependencies": {
 		"astro-integration-kit": "^0.17.0",
-		"lighthouse": "^12.2.1",
-		"puppeteer": "^23.7.1"
+		"lighthouse": "^12.2.2",
+		"puppeteer": "^23.8.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.48.2",
 		"@types/node": "^22.9.0",
-		"@vitest/coverage-v8": "^2.1.4",
-		"happy-dom": "^15.11.0",
+		"@vitest/coverage-v8": "^2.1.5",
+		"happy-dom": "^15.11.6",
 		"tsup": "^8.3.5",
-		"vite": "^5.4.10",
-		"vitest": "^2.1.4"
+		"vite": "^5.4.11",
+		"vitest": "^2.1.5"
 	}
 }
