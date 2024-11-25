@@ -12,14 +12,14 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
-		"@astrojs/starlight": "^0.29.0",
+		"@astrojs/starlight": "^0.29.2",
 		"@catppuccin/vscode": "^3.16.0",
-		"astro": "^4.16.13",
+		"astro": "^4.16.14",
 		"astro-page-insight": "workspace:*",
 		"sharp": "^0.33.5",
-		"typescript": "^5.6.3"
+		"typescript": "^5.7.2"
 	},
 	"devDependencies": {
-		"wrangler": "^3.87.0"
+		"wrangler": "^3.90.0"
 	}
 }
