@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.10.0
+
+### Minor Changes
+
+- 8ccf286: support astro v5
+
 ## 0.9.0
 
 ### Minor Changes
