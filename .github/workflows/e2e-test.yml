@@ -4,14 +4,10 @@ on: [pull_request]
 
 jobs:
   e2e-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Disable AppArmor
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
       - name: Setup PNPM
         run: corepack enable && pnpm -v
