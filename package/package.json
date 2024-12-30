@@ -57,9 +57,9 @@
 		"@playwright/test": "^1.49.1",
 		"@types/node": "^22.10.2",
 		"@vitest/coverage-v8": "^2.1.8",
-		"happy-dom": "^15.11.7",
+		"happy-dom": "^16.0.1",
 		"tsup": "^8.3.5",
-		"vite": "^6.0.5",
+		"vite": "^6.0.6",
 		"vitest": "^2.1.8"
 	}
 }
