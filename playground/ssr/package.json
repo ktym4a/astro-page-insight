@@ -14,10 +14,10 @@
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
 		"@astrojs/node": "^9.0.0",
-		"@astrojs/svelte": "^7.0.2",
-		"astro": "^5.1.1",
+		"@astrojs/svelte": "^7.0.3",
+		"astro": "^5.1.2",
 		"astro-page-insight": "workspace:*",
-		"svelte": "^5.16.0",
+		"svelte": "^5.16.2",
 		"typescript": "^5.7.2"
 	}
 }
