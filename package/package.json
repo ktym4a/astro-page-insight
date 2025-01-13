@@ -51,13 +51,13 @@
 	"dependencies": {
 		"astro-integration-kit": "^0.18.0",
 		"lighthouse": "^12.3.0",
-		"puppeteer": "^23.11.1"
+		"puppeteer": "^24.0.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.49.1",
 		"@types/node": "^22.10.5",
 		"@vitest/coverage-v8": "^2.1.8",
-		"happy-dom": "^16.3.0",
+		"happy-dom": "^16.5.3",
 		"tsup": "^8.3.5",
 		"vite": "^6.0.7",
 		"vitest": "^2.1.8"
