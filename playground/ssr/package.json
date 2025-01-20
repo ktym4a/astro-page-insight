@@ -13,11 +13,11 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
-		"@astrojs/node": "^9.0.0",
+		"@astrojs/node": "^9.0.1",
 		"@astrojs/svelte": "^7.0.3",
-		"astro": "^5.1.5",
+		"astro": "^5.1.7",
 		"astro-page-insight": "workspace:*",
-		"svelte": "^5.17.3",
+		"svelte": "^5.19.0",
 		"typescript": "^5.7.3"
 	}
 }
