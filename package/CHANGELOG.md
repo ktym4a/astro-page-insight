@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.10.1
+
+### Patch Changes
+
+- d3063f1: [internal] update packages
+
 ## 0.10.0
 
 ### Minor Changes
