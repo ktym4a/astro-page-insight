@@ -25,7 +25,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
-		"@changesets/cli": "^2.28.1"
+		"@changesets/cli": "^2.29.2"
 	},
 	"volta": {
 		"node": "20.14.0",
