@@ -1,5 +1,11 @@
 # astro-page-insight
 
+## 0.10.2
+
+### Patch Changes
+
+- 1466bb7: [internal] update dependencies
+
 ## 0.10.1
 
 ### Patch Changes
