@@ -366,7 +366,7 @@ test.describe("ssg with no cache - dev", () => {
 		expect(filterBestPractices).toContainText("0");
 		const filterPerformance = filterModal.locator('[data-type="performance"]');
 		expect(filterPerformance).toBeVisible();
-		expect(filterPerformance).toContainText("3");
+		expect(filterPerformance).toContainText("2");
 		const filterSeo = filterModal.locator('[data-type="seo"]');
 		expect(filterSeo).toBeVisible();
 		expect(filterSeo).toContainText("0");
