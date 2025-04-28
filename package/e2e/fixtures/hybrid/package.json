@@ -3,8 +3,8 @@
 	"type": "module",
 	"private": true,
 	"dependencies": {
-		"@astrojs/node": "^9.2.0",
-		"astro": "^5.7.4",
+		"@astrojs/node": "^9.2.1",
+		"astro": "^5.7.5",
 		"astro-page-insight": "workspace:*"
 	},
 	"version": null
