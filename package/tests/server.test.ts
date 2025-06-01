@@ -1,17 +1,16 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
-import { getLHReport, saveLHReport } from "../src/server/index.ts";
-import {
-	generateDefaultLHData,
-	generateLHReportFileName,
-} from "../src/utils/lh.ts";
+import { LighthouseEngine } from "../src/engines/lighthouse/index.ts";
+import { getEngineReport, saveEngineReport } from "../src/server/engine.ts";
+import { generateDefaultLHData } from "../src/utils/lh.ts";
 
 describe("lh", () => {
-	describe("saveLHReport", () => {
+	describe("saveEngineReport", () => {
 		it("should save a file", async () => {
+			const engine = new LighthouseEngine();
 			const cacheDir = "tests/fixtures/.pageinsight/desktop";
 			const url = "https://example.com/";
-			const fileName = generateLHReportFileName(url);
+			const fileName = engine.generateFileName(url);
 
 			const file = await fs.promises
 				.readFile(`${cacheDir}/${fileName}`, { encoding: "utf-8" })
@@ -22,7 +21,7 @@ describe("lh", () => {
 
 			if (file) {
 				await fs.promises.unlink(`${cacheDir}/${fileName}`).catch(() => null);
-				await saveLHReport(cacheDir, url, JSON.parse(file));
+				await saveEngineReport("lighthouse", cacheDir, url, JSON.parse(file));
 				const newFile = await fs.promises
 					.readFile(`${cacheDir}/${fileName}`, { encoding: "utf-8" })
 					.catch(() => null);
@@ -36,14 +35,14 @@ describe("lh", () => {
 		});
 	});
 
-	describe("getLHReport", () => {
+	describe("getEngineReport", () => {
 		it("should return an empty object without cache false", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/test";
 			const weight = 0;
 
 			const obj = generateDefaultLHData();
-			const result = await getLHReport(cacheDir, url, weight);
+			const result = await getEngineReport("lighthouse", cacheDir, url, weight);
 
 			expect(result).toStrictEqual(obj);
 			expect(result.cache).toBe(false);
@@ -55,7 +54,7 @@ describe("lh", () => {
 			const weight = 0;
 
 			const obj = generateDefaultLHData();
-			const result = await getLHReport(cacheDir, url, weight);
+			const result = await getEngineReport("lighthouse", cacheDir, url, weight);
 
 			expect(result).not.toStrictEqual(obj);
 			expect(Object.keys(result.desktop.elements)).lengthOf(6);
@@ -74,7 +73,7 @@ describe("lh", () => {
 			const url = "https://example.com/";
 			const weight = 2;
 
-			const result = await getLHReport(cacheDir, url, weight);
+			const result = await getEngineReport("lighthouse", cacheDir, url, weight);
 
 			expect(Object.keys(result.desktop.elements)).lengthOf(4);
 			expect(Object.keys(result.mobile.elements)).lengthOf(4);
@@ -86,19 +85,19 @@ describe("lh", () => {
 			const weight = 0;
 
 			const obj = generateDefaultLHData();
-			const result = await getLHReport(cacheDir, url, weight);
+			const result = await getEngineReport("lighthouse", cacheDir, url, weight);
 
 			expect(result.desktop).not.toStrictEqual(obj.desktop);
 			expect(result.mobile).toStrictEqual(obj.mobile);
 		});
 
-		it("should return an LH result object with Desktop", async () => {
+		it("should return an LH result object with Mobile", async () => {
 			const cacheDir = "tests/fixtures/.pageinsight";
 			const url = "https://example.com/releases-1_8";
 			const weight = 0;
 
 			const obj = generateDefaultLHData();
-			const result = await getLHReport(cacheDir, url, weight);
+			const result = await getEngineReport("lighthouse", cacheDir, url, weight);
 
 			expect(result.desktop).toStrictEqual(obj.desktop);
 			expect(result.mobile).not.toStrictEqual(obj.mobile);
