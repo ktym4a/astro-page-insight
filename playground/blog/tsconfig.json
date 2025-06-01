@@ -1,6 +1,3 @@
 {
-	"extends": "astro/tsconfigs/strictest",
-	"compilerOptions": {
-		"strictNullChecks": true
-	}
+	"extends": "../../tsconfig.astro.json"
 }

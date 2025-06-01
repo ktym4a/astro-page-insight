@@ -1,0 +1,12 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"moduleResolution": "Bundler",
+		"jsx": "preserve",
+		"jsxImportSource": "astro",
+		"types": ["astro/client"],
+		"allowJs": true,
+		"checkJs": false
+	}
+}

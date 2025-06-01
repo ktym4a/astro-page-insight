@@ -17,8 +17,8 @@
 		"release": "node scripts/release.mjs",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
-		"test:unit": "pnpm --filter astro-page-insight test:unit",
-		"test:unit:dev": "pnpm --filter astro-page-insight test:unit:dev",
+		"typecheck": "pnpm --parallel --filter astro-page-insight --filter @page-insight/ui typecheck",
+		"test:unit": "pnpm --parallel --filter astro-page-insight --filter @page-insight/ui test",
 		"test:e2e": "pnpm --filter astro-page-insight test:e2e",
 		"test:e2e:clear": "pnpm --filter astro-page-insight test:e2e:clear",
 		"test:e2e:install": "pnpm --filter astro-page-insight test:e2e:install"

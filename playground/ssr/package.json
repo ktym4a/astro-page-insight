@@ -8,6 +8,7 @@
 		"start": "astro dev",
 		"build": "astro check && astro build",
 		"preview": "astro preview",
+		"typecheck": "astro check",
 		"astro": "astro",
 		"server": "node dist/server/entry.mjs"
 	},

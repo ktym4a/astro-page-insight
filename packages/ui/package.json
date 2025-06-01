@@ -1,0 +1,60 @@
+{
+	"name": "@page-insight/ui",
+	"version": "0.0.0",
+	"description": "UI components for Page Insight - displays Lighthouse results with a clean, accessible interface",
+	"author": {
+		"email": "shoma@ktym4a.me",
+		"name": "ktym4a",
+		"url": "https://ktym4a.me"
+	},
+	"license": "MIT",
+	"keywords": [
+		"page-insight",
+		"lighthouse",
+		"ui",
+		"components",
+		"devtools",
+		"a11y",
+		"performance"
+	],
+	"homepage": "https://github.com/ktym4a/astro-page-insight/tree/main/packages/ui",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ktym4a/astro-page-insight.git",
+		"directory": "packages/ui"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./components/*": {
+			"types": "./dist/components/*.d.ts",
+			"import": "./dist/components/*.js"
+		}
+	},
+	"files": ["dist"],
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest",
+		"test:coverage": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"@types/node": "^22.15.21",
+		"@vitest/coverage-v8": "^3.1.4",
+		"happy-dom": "^17.4.7",
+		"tsup": "^8.5.0",
+		"typescript": "^5.7.2",
+		"vite": "^6.3.5",
+		"vitest": "^3.1.4"
+	}
+}

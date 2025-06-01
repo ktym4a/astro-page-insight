@@ -32,14 +32,13 @@
 			"import": "./dist/integration.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup",
-		"test:unit": "vitest run --coverage",
-		"test:unit:dev": "vitest --coverage.enabled=true",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run --coverage",
+		"test:dev": "vitest --coverage.enabled=true",
 		"test:e2e": "playwright test",
 		"test:e2e:clear": "npx puppeteer browsers clear",
 		"test:e2e:install": "playwright install --with-deps && npx puppeteer browsers install chrome"
@@ -49,6 +48,7 @@
 		"astro": "^4.0.0 || ^5.0.0"
 	},
 	"dependencies": {
+		"@page-insight/ui": "workspace:*",
 		"astro-integration-kit": "^0.18.0",
 		"lighthouse": "^12.6.0",
 		"puppeteer": "^24.9.0"

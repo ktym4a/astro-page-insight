@@ -1,9 +1,13 @@
 {
-	"extends": "astro/tsconfigs/strictest",
+	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
-		"module": "Node16",
-		"moduleResolution": "Node16",
-		"jsx": "preserve"
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"types": ["node", "astro/client"]
 	},
-	"exclude": ["dist"]
+	"include": ["src/**/*"],
+	"exclude": ["dist", "e2e", "node_modules"]
 }
