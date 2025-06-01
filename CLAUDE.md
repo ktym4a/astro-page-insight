@@ -62,23 +62,24 @@ pnpm release        # Release new version
 
 ### Core Flow
 1. **Integration Entry** (`package/src/integration.ts`): Astro hooks into dev/build lifecycle
-2. **Dev Mode**: Registers toolbar app → WebSocket events trigger Lighthouse → UI renders results
+2. **Dev Mode**: Registers toolbar app → WebSocket events trigger Lighthouse → UI package renders results
 3. **Build Mode**: Vite plugin bundles cache → Client fetches from `_astro/pageinsight/`
 
-### Key Components
+### Package Architecture
 
-**Server-side** (`package/src/server/index.ts`):
-- Launches Puppeteer for Lighthouse execution
-- Caches results in `.pageinsight/` directory
-- Handles mobile/desktop form factors separately
+**Main Package** (`package/` - `astro-page-insight`):
+- **Integration** (`src/integration.ts`): Astro lifecycle hooks
+- **Server** (`src/server/index.ts`): Puppeteer + Lighthouse execution, caching
+- **Dev Tool** (`src/clients/devTool.ts`): Astro dev toolbar integration
+- **Main Client** (`src/clients/index.ts`): Coordinates with UI package
+- **Dev Plugin** (`src/plugin.ts`): Implements Astro's dev toolbar API
+- **Vite Plugin** (`src/plugins/vite-plugin-page-insight.ts`): Build-time bundling
 
-**Client-side**:
-- **Dev Tool** (`package/src/clients/devTool.ts`): Manages Astro dev toolbar integration
-- **Main Client** (`package/src/clients/index.ts`): Renders UI in Shadow DOM, handles state
-
-**Plugin System**:
-- **Dev Plugin** (`package/src/plugin.ts`): Implements Astro's dev toolbar API
-- **Vite Plugin** (`package/src/plugins/vite-plugin-page-insight.ts`): Bundles cache files during build
+**UI Package** (`packages/ui/` - `@page-insight/ui`):
+- **Components** (`src/components/`): All UI rendering logic (toolbar, indicators, tooltips, etc.)
+- **Coordinator** (`src/coordinator.ts`): Manages component lifecycle and data mapping
+- **Constants & Types** (`src/constants/`, `src/types/`): Shared definitions
+- **Utils** (`src/utils/`): UI-specific utilities
 
 ### Critical Design Patterns
 
@@ -108,17 +109,24 @@ The integration accepts options via `pageInsight({ ... })`:
 
 ### Testing Strategy
 
-- **Unit tests**: Test individual UI components and utilities
-- **DOM tests**: Test UI component rendering and interactions
-- **E2E tests**: Test full integration with different Astro configurations (SSG, SSR, hybrid, view transitions)
+- **UI Package Tests** (`packages/ui/tests/`): Test UI components in isolation using Vitest + Happy DOM
+- **Main Package Tests** (`package/tests/`): Test core functionality, server logic, and utilities
+- **E2E tests** (`package/e2e/`): Test full integration with different Astro configurations (SSG, SSR, hybrid, view transitions)
 
 ### Build Configuration
 
-Uses tsup with:
-- Entry: All TS/JS files in src
-- Format: ESM only
-- Includes: TypeScript definitions and sourcemaps
+**UI Package** (`@page-insight/ui`):
+- Uses tsup with ESM format, TypeScript definitions
+- Target: ES2020 for modern browser compatibility
+- Entry: All components, coordinator, types, and utils
+
+**Main Package** (`astro-page-insight`):
+- Uses tsup with ESM format, TypeScript definitions  
+- Target: Node18 for Astro compatibility
 - Externals: astro, astro-integration-kit, vite
+- **Dependency**: Requires UI package to be built first
+
+**Build Order**: UI package → Main package (handled automatically by scripts)
 
 ### Development Notes
 

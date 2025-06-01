@@ -6,8 +6,8 @@
 		"node": ">=18.19.0"
 	},
 	"scripts": {
-		"package:dev": "pnpm --filter astro-page-insight dev",
-		"package:build": "pnpm --filter astro-page-insight build",
+		"package:dev": "pnpm --parallel --filter @page-insight/ui --filter astro-page-insight dev",
+		"package:build": "pnpm --filter @page-insight/ui build && pnpm --filter astro-page-insight build",
 		"playground:blog": "pnpm --filter blog dev",
 		"playground:ssr": "pnpm --filter ssr dev",
 		"playground:starlog": "pnpm --filter starlog dev",
