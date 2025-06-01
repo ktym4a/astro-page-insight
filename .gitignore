@@ -1,3 +1,35 @@
 node_modules
 .sample_data
 .DS_Store
+
+# Coverage reports
+coverage*
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Astro cache
+.astro/
+
+# Test results
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env*
+!.env.example
+
+# Cache directories
+.cache/
+.vscode/
+.idea/
+
+# OS generated files
+Thumbs.db

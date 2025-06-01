@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { FilterTypes, LHResultForTooltip } from "../../src/types/index.ts";
-import { createHideButton, createHideList } from "../../src/ui/hide.ts";
-import { createToolbar } from "../../src/ui/toolbar.ts";
-import { lhResult } from "../fixtures/dummy.ts";
-import { createShadowRoot } from "../utils.ts";
+import { createHideButton, createHideList } from "../src/components/hide.ts";
+import { createToolbar } from "../src/components/toolbar.ts";
+import type { FilterTypes, LHResultForTooltip } from "../src/types/index.ts";
+import { lhResult } from "./fixtures/dummy.ts";
+import { createShadowRoot } from "./utils.ts";
 
 describe("hide", () => {
 	describe("createHideButton", () => {

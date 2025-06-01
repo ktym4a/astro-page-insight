@@ -1,6 +1,6 @@
+import { showToast } from "@page-insight/ui";
 import type { ToolbarAppEventTarget } from "astro/runtime/client/dev-toolbar/helpers.js";
 import type { Buttons } from "../types/index.js";
-import { showToast } from "../ui/toast.js";
 
 export function showInitialIcon(app: ToolbarAppEventTarget, cache: boolean) {
 	if (cache) {

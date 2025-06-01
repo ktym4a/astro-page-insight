@@ -1,3 +1,9 @@
+import {
+	createToastArea,
+	createToolbarButton,
+	getFormFactor,
+	reloadCircleIcon,
+} from "@page-insight/ui";
 import { defineToolbarApp } from "astro/toolbar";
 import { showError, showInitialIcon, showSuccess } from "./clients/devTool.js";
 import { initPageInsight, initToolbar, updateCanvas } from "./clients/index.js";
@@ -8,10 +14,6 @@ import type {
 	PageInsightData,
 	PageInsightStatus,
 } from "./types/index.js";
-import { reloadCircleIcon } from "./ui/icons.js";
-import { getFormFactor } from "./ui/indicator.js";
-import { createToastArea } from "./ui/toast.js";
-import { createToolbarButton } from "./ui/toolbar.js";
 
 export default defineToolbarApp({
 	init(canvas, app, server) {

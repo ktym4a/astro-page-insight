@@ -9,8 +9,8 @@ import {
 	createToolbarTitle,
 	createToolbarWrapper,
 	toggleToolbarWrapper,
-} from "../../src/ui/toolbar.ts";
-import { createShadowRoot } from "../utils.ts";
+} from "../src/components/toolbar.ts";
+import { createShadowRoot } from "./utils.ts";
 
 describe("toolbar", () => {
 	describe("createToolbar", () => {

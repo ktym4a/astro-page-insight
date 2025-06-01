@@ -1,5 +1,5 @@
-import { mappingData } from "../clients/index.js";
 import { COLORS } from "../constants/index.js";
+import { mappingData } from "../coordinator.js";
 import type {
 	FilterTypes,
 	HideArguments,

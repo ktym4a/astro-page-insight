@@ -20,5 +20,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build UI package
+        run: pnpm --filter @page-insight/ui build
+
+      - name: Build main package
         run: pnpm --filter astro-page-insight build

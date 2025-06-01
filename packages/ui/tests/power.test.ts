@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { Buttons } from "../../src/types/index.ts";
-import { createConsoleAlertButton } from "../../src/ui/consoleAlert.ts";
-import { createFilterButton } from "../../src/ui/filter.ts";
-import { createHideButton } from "../../src/ui/hide.ts";
-import { createPowerButton } from "../../src/ui/power.ts";
-import { createScoreButton } from "../../src/ui/score.ts";
-import { createShadowRoot } from "../utils.ts";
+import { createConsoleAlertButton } from "../src/components/consoleAlert.ts";
+import { createFilterButton } from "../src/components/filter.ts";
+import { createHideButton } from "../src/components/hide.ts";
+import { createPowerButton } from "../src/components/power.ts";
+import { createScoreButton } from "../src/components/score.ts";
+import type { Buttons } from "../src/types/index.ts";
+import { createShadowRoot } from "./utils.ts";
 
 describe("power", () => {
 	describe("createPowerButton", () => {

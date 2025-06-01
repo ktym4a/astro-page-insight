@@ -1,0 +1,4 @@
+coverage-unit
+node_modules/
+/test-results/
+dist/

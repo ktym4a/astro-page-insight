@@ -1,4 +1,4 @@
-import { mappingData } from "../clients/index.js";
+import { mappingData } from "../coordinator.js";
 import type {
 	FilterTypes,
 	HideElement,

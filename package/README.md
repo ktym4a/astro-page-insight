@@ -121,10 +121,11 @@ If you set `build.bundle` to `true`, **It will bundle results from local cache, 
 
 ## Contributing
 
-This package is structured as a monorepo:
+This project is structured as a multi-package monorepo:
 
-- `playground` contains code for testing the package
-- `package` contains the actual package
+- `packages/ui` - UI components and rendering logic (`@page-insight/ui`)
+- `package` - Main Astro integration package (`astro-page-insight`)
+- `playground` - Example applications for testing
 
 Install dependencies using pnpm: 
 
@@ -132,11 +133,13 @@ Install dependencies using pnpm:
 pnpm i --frozen-lockfile
 ```
 
-Watch for package changes:
+Watch for changes in both packages:
 
 ```bash
 pnpm package:dev
 ```
+
+**Note**: The UI package must be built before the main package due to dependencies. The build order is automatically handled by the development and build scripts.
 
 Start the playground with blog:
 

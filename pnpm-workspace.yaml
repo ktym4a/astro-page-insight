@@ -1,7 +1,10 @@
 packages:
   - package
+  - "packages/*"
   - "playground/blog"
   - "playground/ssr"
   - "playground/starlog"
   - "docs"
   - "package/e2e/fixtures/*"
+
+useNodeVersion: 22.16.0

@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { LHResultForTooltip } from "../../src/types/index.ts";
-import { createHighlight } from "../../src/ui/highlight.ts";
-import { highlightObj } from "../fixtures/dummy.ts";
-import { createShadowRoot } from "../utils.ts";
+import { createHighlight } from "../src/components/highlight.ts";
+import type { LHResultForTooltip } from "../src/types/index.ts";
+import { highlightObj } from "./fixtures/dummy.ts";
+import { createShadowRoot } from "./utils.ts";
 
 describe("highlight", () => {
 	describe("createHighlight", () => {

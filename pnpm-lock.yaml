@@ -45,6 +45,9 @@ importers:
 
   package:
     dependencies:
+      '@page-insight/ui':
+        specifier: workspace:*
+        version: link:../packages/ui
       astro:
         specifier: ^4.0.0 || ^5.0.0
         version: 5.8.0(@types/node@22.15.21)(jiti@2.4.2)(rollup@4.41.0)(sass@1.89.0)(typescript@5.8.3)(yaml@2.5.0)
@@ -130,6 +133,30 @@ importers:
       astro-page-insight:
         specifier: workspace:*
         version: link:../../..
+
+  packages/ui:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.21
+        version: 22.15.21
+      '@vitest/coverage-v8':
+        specifier: ^3.1.4
+        version: 3.1.4(vitest@3.1.4(@types/debug@4.1.12)(@types/node@22.15.21)(happy-dom@17.4.7)(jiti@2.4.2)(sass@1.89.0)(yaml@2.5.0))
+      happy-dom:
+        specifier: ^17.4.7
+        version: 17.4.7
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.5.0)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.15.21)(jiti@2.4.2)(sass@1.89.0)(yaml@2.5.0)
+      vitest:
+        specifier: ^3.1.4
+        version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.21)(happy-dom@17.4.7)(jiti@2.4.2)(sass@1.89.0)(yaml@2.5.0)
 
   playground/blog:
     dependencies:

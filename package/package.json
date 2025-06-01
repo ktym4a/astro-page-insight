@@ -32,12 +32,11 @@
 			"import": "./dist/integration.js"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup",
+		"typecheck": "tsc --noEmit",
 		"test:unit": "vitest run --coverage",
 		"test:unit:dev": "vitest --coverage.enabled=true",
 		"test:e2e": "playwright test",
@@ -49,6 +48,7 @@
 		"astro": "^4.0.0 || ^5.0.0"
 	},
 	"dependencies": {
+		"@page-insight/ui": "workspace:*",
 		"astro-integration-kit": "^0.18.0",
 		"lighthouse": "^12.6.0",
 		"puppeteer": "^24.9.0"

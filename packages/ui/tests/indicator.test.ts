@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { desktopIcon } from "../../src/ui/icons.ts";
+import { desktopIcon } from "../src/components/icons.ts";
 import {
 	createIndicatorButton,
 	getFormFactor,
 	getIcon,
-} from "../../src/ui/indicator.ts";
+} from "../src/components/indicator.ts";
 
 describe("indicator", () => {
 	describe("getFormFactor", () => {

@@ -5,10 +5,11 @@ export default defineConfig({
 	test: {
 		coverage: {
 			provider: "v8",
-			include: ["src/utils/lh.ts", "src/server/*.ts"],
-			exclude: ["tests/**/*", "coverage/**/*", "coverage-unit/**/*"],
-			reportsDirectory: "coverage-unit",
+			include: ["src/**/*.ts"],
+			exclude: ["tests/**/*", "coverage/**/*", "dist/**/*"],
+			reportsDirectory: "coverage",
 		},
 		include: ["tests/**/*.test.ts"],
+		environment: "happy-dom",
 	},
 });
