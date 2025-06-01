@@ -44,9 +44,8 @@
 		"dev": "tsup --watch",
 		"build": "tsup",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
-		"test:dev": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:unit": "vitest run --coverage",
+		"test:unit:dev": "vitest --coverage.enabled=true"
 	},
 	"devDependencies": {
 		"@types/node": "^22.15.21",

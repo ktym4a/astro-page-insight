@@ -18,7 +18,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Unit Test UI package
-        run: pnpm --filter @page-insight/ui test
+        run: pnpm --filter @page-insight/ui test:unit
 
       - name: Unit Test main package
         run: pnpm --filter astro-page-insight test:unit

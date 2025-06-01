@@ -37,8 +37,8 @@
 		"dev": "tsup --watch",
 		"build": "tsup",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run --coverage",
-		"test:dev": "vitest --coverage.enabled=true",
+		"test:unit": "vitest run --coverage",
+		"test:unit:dev": "vitest --coverage.enabled=true",
 		"test:e2e": "playwright test",
 		"test:e2e:clear": "npx puppeteer browsers clear",
 		"test:e2e:install": "playwright install --with-deps && npx puppeteer browsers install chrome"
