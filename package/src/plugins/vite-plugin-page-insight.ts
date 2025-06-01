@@ -25,15 +25,13 @@ export const astroPageInsightPlugin = (
 							withFileTypes: true,
 						})
 						.filter((dirent) => dirent.isFile())
-						.map((dirent) => `${dirent.path}/${dirent.name}`);
-
+						.map((dirent) => `${dirent.parentPath}/${dirent.name}`);
 					for (const filePath of files) {
 						const normalizeFilePath = normalizePath(filePath);
 						if (!normalizeFilePath.endsWith(".json")) {
 							continue;
 						}
 						const content = fs.readFileSync(normalizeFilePath, "utf-8");
-
 						this.emitFile({
 							type: "asset",
 							fileName: normalizePath(

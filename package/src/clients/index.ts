@@ -21,12 +21,8 @@ import {
 	mobileIcon,
 } from "@page-insight/ui";
 
-import type { LoadOptionsType, PageInsightData } from "../types/index.js";
-import {
-	generateDefaultLHData,
-	generateLHReportFileName,
-	organizeLHResult,
-} from "../utils/lh.js";
+import { clientEngineRegistry } from "../engines/client-registry.js";
+import type { LoadOptionsType, PageInsightData, CacheLHResultByFormFactor } from "../types/index.js";
 
 export const initPageInsightForClient = async (
 	assetsDir: string,
@@ -34,33 +30,56 @@ export const initPageInsightForClient = async (
 	weight: number,
 	breakPoint: number,
 ) => {
-	const lhResult = generateDefaultLHData();
+	const lhResult: CacheLHResultByFormFactor = {
+		desktop: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+		mobile: {
+			elements: {},
+			consoleErrors: [],
+			scoreList: {},
+			metaErrors: [],
+			categoryCount: {},
+		},
+		cache: false,
+	};
 	let hasCache = false;
 
-	const fileName = generateLHReportFileName(window.location.href);
+	const engineName = "lighthouse";
+	const engine = clientEngineRegistry.get(engineName);
 
-	const filePathDesktop = `/${assetsDir}/pageinsight/desktop/${fileName}`;
-	const responseDesktop = await fetch(filePathDesktop, {
-		cache: "no-store",
-	});
-	if (responseDesktop.ok) {
-		const data = await responseDesktop.json();
-		const result = organizeLHResult(data, weight);
+	if (engine) {
+		const fileName = engine.generateFileName(window.location.href);
 
-		lhResult.desktop = result;
-		hasCache = true;
-	}
+		const filePathDesktop = `/${assetsDir}/pageinsight/desktop/${fileName}`;
+		const responseDesktop = await fetch(filePathDesktop, {
+			cache: "no-store",
+		});
+		if (responseDesktop.ok) {
+			const serializedData = await responseDesktop.text();
+			const rawResult = engine.deserializeResult(serializedData);
+			const result = engine.organizeResult(rawResult, weight);
 
-	const filePathMobile = `/${assetsDir}/pageinsight/mobile/${fileName}`;
-	const responseMobile = await fetch(filePathMobile, {
-		cache: "no-store",
-	});
-	if (responseMobile.ok) {
-		const data = await responseMobile.json();
-		const result = organizeLHResult(data, weight);
+			lhResult.desktop = result;
+			hasCache = true;
+		}
 
-		lhResult.mobile = result;
-		hasCache = true;
+		const filePathMobile = `/${assetsDir}/pageinsight/mobile/${fileName}`;
+		const responseMobile = await fetch(filePathMobile, {
+			cache: "no-store",
+		});
+		if (responseMobile.ok) {
+			const serializedData = await responseMobile.text();
+			const rawResult = engine.deserializeResult(serializedData);
+			const result = engine.organizeResult(rawResult, weight);
+
+			lhResult.mobile = result;
+			hasCache = true;
+		}
 	}
 
 	if (!hasCache) return;
@@ -75,7 +94,7 @@ export const initPageInsightForClient = async (
 	const options: Omit<LoadOptionsType, "firstFetch"> = {
 		breakPoint: breakPoint,
 		categories: CATEGORIES,
-		lhReports: lhResult,
+		reports: lhResult,
 	};
 
 	const initObj = initToolbar(pageInsightRoot.shadowRoot, !showOnLoad, options);
@@ -121,7 +140,6 @@ export const initToolbar = (
 	breakPoint: number;
 	pageInsightData: PageInsightData;
 } => {
-	// Clean up existing toolbars to prevent duplicates
 	const existingToolbars = root.querySelectorAll(".astro-page-insight-toolbar");
 	for (const toolbar of existingToolbars) {
 		toolbar.remove();
@@ -140,33 +158,33 @@ export const initToolbar = (
 	};
 
 	const scoreListByFormFactor = {
-		mobile: options.lhReports.mobile.scoreList,
-		desktop: options.lhReports.desktop.scoreList,
+		mobile: options.reports.mobile.scoreList,
+		desktop: options.reports.desktop.scoreList,
 	};
 
-	const filterCategories = options.categories.reduce((acc, cur) => {
-		return {
-			// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-			...acc,
-			[cur]: false,
-		};
-	}, {});
+	const filterCategories = options.categories.reduce(
+		(acc, cur) => {
+			acc[cur] = false;
+			return acc;
+		},
+		{} as Record<string, boolean>,
+	);
 
 	const categoryCountByFormFactor = {
-		mobile: options.lhReports.mobile.categoryCount,
-		desktop: options.lhReports.desktop.categoryCount,
+		mobile: options.reports.mobile.categoryCount,
+		desktop: options.reports.desktop.categoryCount,
 	};
 
 	const lhResultByFormFactor = {
 		mobile: {
-			elements: options.lhReports.mobile.elements,
-			metaErrors: options.lhReports.mobile.metaErrors,
-			consoleErrors: options.lhReports.mobile.consoleErrors,
+			elements: options.reports.mobile.elements,
+			metaErrors: options.reports.mobile.metaErrors,
+			consoleErrors: options.reports.mobile.consoleErrors,
 		},
 		desktop: {
-			elements: options.lhReports.desktop.elements,
-			metaErrors: options.lhReports.desktop.metaErrors,
-			consoleErrors: options.lhReports.desktop.consoleErrors,
+			elements: options.reports.desktop.elements,
+			metaErrors: options.reports.desktop.metaErrors,
+			consoleErrors: options.reports.desktop.consoleErrors,
 		},
 	};
 

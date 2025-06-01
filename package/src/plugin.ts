@@ -17,7 +17,6 @@ import type {
 
 export default defineToolbarApp({
 	init(canvas, app, server) {
-		// if load from LH, then skip
 		if (
 			new URL(window.location.href).searchParams.get("astro-page-insight") ===
 			"true"
@@ -25,7 +24,6 @@ export default defineToolbarApp({
 			return;
 		}
 
-		// if move to another page, then close app
 		document.addEventListener("astro:before-preparation", () => {
 			app.toggleState({
 				state: false,
@@ -89,7 +87,7 @@ export default defineToolbarApp({
 				if (fetchStatus.isFetching && buttons.fetchButton)
 					buttons.fetchButton.classList.add("animate");
 
-				showInitialIcon(app, options.lhReports.cache);
+				showInitialIcon(app, options.reports.cache);
 
 				if (fetchStatus.firstFetch === "load" && !fetchStatus.isFirstFetch) {
 					fetchStart(server);

@@ -3,17 +3,19 @@ import {
 	createResolver,
 	defineIntegration,
 } from "astro-integration-kit";
-import { CATEGORIES } from "./constants/index.js";
+import { engineRegistry } from "./engines/index.js";
 import { astroPageInsightPlugin } from "./plugins/vite-plugin-page-insight.js";
 import { integrationOptionsSchema } from "./schema/index.js";
-import { getLHReport, saveLHReport, startLH } from "./server/index.js";
-import { organizeLHResult } from "./utils/lh.js";
+import {
+	getEngineReport,
+	runTestingEngine,
+	saveEngineReport,
+} from "./server/engine.js";
 
 export default defineIntegration({
 	name: "astro-page-insight",
 	optionsSchema: integrationOptionsSchema,
 	setup({ options }) {
-		// TODO: remove experimentalCache in the next major release
 		const { lh, firstFetch, experimentalCache, cache, build } = options;
 		const { resolve } = createResolver(import.meta.url);
 		let cacheDir = ".pageinsight";
@@ -69,13 +71,22 @@ export default defineIntegration({
 					}>(
 						"astro-dev-toolbar:astro-page-insight-app:init",
 						async ({ url }) => {
-							const lhReports = await getLHReport(cacheDir, url, lh.weight);
+							const engineName = "lighthouse";
+							const engineReports = await getEngineReport(
+								engineName,
+								cacheDir,
+								url,
+								lh.weight,
+							);
+
+							const engine = engineRegistry.get(engineName);
+							const categories = engine?.categories;
 
 							toolbar.send("astro-dev-toolbar:astro-page-insight-app:options", {
 								breakPoint: lh.breakPoint,
-								categories: CATEGORIES,
+								categories,
 								firstFetch,
-								lhReports,
+								reports: engineReports,
 							});
 						},
 					);
@@ -88,31 +99,35 @@ export default defineIntegration({
 						"astro-dev-toolbar:astro-page-insight-app:run-lighthouse",
 						async ({ url, width, height }) => {
 							try {
-								const lhData = await startLH({
+								const engineName = "lighthouse";
+								const engineData = await runTestingEngine(engineName, {
 									url,
 									width,
 									height,
 									breakPoint: lh.breakPoint,
 									weight: lh.weight,
 								});
-								if (lhData.result) {
-									// TODO: remove experimentalCache in the next major release
+
+								if (engineData.result) {
 									if (experimentalCache || cache) {
-										await saveLHReport(
-											`${cacheDir}/${lhData.formFactor}`,
-											url,
-											lhData.result,
-										);
+										if (engineData.rawResult) {
+											await saveEngineReport(
+												engineName,
+												`${cacheDir}/${engineData.formFactor}`,
+												url,
+												engineData.rawResult,
+											);
+										}
 									}
 
-									const result = organizeLHResult(lhData.result, lh.weight);
+									const result = engineData.result;
 
 									toolbar.send(
 										"astro-dev-toolbar:astro-page-insight-app:on-success",
 										{
 											...result,
 											url,
-											formFactor: lhData.formFactor,
+											formFactor: engineData.formFactor,
 										},
 									);
 								}

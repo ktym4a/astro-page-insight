@@ -1,12 +1,20 @@
-import type { CacheLHResultByFormFactor } from "../types/index.js";
+import type {
+	MetricSavings,
+	Result,
+	ScoreDisplayMode,
+} from "lighthouse/types/lhr/audit-result.d.ts";
 
-// Removed organizeLHResult - now handled by engine system
+import type { RunnerResult } from "lighthouse";
+import type {
+	AuditType,
+	CategoryCountType,
+	ScoreListType,
+} from "../../types/index.js";
 
-/*
-const organizeLHResult = (
+export const organizeLighthouseResult = (
 	lhResult: RunnerResult,
 	weight: number,
-): Omit<LHResult, "url" | "formFactor"> => {
+) => {
 	const { lhr, artifacts } = lhResult;
 
 	const consoleErrors = artifacts.ConsoleMessages.filter(
@@ -24,7 +32,7 @@ const organizeLHResult = (
 		};
 	});
 
-	const categories: Categories = {};
+	const categories: { [auditId: string]: string[] } = {};
 	const scoreList = {} as ScoreListType;
 	const categoryCount = {} as CategoryCountType;
 
@@ -47,8 +55,8 @@ const organizeLHResult = (
 		}
 	}
 
-	let elements = {} as LHResult["elements"];
-	let metaErrors = [] as LHResult["metaErrors"];
+	let elements = {} as { [selector: string]: Array<AuditType> };
+	let metaErrors = [] as Array<AuditType>;
 
 	for (const incomplete of artifacts.Accessibility.violations) {
 		if (categories[incomplete.id] === undefined) continue;
@@ -158,13 +166,10 @@ const organizeLHResult = (
 		categoryCount,
 	};
 };
-*/
 
-// Removed helper functions - now in engine system
-/*
 const createAudit = (
-	elements: LHResult["elements"],
-	metaErrors: LHResult["metaErrors"],
+	elements: { [selector: string]: Array<AuditType> },
+	metaErrors: Array<AuditType>,
 	selector: string,
 	element: AuditType,
 	categoryCount: CategoryCountType,
@@ -207,8 +212,8 @@ const findSelector = (
 	score: number | null,
 	scoreDisplayMode: ScoreDisplayMode,
 	category: string[],
-	elements: LHResult["elements"],
-	metaErrors: LHResult["metaErrors"],
+	elements: { [selector: string]: Array<AuditType> },
+	metaErrors: Array<AuditType>,
 	categoryCount: CategoryCountType,
 	metricSavings?: MetricSavings,
 ) => {
@@ -301,47 +306,4 @@ const getSelector = (node: string) => {
 			if (index === 1) return `html > body > ${acc}${elem}`;
 			return `${acc} > ${elem}`;
 		}, "");
-};
-*/
-
-// Removed generateLHReportFileName - now in engine system
-/*
-export const generateLHReportFileName = (url: string) => {
-	const urlObj = new URL(url);
-
-	let fileName: string;
-	if (urlObj.pathname === "/") {
-		fileName = "index";
-	} else {
-		fileName = urlObj.pathname.replace(/\//g, "-").replace(/^-|-$/g, "");
-	}
-
-	if (urlObj.search) {
-		fileName += urlObj.search.replace(/\//g, "").replace(/\?/g, "-");
-	}
-
-	return `${decodeURI(fileName)}.json`;
-};
-*/
-
-export const generateDefaultLHData = () => {
-	const lhResult: CacheLHResultByFormFactor = {
-		desktop: {
-			elements: {},
-			consoleErrors: [],
-			scoreList: {},
-			metaErrors: [],
-			categoryCount: {},
-		},
-		mobile: {
-			elements: {},
-			consoleErrors: [],
-			scoreList: {},
-			metaErrors: [],
-			categoryCount: {},
-		},
-		cache: false,
-	};
-
-	return lhResult;
 };

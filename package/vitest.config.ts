@@ -5,7 +5,7 @@ export default defineConfig({
 	test: {
 		coverage: {
 			provider: "v8",
-			include: ["src/utils/lh.ts", "src/server/*.ts"],
+			include: ["src/**/*.ts"],
 			exclude: ["tests/**/*", "coverage/**/*", "coverage-unit/**/*"],
 			reportsDirectory: "coverage-unit",
 		},

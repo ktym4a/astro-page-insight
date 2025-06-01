@@ -1,20 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { LighthouseEngine } from "../src/engines/lighthouse/index.ts";
 import type { CacheLHResultByFormFactor } from "../src/types/index.ts";
-import {
-	generateDefaultLHData,
-	generateLHReportFileName,
-} from "../src/utils/lh.ts";
+import { generateDefaultLHData } from "../src/utils/lh.ts";
 
 describe("lh", () => {
-	describe("generateLHReportFileName", () => {
+	describe("LighthouseEngine.generateFileName", () => {
+		const engine = new LighthouseEngine();
+
 		it("should generate a filename with index.json", () => {
 			const url = "https://example.com";
 			const urlWithSlash = "https://example.com/";
 
 			const correctFileName = "index.json";
 
-			expect(generateLHReportFileName(url)).toBe(correctFileName);
-			expect(generateLHReportFileName(urlWithSlash)).toBe(correctFileName);
+			expect(engine.generateFileName(url)).toBe(correctFileName);
+			expect(engine.generateFileName(urlWithSlash)).toBe(correctFileName);
 		});
 
 		it("should generate a filename with about.json", () => {
@@ -23,8 +23,8 @@ describe("lh", () => {
 
 			const correctFileName = "about.json";
 
-			expect(generateLHReportFileName(url)).toBe(correctFileName);
-			expect(generateLHReportFileName(urlWithSlash)).toBe(correctFileName);
+			expect(engine.generateFileName(url)).toBe(correctFileName);
+			expect(engine.generateFileName(urlWithSlash)).toBe(correctFileName);
 		});
 
 		it("should generate a filename with about-what.json", () => {
@@ -33,8 +33,8 @@ describe("lh", () => {
 
 			const correctFileName = "about-what.json";
 
-			expect(generateLHReportFileName(url)).toBe(correctFileName);
-			expect(generateLHReportFileName(urlWithSlash)).toBe(correctFileName);
+			expect(engine.generateFileName(url)).toBe(correctFileName);
+			expect(engine.generateFileName(urlWithSlash)).toBe(correctFileName);
 		});
 
 		it("should generate a filename with about-query=string.json", () => {
@@ -43,8 +43,8 @@ describe("lh", () => {
 
 			const correctFileName = "about-query=string.json";
 
-			expect(generateLHReportFileName(url)).toBe(correctFileName);
-			expect(generateLHReportFileName(urlWithSlash)).toBe(correctFileName);
+			expect(engine.generateFileName(url)).toBe(correctFileName);
+			expect(engine.generateFileName(urlWithSlash)).toBe(correctFileName);
 		});
 	});
 

@@ -18,7 +18,7 @@ export type LoadOptionsType = {
 	breakPoint: number;
 	categories: string[];
 	firstFetch: "load" | "open" | "none";
-	lhReports: CacheLHResultByFormFactor;
+	reports: CacheLHResultByFormFactor;
 };
 
 export type LHOptions = {
