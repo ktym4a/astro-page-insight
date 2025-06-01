@@ -18,13 +18,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
-        run: pnpm --filter astro-page-insight test:e2e:install
+        run: pnpm test:e2e:install
 
-      - name: Build UI package
-        run: pnpm --filter @page-insight/ui build
-
-      - name: Build main package
-        run: pnpm --filter astro-page-insight build
-
-      - name: E2E Test
-        run: pnpm --filter astro-page-insight test:e2e
+      - name: Build and E2E Test
+        run: pnpm test:e2e:build

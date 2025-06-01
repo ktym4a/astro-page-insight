@@ -21,7 +21,8 @@
 		"test:unit": "pnpm --parallel --filter astro-page-insight --filter @page-insight/ui test",
 		"test:e2e": "pnpm --filter astro-page-insight test:e2e",
 		"test:e2e:clear": "pnpm --filter astro-page-insight test:e2e:clear",
-		"test:e2e:install": "pnpm --filter astro-page-insight test:e2e:install"
+		"test:e2e:install": "pnpm --filter astro-page-insight test:e2e:install",
+		"test:e2e:build": "pnpm package:build && pnpm --filter astro-page-insight test:e2e"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
