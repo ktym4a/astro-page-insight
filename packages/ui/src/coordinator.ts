@@ -173,11 +173,9 @@ const createMapElement = (
 			position,
 		);
 
-		const elem = document.createElement("div");
-		elem.appendChild(highlight);
-		elem.appendChild(toolTip);
+		highlight.appendChild(toolTip);
 
-		return elem;
+		return highlight;
 	} catch {
 		return;
 	}

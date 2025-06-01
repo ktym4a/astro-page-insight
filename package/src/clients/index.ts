@@ -121,6 +121,12 @@ export const initToolbar = (
 	breakPoint: number;
 	pageInsightData: PageInsightData;
 } => {
+	// Clean up existing toolbars to prevent duplicates
+	const existingToolbars = root.querySelectorAll(".astro-page-insight-toolbar");
+	for (const toolbar of existingToolbars) {
+		toolbar.remove();
+	}
+
 	const toolbarWrap = createToolbar(root);
 
 	const formFactor = getFormFactor(options.breakPoint);
