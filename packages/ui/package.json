@@ -48,12 +48,12 @@
 		"test:unit:dev": "vitest --coverage.enabled=true"
 	},
 	"devDependencies": {
-		"@types/node": "^22.15.29",
-		"@vitest/coverage-v8": "^3.1.4",
-		"happy-dom": "^17.5.6",
+		"@types/node": "^22.15.30",
+		"@vitest/coverage-v8": "^3.2.2",
+		"happy-dom": "^17.6.3",
 		"tsup": "^8.5.0",
 		"typescript": "^5.7.2",
 		"vite": "^6.3.5",
-		"vitest": "^3.1.4"
+		"vitest": "^3.2.2"
 	}
 }
