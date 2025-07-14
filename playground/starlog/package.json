@@ -16,7 +16,7 @@
 		"astro": "^5.11.0",
 		"astro-page-insight": "workspace:*",
 		"sass": "^1.89.2",
-		"sharp": "^0.34.2",
+		"sharp": "^0.34.3",
 		"typescript": "^5.8.3"
 	}
 }
