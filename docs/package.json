@@ -18,9 +18,9 @@
 		"astro": "^5.14.1",
 		"astro-page-insight": "workspace:*",
 		"sharp": "^0.34.4",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"wrangler": "^4.40.2"
+		"wrangler": "^4.42.0"
 	}
 }

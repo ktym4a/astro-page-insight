@@ -18,6 +18,6 @@
 		"@astrojs/sitemap": "^3.6.0",
 		"astro": "^5.14.1",
 		"astro-page-insight": "workspace:*",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.3"
 	}
 }
